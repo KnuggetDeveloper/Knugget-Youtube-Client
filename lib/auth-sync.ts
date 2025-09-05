@@ -41,11 +41,12 @@ class AuthSyncService {
     }
 
     this.chromeAPI = getChromeAPI();
-    this.extensionId = process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID || null;
+    // Try to get extension ID from localStorage first, then from URL params
+    this.extensionId =
+      this.getStoredExtensionId() || this.getExtensionIdFromUrl();
     console.log("🔧 AuthSyncService initialized:", {
       hasChromeAPI: !!this.chromeAPI,
       extensionId: this.extensionId,
-      envVar: process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID,
       chromeExists: typeof chrome !== "undefined",
       chromeRuntime: typeof chrome !== "undefined" && !!chrome?.runtime,
     });
@@ -66,10 +67,19 @@ class AuthSyncService {
       return false;
     }
 
-    // Try with configured extension ID first, then try to detect
+    // Try to discover extension ID if not known
+    if (!this.extensionId) {
+      const urlExtensionId = this.getExtensionIdFromUrl();
+      if (urlExtensionId) {
+        this.extensionId = urlExtensionId;
+        this.storeExtensionId(urlExtensionId);
+      }
+    }
+
+    // Build list of extension IDs to try
     const extensionIds = [
       this.extensionId,
-      "dnjcobdifkjddcnkcoiaadnogjfkiaem", // Common development extension ID
+      this.getExtensionIdFromUrl(),
     ].filter(Boolean);
 
     for (const id of extensionIds) {
@@ -81,6 +91,9 @@ class AuthSyncService {
         });
         console.log("✅ Extension is available with ID:", id, response);
         this.extensionId = id; // Update the working extension ID
+        if (id) {
+          this.storeExtensionId(id); // Store for future use
+        }
         return true;
       } catch (error) {
         console.log("ℹ️ Extension ID not responding:", id, error);
@@ -481,6 +494,46 @@ class AuthSyncService {
       createdAt: new Date().toISOString(),
       lastLoginAt: new Date().toISOString(),
     };
+  }
+
+  /**
+   * Get extension ID from URL parameters
+   */
+  private getExtensionIdFromUrl(): string | null {
+    if (typeof window === "undefined") return null;
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("extensionId");
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get stored extension ID from localStorage
+   */
+  private getStoredExtensionId(): string | null {
+    if (typeof window === "undefined") return null;
+
+    try {
+      return localStorage.getItem("knugget_extension_id");
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Store extension ID in localStorage
+   */
+  private storeExtensionId(extensionId: string): void {
+    if (typeof window === "undefined") return;
+
+    try {
+      localStorage.setItem("knugget_extension_id", extensionId);
+    } catch {
+      // Ignore storage errors
+    }
   }
 }
 

@@ -277,13 +277,51 @@ class AuthService {
     }
   }
 
+  // Helper method to find extension ID dynamically
+  private async findExtensionId(chromeAPI: ChromeAPI): Promise<string | null> {
+    // Try stored extension ID first
+    try {
+      const storedId = localStorage.getItem("knugget_extension_id");
+      if (storedId) {
+        // Test if it's still working
+        await chromeAPI.runtime.sendMessage(storedId, {
+          type: "KNUGGET_CHECK_AUTH",
+          timestamp: new Date().toISOString(),
+        });
+        return storedId;
+      }
+    } catch {
+      // If stored ID doesn't work, continue to discovery
+    }
+
+    // Try to get from URL parameters
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlExtensionId = urlParams.get("extensionId");
+      if (urlExtensionId) {
+        // Test if it works
+        await chromeAPI.runtime.sendMessage(urlExtensionId, {
+          type: "KNUGGET_CHECK_AUTH",
+          timestamp: new Date().toISOString(),
+        });
+        // Store for future use
+        localStorage.setItem("knugget_extension_id", urlExtensionId);
+        return urlExtensionId;
+      }
+    } catch {
+      // Continue to next method
+    }
+
+    return null;
+  }
+
   // FIXED: Notification methods for extension sync
   async notifyExtensionAuthSuccess(authData: LoginResponse): Promise<void> {
     const chromeAPI = getChromeAPI();
     if (!chromeAPI) return;
 
     try {
-      const extensionId = process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID;
+      const extensionId = await this.findExtensionId(chromeAPI);
       if (!extensionId) return;
 
       await chromeAPI.runtime.sendMessage(extensionId, {
@@ -305,7 +343,7 @@ class AuthService {
     if (!chromeAPI) return;
 
     try {
-      const extensionId = process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID;
+      const extensionId = await this.findExtensionId(chromeAPI);
       if (!extensionId) return;
 
       await chromeAPI.runtime.sendMessage(extensionId, {

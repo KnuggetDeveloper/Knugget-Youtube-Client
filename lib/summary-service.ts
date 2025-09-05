@@ -314,7 +314,7 @@ class SummaryService {
         if (!chromeAPI) return
 
         try {
-            const extensionId = process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID
+            const extensionId = await this.findExtensionId(chromeAPI)
             if (extensionId) {
                 await chromeAPI.runtime.sendMessage(extensionId, {
                     type: 'SUMMARY_SYNC_REQUEST',
@@ -324,6 +324,41 @@ class SummaryService {
         } catch (error) {
             console.warn('Failed to sync with Chrome extension:', error)
         }
+    }
+
+    // Helper method to find extension ID dynamically
+    private async findExtensionId(chromeAPI: any): Promise<string | null> {
+        // Try stored extension ID first
+        try {
+            const storedId = localStorage.getItem("knugget_extension_id");
+            if (storedId) {
+                await chromeAPI.runtime.sendMessage(storedId, {
+                    type: "KNUGGET_CHECK_AUTH",
+                    timestamp: new Date().toISOString(),
+                });
+                return storedId;
+            }
+        } catch {
+            // Continue to next method
+        }
+
+        // Try to get from URL parameters
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlExtensionId = urlParams.get("extensionId");
+            if (urlExtensionId) {
+                await chromeAPI.runtime.sendMessage(urlExtensionId, {
+                    type: "KNUGGET_CHECK_AUTH",
+                    timestamp: new Date().toISOString(),
+                });
+                localStorage.setItem("knugget_extension_id", urlExtensionId);
+                return urlExtensionId;
+            }
+        } catch {
+            // Continue
+        }
+
+        return null;
     }
 
     /**

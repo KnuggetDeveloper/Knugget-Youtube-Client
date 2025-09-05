@@ -105,22 +105,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
           href="https://knugget-new-backend.onrender.com"
         />
 
-        {/* Chrome Extension Connection */}
-        {process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID && (
-          <meta
-            name="chrome-extension-id"
-            content={process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID}
-          />
-        )}
+        {/* Chrome Extension Connection - Extension ID is now auto-discovered */}
       </head>
       <body
         className={`${inter.className} dark bg-gray-950 text-white`}
         suppressHydrationWarning={true}
       >
         <AuthProvider>
-          <MainLayout>
-            {children}
-          </MainLayout>
+          <MainLayout>{children}</MainLayout>
         </AuthProvider>
 
         {/* Development helpers */}
