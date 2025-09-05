@@ -70,7 +70,7 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value:
               process.env.NODE_ENV === "production"
-                ? "https://knugget-new-client.vercel.app"
+                ? "https://knugget-youtube-client.vercel.app"
                 : "*",
           },
           {
