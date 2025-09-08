@@ -88,16 +88,16 @@ function DashboardContent() {
       items.push({
         id: summary.id,
         type: "youtube",
-        title: summary.videoMetadata.title,
-        source: summary.videoMetadata.channelName,
-        thumbnail: summary.videoMetadata.thumbnailUrl,
-        url: summary.videoMetadata.url,
+        title: summary.videoTitle,
+        source: summary.channelName,
+        thumbnail: summary.thumbnailUrl,
+        url: summary.videoUrl,
         tags: summary.tags,
         createdAt: summary.createdAt,
         videoMetadata: {
-          duration: summary.videoMetadata.duration,
-          channelName: summary.videoMetadata.channelName,
-          thumbnailUrl: summary.videoMetadata.thumbnailUrl,
+          duration: summary.videoDuration,
+          channelName: summary.channelName,
+          thumbnailUrl: summary.thumbnailUrl,
         },
         summary: summary.fullSummary,
       });

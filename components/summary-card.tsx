@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
+import { useState } from "react";
+import Image from "next/image";
 import {
   MoreHorizontal,
   Edit3,
@@ -15,9 +15,9 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
-} from 'lucide-react'
-import { Summary } from '@/types/summary'
-import { formatRelativeTime, truncate } from '@/lib/utils'
+} from "lucide-react";
+import { Summary } from "@/types/summary";
+import { formatRelativeTime, truncate } from "@/lib/utils";
 import {
   Card,
   CardHeader,
@@ -25,17 +25,17 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface SummaryCardProps {
-  summary: Summary
-  onEdit?: (summary: Summary) => void
-  onDelete?: (summary: Summary) => void
-  onView?: (summary: Summary) => void
-  isSelected?: boolean
-  onSelect?: (summary: Summary, selected: boolean) => void
-  showActions?: boolean
+  summary: Summary;
+  onEdit?: (summary: Summary) => void;
+  onDelete?: (summary: Summary) => void;
+  onView?: (summary: Summary) => void;
+  isSelected?: boolean;
+  onSelect?: (summary: Summary, selected: boolean) => void;
+  showActions?: boolean;
 }
 
 export function SummaryCard({
@@ -47,78 +47,80 @@ export function SummaryCard({
   onSelect,
   showActions = true,
 }: SummaryCardProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [imageError, setImageError] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleCardClick = () => {
     if (onView) {
-      onView(summary)
+      onView(summary);
     }
-  }
+  };
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (onSelect) {
-      onSelect(summary, !isSelected)
+      onSelect(summary, !isSelected);
     }
-  }
+  };
 
   const handleMenuClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsMenuOpen(!isMenuOpen)
-  }
+    e.stopPropagation();
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsMenuOpen(false)
+    e.stopPropagation();
+    setIsMenuOpen(false);
     if (onEdit) {
-      onEdit(summary)
+      onEdit(summary);
     }
-  }
+  };
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsMenuOpen(false)
+    e.stopPropagation();
+    setIsMenuOpen(false);
     if (onDelete) {
-      onDelete(summary)
+      onDelete(summary);
     }
-  }
+  };
 
   const handleVideoLink = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    window.open(summary.videoMetadata.url, '_blank', 'noopener,noreferrer')
-  }
+    e.stopPropagation();
+    window.open(summary.videoUrl, "_blank", "noopener,noreferrer");
+  };
 
   const getStatusIcon = () => {
     switch (summary.status) {
-      case 'COMPLETED':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
-      case 'PROCESSING':
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
-      case 'FAILED':
-        return <AlertCircle className="h-4 w-4 text-red-500" />
+      case "COMPLETED":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "PROCESSING":
+        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+      case "FAILED":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-500" />
+        return <Clock className="h-4 w-4 text-gray-500" />;
     }
-  }
+  };
 
   const getStatusText = () => {
     switch (summary.status) {
-      case 'COMPLETED':
-        return 'Completed'
-      case 'PROCESSING':
-        return 'Processing'
-      case 'FAILED':
-        return 'Failed'
+      case "COMPLETED":
+        return "Completed";
+      case "PROCESSING":
+        return "Processing";
+      case "FAILED":
+        return "Failed";
       default:
-        return 'Pending'
+        return "Pending";
     }
-  }
+  };
 
   return (
-    <Card 
+    <Card
       className={`group cursor-pointer transition-all duration-200 hover:shadow-md ${
-        isSelected ? 'ring-2 ring-knugget-500 bg-knugget-50 dark:bg-knugget-950' : ''
+        isSelected
+          ? "ring-2 ring-knugget-500 bg-knugget-50 dark:bg-knugget-950"
+          : ""
       }`}
       onClick={handleCardClick}
     >
@@ -153,11 +155,11 @@ export function SummaryCard({
               {isMenuOpen && (
                 <>
                   {/* Backdrop */}
-                  <div 
-                    className="fixed inset-0 z-40" 
+                  <div
+                    className="fixed inset-0 z-40"
                     onClick={() => setIsMenuOpen(false)}
                   />
-                  
+
                   {/* Menu */}
                   <div className="absolute right-0 mt-2 w-48 rounded-md border bg-popover shadow-lg z-50">
                     <div className="py-1">
@@ -193,10 +195,10 @@ export function SummaryCard({
 
         {/* Video Thumbnail */}
         <div className="relative w-full h-40 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-          {summary.videoMetadata.thumbnailUrl && !imageError ? (
+          {summary.thumbnailUrl && !imageError ? (
             <Image
-              src={summary.videoMetadata.thumbnailUrl}
-              alt={summary.videoMetadata.title}
+              src={summary.thumbnailUrl}
+              alt={summary.videoTitle}
               fill
               className="object-cover"
               onError={() => setImageError(true)}
@@ -209,23 +211,25 @@ export function SummaryCard({
           )}
 
           {/* Video Duration Overlay */}
-          {summary.videoMetadata.duration && (
+          {summary.videoDuration && (
             <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-              {summary.videoMetadata.duration}
+              {summary.videoDuration}
             </div>
           )}
 
           {/* Status Badge */}
           <div className="absolute top-2 left-2">
-            <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
-              summary.status === 'COMPLETED' 
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                : summary.status === 'PROCESSING'
-                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                : summary.status === 'FAILED'
-                ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-            }`}>
+            <div
+              className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+                summary.status === "COMPLETED"
+                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                  : summary.status === "PROCESSING"
+                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                    : summary.status === "FAILED"
+                      ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+              }`}
+            >
               {getStatusIcon()}
               <span>{getStatusText()}</span>
             </div>
@@ -238,7 +242,7 @@ export function SummaryCard({
             {summary.title}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground line-clamp-1">
-            {summary.videoMetadata.channelName}
+            {summary.channelName}
           </CardDescription>
         </div>
       </CardHeader>
@@ -315,10 +319,10 @@ export function SummaryCard({
               <Calendar className="h-3 w-3" />
               <span>{formatRelativeTime(summary.createdAt)}</span>
             </div>
-            {summary.videoMetadata.duration && (
+            {summary.videoDuration && (
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>{summary.videoMetadata.duration}</span>
+                <span>{summary.videoDuration}</span>
               </div>
             )}
           </div>
@@ -347,5 +351,5 @@ export function SummaryCard({
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

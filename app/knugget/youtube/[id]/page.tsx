@@ -43,8 +43,8 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
   };
 
   const handleOpenVideo = () => {
-    if (summary?.videoMetadata.url) {
-      window.open(summary.videoMetadata.url, "_blank");
+    if (summary?.videoUrl) {
+      window.open(summary.videoUrl, "_blank");
     }
   };
 
@@ -136,15 +136,15 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           {/* Video Thumbnail */}
           <div className="relative mb-6">
             <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-800">
-              {summary.videoMetadata.thumbnailUrl ? (
+              {summary.thumbnailUrl ? (
                 <img
-                  src={summary.videoMetadata.thumbnailUrl}
-                  alt={summary.videoMetadata.title}
+                  src={summary.thumbnailUrl}
+                  alt={summary.videoTitle}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.log(
                       "❌ Thumbnail failed to load:",
-                      summary.videoMetadata.thumbnailUrl
+                      summary.thumbnailUrl
                     );
                     e.currentTarget.style.display = "none";
                   }}
@@ -156,9 +156,9 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                 </div>
               )}
               {/* Duration Badge */}
-              {summary.videoMetadata.duration && (
+              {summary.videoDuration && (
                 <div className="absolute bottom-3 right-3 bg-black bg-opacity-80 text-white text-sm px-2 py-1 rounded">
-                  {summary.videoMetadata.duration}
+                  {summary.videoDuration}
                 </div>
               )}
             </div>
@@ -166,19 +166,17 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-white mb-3 leading-tight">
-            {summary.videoMetadata.title}
+            {summary.videoTitle}
           </h1>
 
           {/* Channel */}
           <div className="flex items-center space-x-2 mb-4">
             <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
               <span className="text-white text-xs font-bold">
-                {summary.videoMetadata.channelName.charAt(0).toUpperCase()}
+                {summary.channelName.charAt(0).toUpperCase()}
               </span>
             </div>
-            <span className="text-gray-300">
-              {summary.videoMetadata.channelName}
-            </span>
+            <span className="text-gray-300">{summary.channelName}</span>
           </div>
 
           {/* Tags */}
