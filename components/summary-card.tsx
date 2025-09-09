@@ -10,7 +10,7 @@ import {
   Play,
   Clock,
   Calendar,
-  Tag,
+  // Tag,
   FileText,
   CheckCircle,
   AlertCircle,
@@ -274,7 +274,7 @@ export function SummaryCard({
         )}
 
         {/* Tags */}
-        {summary.tags.length > 0 && (
+        {/* {summary.tags.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Tag className="h-4 w-4 text-muted-foreground" />
@@ -296,7 +296,7 @@ export function SummaryCard({
               )}
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Summary Preview */}
         {summary.fullSummary && (

@@ -248,7 +248,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           </div>
 
           {/* Tags */}
-          {summary.tags && summary.tags.length > 0 && (
+          {/* {summary.tags && summary.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {summary.tags.map((tag, index) => (
                 <span
@@ -259,7 +259,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                 </span>
               ))}
             </div>
-          )}
+          )} */}
 
           {/* YouTube Link */}
           <div className="mb-6">
