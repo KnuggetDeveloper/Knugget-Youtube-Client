@@ -211,6 +211,17 @@ function DashboardContent() {
     }
   };
 
+  const handleThumbnailClick = (item: KnuggetItem) => {
+    switch (item.type) {
+      case "youtube":
+        // Navigate to detail page with autoplay parameter
+        router.push(`/knugget/youtube/${item.id}?autoplay=true`);
+        break;
+      default:
+        break;
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-950">
@@ -282,6 +293,7 @@ function DashboardContent() {
                         duration: item.videoMetadata?.duration,
                       }}
                       onCardClick={() => handleItemClick(item)}
+                      onThumbnailClick={() => handleThumbnailClick(item)}
                     />
                   );
                 // LinkedIn cards disabled

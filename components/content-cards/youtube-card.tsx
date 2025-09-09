@@ -17,11 +17,13 @@ interface YouTubeCardData {
 interface YouTubeCardProps {
   data: YouTubeCardData;
   onCardClick?: (data: YouTubeCardData) => void;
+  onThumbnailClick?: (data: YouTubeCardData) => void;
 }
 
 export const YouTubeCard: React.FC<YouTubeCardProps> = ({
   data,
   onCardClick,
+  onThumbnailClick,
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -36,6 +38,11 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
     onCardClick?.(data);
   };
 
+  const handleThumbnailClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    onThumbnailClick?.(data);
+  };
+
   return (
     <BaseCard onClick={handleCardClick} style={{ backgroundColor: "#151515" }}>
       <CardHeader
@@ -48,8 +55,9 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
 
       {/* Thumbnail */}
       <div
-        className="relative mb-4 rounded-lg overflow-hidden flex-shrink-0"
+        className="relative mb-4 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer group"
         style={{ backgroundColor: "#151515" }}
+        onClick={handleThumbnailClick}
       >
         <div className="aspect-video w-full relative">
           {data.thumbnail ? (
@@ -57,7 +65,7 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
               <img
                 src={data.thumbnail}
                 alt={data.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-opacity group-hover:opacity-90"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = "none";
@@ -71,15 +79,25 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
                 className="fallback-container hidden w-full h-full absolute inset-0 items-center justify-center text-gray-400"
                 style={{ backgroundColor: "#151515" }}
               >
-                <Play className="w-12 h-12" />
+                <div className="bg-red-600 rounded-full p-3 shadow-lg">
+                  <Play className="w-8 h-8 text-white fill-white ml-0.5" />
+                </div>
+              </div>
+              {/* Play Button Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200">
+                <div className="bg-red-600 rounded-full p-3 shadow-lg transform group-hover:scale-110 transition-transform duration-200 opacity-0 group-hover:opacity-100">
+                  <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+                </div>
               </div>
             </>
           ) : (
             <div
-              className="w-full h-full flex items-center justify-center text-gray-400"
+              className="w-full h-full flex items-center justify-center text-gray-400 group-hover:bg-gray-700 transition-colors"
               style={{ backgroundColor: "#151515" }}
             >
-              <Play className="w-12 h-12" />
+              <div className="bg-red-600 rounded-full p-3 shadow-lg transform group-hover:scale-110 transition-transform duration-200">
+                <Play className="w-8 h-8 text-white fill-white ml-0.5" />
+              </div>
             </div>
           )}
 

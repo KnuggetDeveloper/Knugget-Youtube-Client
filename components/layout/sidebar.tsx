@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { LogOut, Tag } from "lucide-react";
+import { LogOut, Youtube, Clock } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useSummaries } from "@/hooks/use-summaries";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
@@ -40,17 +40,35 @@ export function GlobalSidebar() {
     }
   };
 
-  // Get all unique tags for the topics section
-  const allTags = Array.from(
-    new Set([
-      ...(summaries?.flatMap((s) => s.tags) || []),
-      // Add other content types when available
-    ])
-  ).slice(0, 20);
+  // Group summaries by date for chronological list
+  const groupedSummaries =
+    summaries?.reduce(
+      (groups, summary) => {
+        const date = new Date(summary.createdAt).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
 
-  // Handle tag clicks with proper search
-  const handleTagClick = (tag: string) => {
-    router.push(`/dashboard?search=${encodeURIComponent(tag)}`);
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(summary);
+        return groups;
+      },
+      {} as Record<string, typeof summaries>
+    ) || {};
+
+  // Sort dates in descending order (newest first)
+  const sortedDates = Object.keys(groupedSummaries).sort((a, b) => {
+    const dateA = new Date(a.split("/").reverse().join("-"));
+    const dateB = new Date(b.split("/").reverse().join("-"));
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  // Handle video click
+  const handleVideoClick = (summaryId: string) => {
+    router.push(`/knugget/youtube/${summaryId}`);
   };
 
   return (
@@ -73,23 +91,48 @@ export function GlobalSidebar() {
 
       {/* Navigation */}
       <div className="flex-1 p-4 space-y-6 overflow-y-auto">
-        {/* Topics */}
-        {!sidebarCollapsed && allTags.length > 0 && (
+        {/* Recent Videos */}
+        {!sidebarCollapsed && sortedDates.length > 0 && (
           <div>
             <h3 className="text-sm font-medium text-gray-400 mb-3 flex items-center">
-              <Tag className="w-4 h-4 mr-2" />
-              Topics
+              <Clock className="w-4 h-4 mr-2" />
+              Recent Videos
             </h3>
-            <div className="space-y-1 max-h-48 overflow-y-auto scrollbar-hide">
-              {allTags.map((tag, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleTagClick(tag)}
-                  className="w-full text-left px-3 py-1 text-xs text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors"
-                >
-                  <span className="text-orange-500 mr-2">#</span>
-                  {tag}
-                </button>
+            <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-hide">
+              {sortedDates.slice(0, 10).map((date) => (
+                <div key={date} className="space-y-2">
+                  <div className="text-xs font-medium text-gray-500 px-2">
+                    {date}
+                  </div>
+                  <div className="space-y-1">
+                    {groupedSummaries[date]?.slice(0, 5).map((summary) => (
+                      <button
+                        key={summary.id}
+                        onClick={() => handleVideoClick(summary.id)}
+                        className="w-full text-left px-2 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors group"
+                      >
+                        <div className="flex items-start space-x-2">
+                          <Youtube className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />
+                          <span
+                            className="text-left block overflow-hidden"
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                            }}
+                          >
+                            {summary.videoTitle || summary.title}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                    {groupedSummaries[date]?.length > 5 && (
+                      <div className="text-xs text-gray-600 px-2 py-1">
+                        +{groupedSummaries[date].length - 5} more videos
+                      </div>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

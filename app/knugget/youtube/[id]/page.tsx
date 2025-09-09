@@ -2,8 +2,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, ExternalLink, Youtube } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, ExternalLink, Youtube, Play } from "lucide-react";
 import { useSummary } from "@/hooks/use-summaries";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +13,9 @@ interface YouTubeDetailPageProps {
 
 export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("summary");
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
     null
   );
@@ -38,6 +40,14 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
     }
   }, [summary, error]);
 
+  // Check for autoplay parameter and auto-start video
+  useEffect(() => {
+    const autoplay = searchParams.get("autoplay");
+    if (autoplay === "true" && summary) {
+      setIsVideoPlaying(true);
+    }
+  }, [searchParams, summary]);
+
   const handleBack = () => {
     router.back();
   };
@@ -46,6 +56,30 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
     if (summary?.videoUrl) {
       window.open(summary.videoUrl, "_blank");
     }
+  };
+
+  const extractYouTubeVideoId = (url: string): string | null => {
+    const patterns = [
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&\n?#]+)/,
+      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^&\n?#]+)/,
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^&\n?#]+)/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) {
+        return match[1];
+      }
+    }
+    return null;
+  };
+
+  const handlePlayVideo = () => {
+    setIsVideoPlaying(true);
+  };
+
+  const getYouTubeEmbedUrl = (videoId: string): string => {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   };
 
   const formatDate = (dateString: string) => {
@@ -133,32 +167,66 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
             </div>
           </div>
 
-          {/* Video Thumbnail */}
+          {/* Video Player / Thumbnail */}
           <div className="relative mb-6">
             <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-800">
-              {summary.thumbnailUrl ? (
-                <img
-                  src={summary.thumbnailUrl}
-                  alt={summary.videoTitle}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    console.log(
-                      "❌ Thumbnail failed to load:",
-                      summary.thumbnailUrl
-                    );
-                    e.currentTarget.style.display = "none";
-                  }}
+              {isVideoPlaying && summary.videoUrl ? (
+                // YouTube Embedded Player
+                <iframe
+                  src={getYouTubeEmbedUrl(
+                    extractYouTubeVideoId(summary.videoUrl) || summary.videoId
+                  )}
+                  title={summary.videoTitle}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-800">
-                  <Youtube className="w-16 h-16 text-gray-600" />
-                  <p className="text-gray-500 ml-4">No thumbnail available</p>
-                </div>
-              )}
-              {/* Duration Badge */}
-              {summary.videoDuration && (
-                <div className="absolute bottom-3 right-3 bg-black bg-opacity-80 text-white text-sm px-2 py-1 rounded">
-                  {summary.videoDuration}
+                // Thumbnail with Play Button
+                <div
+                  className="relative w-full h-full cursor-pointer group"
+                  onClick={handlePlayVideo}
+                >
+                  {summary.thumbnailUrl ? (
+                    <>
+                      <img
+                        src={summary.thumbnailUrl}
+                        alt={summary.videoTitle}
+                        className="w-full h-full object-cover transition-opacity group-hover:opacity-90"
+                        onError={(e) => {
+                          console.log(
+                            "❌ Thumbnail failed to load:",
+                            summary.thumbnailUrl
+                          );
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                      {/* Play Button Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200">
+                        <div className="bg-red-600 rounded-full p-4 shadow-lg transform group-hover:scale-110 transition-transform duration-200">
+                          <Play className="w-8 h-8 text-white fill-white ml-1" />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-800 group-hover:bg-gray-700 transition-colors">
+                      <div className="text-center">
+                        <Youtube className="w-16 h-16 text-gray-600 mx-auto mb-2" />
+                        <p className="text-gray-500 mb-2">
+                          No thumbnail available
+                        </p>
+                        <div className="bg-red-600 rounded-full p-3 mx-auto w-fit">
+                          <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {/* Duration Badge */}
+                  {summary.videoDuration && !isVideoPlaying && (
+                    <div className="absolute bottom-3 right-3 bg-black bg-opacity-80 text-white text-sm px-2 py-1 rounded">
+                      {summary.videoDuration}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -187,7 +255,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                   key={index}
                   className="px-3 py-1 border border-yellow-500 text-yellow-500 rounded-full text-sm"
                 >
-                  {tag.startsWith("#") ? tag : `#${tag}`}
+                  {tag}
                 </span>
               ))}
             </div>
