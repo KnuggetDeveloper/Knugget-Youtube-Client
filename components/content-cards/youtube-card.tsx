@@ -114,7 +114,7 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
       <p className="text-gray-400 text-sm mb-3 font-medium">{data.source}</p>
 
       {/* Tags */}
-      {/* <TagsContainer tags={data.tags} /> */}
+      <TagsContainer tags={data.tags} />
     </BaseCard>
   );
 };
