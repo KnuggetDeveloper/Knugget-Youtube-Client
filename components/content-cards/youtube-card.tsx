@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { Youtube, Play } from "lucide-react";
-import { BaseCard, CardHeader, CardTitle, TagsContainer } from "./base-card";
+import { BaseCard, CardHeader, CardTitle } from "./base-card";
 
 interface YouTubeCardData {
   id: string;
@@ -112,9 +112,6 @@ export const YouTubeCard: React.FC<YouTubeCardProps> = ({
 
       {/* Channel Name */}
       <p className="text-gray-400 text-sm mb-3 font-medium">{data.source}</p>
-
-      {/* Tags */}
-      <TagsContainer tags={data.tags} />
     </BaseCard>
   );
 };
