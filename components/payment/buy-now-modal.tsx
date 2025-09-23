@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Crown, Check, X, CreditCard, Zap, Shield, Star } from "lucide-react";
+import { Crown, Check, X, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { paymentService } from "@/lib/payment-service";
 import { toast } from "sonner";
@@ -127,7 +127,7 @@ export function BuyNowModal({
 
             {/* Features */}
             <div className="space-y-3">
-              <h3 className="font-semibold">What you'll get:</h3>
+              <h3 className="font-semibold">What you&apos;ll get:</h3>
               <div className="space-y-2">
                 {plans.PREMIUM.features.slice(0, 4).map((feature, index) => (
                   <div key={index} className="flex items-center gap-3 text-sm">

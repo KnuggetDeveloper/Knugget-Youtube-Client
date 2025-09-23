@@ -53,17 +53,6 @@ export function PremiumStatusModal({
     }
   };
 
-  const premiumFeatures = [
-    "1,000 monthly credits",
-    "Advanced AI summaries",
-    "Priority support",
-    "Full feature access",
-    "Export capabilities",
-    "Custom templates",
-    "API access",
-    "Advanced analytics",
-  ];
-
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-md bg-card">
@@ -142,7 +131,7 @@ export function PremiumStatusModal({
                   Are you sure you want to cancel?
                 </p>
                 <p className="text-xs text-red-600">
-                  You'll lose all Premium features immediately
+                  You&apos;ll lose all Premium features immediately
                 </p>
               </div>
 
