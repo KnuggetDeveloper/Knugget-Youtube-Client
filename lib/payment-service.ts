@@ -136,6 +136,32 @@ class PaymentService {
   }
 
   /**
+   * Cancel subscription
+   */
+  async cancelSubscription(): Promise<void> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/payment/cancel-subscription`,
+        {
+          method: "POST",
+          headers: this.getAuthHeaders(),
+        }
+      );
+
+      const result = await this.handleResponse<{ message: string }>(response);
+      console.log("Subscription cancelled:", result);
+      toast.success("Subscription cancelled successfully");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to cancel subscription";
+      toast.error(message);
+      throw error;
+    }
+  }
+
+  /**
    * Process subscription payment
    */
   async processPayment(
