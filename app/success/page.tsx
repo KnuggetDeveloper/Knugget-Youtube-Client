@@ -5,11 +5,14 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/contexts/auth-context";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
+  const { refreshAuth } = useAuth();
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const payment_id = searchParams.get("payment_id");
@@ -17,7 +20,27 @@ function SuccessContent() {
 
     setPaymentId(payment_id);
     setStatus(payment_status);
-  }, [searchParams]);
+
+    // Refresh user auth to get updated subscription status
+    // This ensures the user's profile reflects their new premium status
+    const refreshUserData = async () => {
+      if (payment_id && payment_status === "active") {
+        setIsRefreshing(true);
+        try {
+          await refreshAuth();
+          console.log(
+            "✅ User profile refreshed after successful subscription"
+          );
+        } catch (error) {
+          console.error("❌ Failed to refresh user profile:", error);
+        } finally {
+          setIsRefreshing(false);
+        }
+      }
+    };
+
+    refreshUserData();
+  }, [searchParams, refreshAuth]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
@@ -57,9 +80,12 @@ function SuccessContent() {
         )}
 
         <Link href="/dashboard">
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+          <Button
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            disabled={isRefreshing}
+          >
             <Home className="h-4 w-4 mr-2" />
-            Go to Dashboard
+            {isRefreshing ? "Updating profile..." : "Go to Dashboard"}
           </Button>
         </Link>
       </div>

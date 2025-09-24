@@ -63,6 +63,7 @@ export function BuyNowButton({
               credits: user.credits,
               email: user.email,
               name: user.name,
+              subscriptionId: user.subscriptionId,
             }}
           />
         ) : (

@@ -16,6 +16,7 @@ interface PremiumStatusModalProps {
     credits: number;
     email: string;
     name: string | null;
+    subscriptionId?: string | null;
   };
 }
 
@@ -94,6 +95,16 @@ export function PremiumStatusModal({
                   <span className="text-muted-foreground">Credits:</span>
                   <span>{user.credits}</span>
                 </div>
+                {user.subscriptionId && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      Subscription ID:
+                    </span>
+                    <span className="font-mono text-xs break-all">
+                      {user.subscriptionId}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Actions */}

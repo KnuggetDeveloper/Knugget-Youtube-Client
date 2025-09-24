@@ -13,6 +13,7 @@ export interface UserProfile {
   avatar: string | null;
   plan: "FREE" | "PREMIUM";
   credits: number;
+  subscriptionId: string | null;
   emailVerified: boolean;
   createdAt: string;
   lastLoginAt: string | null;
@@ -121,6 +122,7 @@ export function useProfile() {
         avatar: user.avatar,
         plan: user.plan,
         credits: user.credits,
+        subscriptionId: user.subscriptionId,
         emailVerified: user.emailVerified,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
@@ -134,6 +136,17 @@ export function useProfile() {
       setIsLoading(false);
     }
   }, [isAuthenticated, user, fetchProfile]);
+
+  // Periodic refresh to catch subscription updates from webhooks
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const interval = setInterval(() => {
+      fetchProfile();
+    }, 60000); // Refresh every 60 seconds
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, fetchProfile]);
 
   return {
     profile,

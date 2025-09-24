@@ -490,6 +490,7 @@ class AuthSyncService {
       avatar: null,
       plan: (extUser.plan?.toUpperCase() as "FREE" | "PREMIUM") || "FREE",
       credits: extUser.credits || 0,
+      subscriptionId: extUser.subscriptionId || null,
       emailVerified: true,
       createdAt: new Date().toISOString(),
       lastLoginAt: new Date().toISOString(),
