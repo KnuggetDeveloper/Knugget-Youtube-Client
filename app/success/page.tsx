@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
@@ -21,26 +22,39 @@ function SuccessContent() {
     setPaymentId(subscription_id);
     setStatus(payment_status);
 
+    // Only run once when component mounts with search params
+    let hasRefreshed = false;
+
     // Refresh user auth to get updated subscription status
     // This ensures the user's profile reflects their new premium status
     const refreshUserData = async () => {
-      if (subscription_id && payment_status === "active") {
+      if (subscription_id && payment_status === "active" && !hasRefreshed) {
+        hasRefreshed = true; // Prevent multiple calls
         setIsRefreshing(true);
         try {
-          await refreshAuth();
+          // Add timeout to prevent infinite loading
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Refresh timeout")), 10000)
+          );
+
+          await Promise.race([refreshAuth(), timeoutPromise]);
           console.log(
             "✅ User profile refreshed after successful subscription"
           );
         } catch (error) {
           console.error("❌ Failed to refresh user profile:", error);
+          // Continue anyway - user can manually refresh later
         } finally {
           setIsRefreshing(false);
         }
+      } else {
+        // No refresh needed, stop loading immediately
+        setIsRefreshing(false);
       }
     };
 
     refreshUserData();
-  }, [searchParams, refreshAuth]);
+  }, [searchParams]); // ✅ REMOVED refreshAuth from dependencies
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
