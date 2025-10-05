@@ -15,16 +15,16 @@ function SuccessContent() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    const payment_id = searchParams.get("payment_id");
+    const subscription_id = searchParams.get("subscription_id");
     const payment_status = searchParams.get("status");
 
-    setPaymentId(payment_id);
+    setPaymentId(subscription_id);
     setStatus(payment_status);
 
     // Refresh user auth to get updated subscription status
     // This ensures the user's profile reflects their new premium status
     const refreshUserData = async () => {
-      if (payment_id && payment_status === "active") {
+      if (subscription_id && payment_status === "active") {
         setIsRefreshing(true);
         try {
           await refreshAuth();
@@ -66,7 +66,7 @@ function SuccessContent() {
         {paymentId && (
           <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <strong>Payment ID:</strong> {paymentId}
+              <strong>Subscription ID:</strong> {paymentId}
             </p>
           </div>
         )}

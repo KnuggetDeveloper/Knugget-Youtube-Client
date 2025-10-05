@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "sonner";
 import { AUTH_STORAGE_KEYS } from "@/types/auth";
 
@@ -136,26 +137,101 @@ class PaymentService {
   }
 
   /**
-   * Cancel subscription
+   * Request subscription cancellation (sends email to admin)
    */
-  async cancelSubscription(): Promise<void> {
+  async requestCancellation(): Promise<{
+    message: string;
+    nextBillingDate?: string;
+  }> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/payment/cancel-subscription`,
+        `${this.baseUrl}/payment/request-cancellation`,
         {
           method: "POST",
           headers: this.getAuthHeaders(),
         }
       );
 
-      const result = await this.handleResponse<{ message: string }>(response);
-      console.log("Subscription cancelled:", result);
-      toast.success("Subscription cancelled successfully");
+      const result = await this.handleResponse<{
+        message: string;
+        nextBillingDate?: string;
+      }>(response);
+
+      console.log("Cancellation request submitted:", result);
+      toast.success("Cancellation request submitted successfully");
+      return result;
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Failed to cancel subscription";
+          : "Failed to request cancellation";
+      toast.error(message);
+      throw error;
+    }
+  }
+
+  /**
+   * Get subscription status
+   */
+  async getSubscriptionStatus(): Promise<{
+    isPremium: boolean;
+    status: string;
+    message: string;
+    nextBillingDate?: string;
+    cancelAtBillingDate?: boolean;
+    subscriptionId?: string;
+    subscription?: any;
+  }> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/payment/subscription-status`,
+        {
+          method: "GET",
+          headers: this.getAuthHeaders(),
+        }
+      );
+
+      const result = await this.handleResponse<{
+        subscription?: any;
+        isPremium?: boolean;
+        status?: string;
+        message?: string;
+        nextBillingDate?: string;
+        cancelAtBillingDate?: boolean;
+        subscriptionId?: string;
+        synced?: boolean;
+      }>(response);
+
+      console.log("Subscription status:", result);
+
+      // Handle both formats - direct subscription object or wrapped data
+      if (result.subscription) {
+        const subscription = result.subscription;
+        return {
+          isPremium: subscription.status === "active",
+          status: subscription.status,
+          message: result.message || `Status: ${subscription.status}`,
+          nextBillingDate: subscription.next_billing_date,
+          cancelAtBillingDate: subscription.cancel_at_next_billing_date,
+          subscriptionId: subscription.subscription_id,
+          subscription: subscription,
+        };
+      } else {
+        // Handle direct data format
+        return {
+          isPremium: result.isPremium || false,
+          status: result.status || "free",
+          message: result.message || "No active subscription",
+          nextBillingDate: result.nextBillingDate,
+          cancelAtBillingDate: result.cancelAtBillingDate,
+          subscriptionId: result.subscriptionId,
+        };
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to get subscription status";
       toast.error(message);
       throw error;
     }

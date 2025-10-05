@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Crown, X, AlertTriangle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { paymentService } from "@/lib/payment-service";
 import { toast } from "sonner";
+import { paymentService } from "@/lib/payment-service";
 
 interface PremiumStatusModalProps {
   isOpen: boolean;
@@ -27,6 +27,30 @@ export function PremiumStatusModal({
 }: PremiumStatusModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{
+    isPremium: boolean;
+    status: string;
+    message: string;
+    nextBillingDate?: string;
+    cancelAtBillingDate?: boolean;
+    subscriptionId?: string;
+  } | null>(null);
+
+  // Fetch subscription status when modal opens
+  useEffect(() => {
+    if (isOpen && user?.plan === "PREMIUM") {
+      fetchSubscriptionStatus();
+    }
+  }, [isOpen, user?.plan]);
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const status = await paymentService.getSubscriptionStatus();
+      setSubscriptionStatus(status);
+    } catch (error) {
+      console.error("Failed to fetch subscription status:", error);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -34,19 +58,24 @@ export function PremiumStatusModal({
     setIsLoading(true);
 
     try {
-      await paymentService.cancelSubscription();
-      toast.success("Subscription cancelled successfully");
+      await paymentService.requestCancellation();
+      toast.success("Cancellation request submitted successfully");
       onClose();
 
+      // Refresh subscription status
+      await fetchSubscriptionStatus();
+
       // Refresh the page to update the user's plan status
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
-      console.error("Cancel subscription failed:", error);
+      console.error("Cancel subscription request failed:", error);
 
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Failed to cancel subscription. Please try again.");
+        toast.error("Failed to request cancellation. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -80,10 +109,53 @@ export function PremiumStatusModal({
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="font-semibold text-green-600">Active</span>
+                  <span className="font-semibold text-green-600">
+                    {subscriptionStatus?.cancelAtBillingDate
+                      ? "Cancelling"
+                      : "Active"}
+                  </span>
                 </div>
                 <p className="text-sm text-muted-foreground">$9.99/month</p>
+                {subscriptionStatus?.message && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {subscriptionStatus.message}
+                  </p>
+                )}
               </div>
+
+              {/* Subscription Status Details */}
+              {subscriptionStatus && (
+                <div className="bg-muted p-3 rounded-lg">
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Status:</span>
+                      <span>{subscriptionStatus.status}</span>
+                    </div>
+                    {subscriptionStatus.nextBillingDate && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          Next Billing:
+                        </span>
+                        <span>
+                          {new Date(
+                            subscriptionStatus.nextBillingDate
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                    {subscriptionStatus.subscriptionId && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">
+                          Subscription ID:
+                        </span>
+                        <span className="font-mono break-all">
+                          {subscriptionStatus.subscriptionId}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* User Info */}
               <div className="space-y-2">
@@ -95,16 +167,6 @@ export function PremiumStatusModal({
                   <span className="text-muted-foreground">Credits:</span>
                   <span>{user.credits}</span>
                 </div>
-                {user.subscriptionId && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      Subscription ID:
-                    </span>
-                    <span className="font-mono text-xs break-all">
-                      {user.subscriptionId}
-                    </span>
-                  </div>
-                )}
               </div>
 
               {/* Actions */}
@@ -112,13 +174,21 @@ export function PremiumStatusModal({
                 <Button variant="outline" onClick={onClose} className="flex-1">
                   Close
                 </Button>
-                <Button
-                  onClick={() => setShowCancelConfirm(true)}
-                  variant="destructive"
-                  className="flex-1"
-                >
-                  Cancel Plan
-                </Button>
+                {subscriptionStatus?.cancelAtBillingDate ? (
+                  <div className="flex-1 bg-yellow-50 border border-yellow-200 p-2 rounded-lg text-center">
+                    <p className="text-xs text-yellow-800">
+                      Cancellation requested
+                    </p>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setShowCancelConfirm(true)}
+                    variant="destructive"
+                    className="flex-1"
+                  >
+                    Request Cancellation
+                  </Button>
+                )}
               </div>
             </div>
           ) : (
@@ -137,13 +207,35 @@ export function PremiumStatusModal({
               </div>
 
               <div className="text-center">
-                <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
                 <p className="text-sm text-muted-foreground mb-2">
-                  Are you sure you want to cancel?
+                  Request subscription cancellation?
                 </p>
-                <p className="text-xs text-red-600">
-                  You&apos;ll lose all Premium features immediately
-                </p>
+                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4">
+                  <p className="text-xs text-blue-800">
+                    ✅ You&apos;ll keep premium access until your next billing
+                    date
+                  </p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    📧 We&apos;ll process your request within 24 hours
+                  </p>
+                </div>
+
+                {/* Email Information */}
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg text-left">
+                  <p className="text-xs text-gray-700 mb-1">
+                    <strong>What happens next:</strong>
+                  </p>
+                  <p className="text-xs text-gray-600 mb-1">
+                    • Request logged for admin review
+                  </p>
+                  <p className="text-xs text-gray-600 mb-1">
+                    • Manual cancellation in DodoPayments dashboard
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    • Premium access continues until billing date
+                  </p>
+                </div>
               </div>
 
               <div className="flex gap-3">
@@ -164,10 +256,10 @@ export function PremiumStatusModal({
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <Spinner size="sm" />
-                      Cancelling...
+                      Requesting...
                     </div>
                   ) : (
-                    "Confirm"
+                    "Request Cancellation"
                   )}
                 </Button>
               </div>
