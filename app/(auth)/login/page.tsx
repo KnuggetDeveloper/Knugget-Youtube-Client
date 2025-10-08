@@ -27,6 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { GoogleSignInButton } from "@/components/auth/google-signin-button";
 
 const loginSchema = z.object({
   email: z
@@ -216,6 +217,23 @@ function LoginPageContent() {
                     "Sign in"
                   )}
                 </Button>
+
+                {/* Divider */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-600" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-gray-800 px-2 text-gray-400">Or</span>
+                  </div>
+                </div>
+
+                {/* Google Sign-In */}
+                <GoogleSignInButton
+                  text="Sign in with Google"
+                  className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                  disabled={isLoading}
+                />
               </form>
             </FormProvider>
           </CardContent>

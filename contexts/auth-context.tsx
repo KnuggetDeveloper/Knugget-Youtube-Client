@@ -434,6 +434,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     error: state.error,
     login,
     signup,
+    signInWithGoogle: async () => {
+      throw new Error("Google Sign-In not implemented in this auth context");
+    },
     logout,
     refreshAuth,
     clearError,

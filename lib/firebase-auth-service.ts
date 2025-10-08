@@ -6,6 +6,8 @@ import {
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail,
+  signInWithPopup,
+  GoogleAuthProvider,
   User as FirebaseUser,
 } from "firebase/auth";
 import { auth } from "./firebase";
@@ -16,7 +18,8 @@ class FirebaseAuthService {
 
   constructor() {
     this.baseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "https://knugget-youtube-backend.onrender.com/api";
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "https://knugget-youtube-backend.onrender.com/api";
   }
 
   // Sign in with email and password
@@ -89,6 +92,37 @@ class FirebaseAuthService {
       return {
         success: false,
         error: error.message || "Sign up failed",
+      };
+    }
+  }
+
+  // Sign in with Google
+  async signInWithGoogle(): Promise<{
+    success: boolean;
+    user?: User;
+    error?: string;
+  }> {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.addScope("email");
+      provider.addScope("profile");
+
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+
+      // Get ID token and sync with backend
+      const idToken = await firebaseUser.getIdToken();
+      const backendUser = await this.syncWithBackend(idToken);
+
+      if (backendUser) {
+        return { success: true, user: backendUser };
+      } else {
+        throw new Error("Failed to sync with backend");
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || "Google sign in failed",
       };
     }
   }

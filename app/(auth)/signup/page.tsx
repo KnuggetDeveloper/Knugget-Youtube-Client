@@ -36,6 +36,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useSignup } from "@/hooks/use-auth-form";
+import { GoogleSignInButton } from "@/components/auth/google-signin-button";
 import { Suspense } from "react";
 
 // Form validation schema
@@ -415,6 +416,24 @@ function SignupPageContent() {
                   "Create account"
                 )}
               </Button>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or
+                  </span>
+                </div>
+              </div>
+
+              {/* Google Sign-In */}
+              <GoogleSignInButton
+                text="Sign up with Google"
+                disabled={isLoading}
+              />
             </form>
           </FormProvider>
         </CardContent>

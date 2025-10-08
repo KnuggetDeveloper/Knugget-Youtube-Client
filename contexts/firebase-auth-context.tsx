@@ -143,6 +143,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  // Sign in with Google
+  async function signInWithGoogle() {
+    try {
+      dispatch({ type: "AUTH_START" });
+
+      const result = await firebaseAuthService.signInWithGoogle();
+
+      if (result.success && result.user) {
+        dispatch({ type: "AUTH_SUCCESS", payload: result.user });
+        router.push("/dashboard");
+      } else {
+        const errorMessage = result.error || "Google sign in failed";
+        dispatch({ type: "AUTH_ERROR", payload: errorMessage });
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = formatError(error);
+      dispatch({ type: "AUTH_ERROR", payload: errorMessage });
+      throw error;
+    }
+  }
+
   // Logout
   async function logout() {
     try {
@@ -241,6 +263,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     error: state.error,
     login,
     signup,
+    signInWithGoogle,
     logout,
     refreshAuth,
     clearError,
