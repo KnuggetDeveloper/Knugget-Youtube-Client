@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummaries } from "@/hooks/use-summaries";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
 // import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";

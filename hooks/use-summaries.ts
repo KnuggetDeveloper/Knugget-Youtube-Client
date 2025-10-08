@@ -10,7 +10,7 @@ import {
 } from "@/types/summary";
 import { summaryService } from "@/lib/summary-service";
 import { formatError } from "@/lib/utils";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 
 /**
  * Hook for managing summaries list with pagination, filtering, and search

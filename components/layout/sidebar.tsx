@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { LogOut, Youtube, Clock } from "lucide-react";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummaries } from "@/hooks/use-summaries";
 import { useUserStats } from "@/hooks/profile-hooks";
 import { BuyNowButton } from "@/components/payment/buy-now-button";

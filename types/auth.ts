@@ -138,6 +138,7 @@ export interface UseAuthReturn {
   refreshAuth: () => Promise<void>;
   clearError: () => void;
   updateProfile: (data: UpdateProfileRequest) => Promise<void>;
+  forgotPassword: (email: string) => Promise<{ success: boolean }>;
 }
 
 export interface UseLoginReturn {

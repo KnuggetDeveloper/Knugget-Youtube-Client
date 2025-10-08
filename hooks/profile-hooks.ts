@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 import { formatError } from "@/lib/utils";
 import { profileService } from "@/lib/profile-service";
 

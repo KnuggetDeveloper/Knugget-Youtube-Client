@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AuthProvider } from "@/contexts/auth-context";
+import { AuthProvider } from "@/contexts/firebase-auth-context";
 import { MainLayout } from "@/components/layout/main-layout";
 import "./globals.css";
 

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 
 function SuccessContent() {
   const searchParams = useSearchParams();

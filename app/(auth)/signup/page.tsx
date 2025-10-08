@@ -1,133 +1,153 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { FormProvider, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Eye, EyeOff, Mail, Lock, User, Chrome, ArrowLeft, CheckCircle } from 'lucide-react'
-import { Spinner } from '@/components/ui/spinner'
-import { useAuth } from '@/contexts/auth-context'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormControl, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useSignup } from '@/hooks/use-auth-form'
-import { Suspense } from 'react'
-
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Chrome,
+  ArrowLeft,
+  CheckCircle,
+} from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/contexts/firebase-auth-context";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useSignup } from "@/hooks/use-auth-form";
+import { Suspense } from "react";
 
 // Form validation schema
-const signupSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Name is required')
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be less than 50 characters'),
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .min(8, 'Password must be at least 8 characters')
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    ),
-  confirmPassword: z
-    .string()
-    .min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-})
+const signupSchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name must be less than 50 characters"),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Please enter a valid email address"),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
-type SignupFormData = z.infer<typeof signupSchema>
+type SignupFormData = z.infer<typeof signupSchema>;
 
 function SignupPageContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { isAuthenticated, isLoading: authLoading } = useAuth()
-  const { signup, isLoading, error, clearError } = useSignup()
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { signup, isLoading, error, clearError } = useSignup();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Get return URL and source from query params
-  const returnUrl = searchParams.get('returnUrl')
-  const source = searchParams.get('source')
-  const isFromExtension = source === 'extension'
+  const returnUrl = searchParams.get("returnUrl");
+  const source = searchParams.get("source");
+  const isFromExtension = source === "extension";
 
   // Form setup
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
-  })
+  });
 
   // Watch password for strength indicator
-  const password = form.watch('password')
+  const password = form.watch("password");
 
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      router.push(returnUrl || '/dashboard')
+      router.push(returnUrl || "/dashboard");
     }
-  }, [isAuthenticated, authLoading, router, returnUrl])
+  }, [isAuthenticated, authLoading, router, returnUrl]);
 
   // Clear error when form changes
   useEffect(() => {
     if (error) {
       const timeout = setTimeout(() => {
-        clearError()
-      }, 5000)
-      return () => clearTimeout(timeout)
+        clearError();
+      }, 5000);
+      return () => clearTimeout(timeout);
     }
-  }, [error, clearError])
+  }, [error, clearError]);
 
   const onSubmit = async (data: SignupFormData) => {
     try {
-      await signup(data.email, data.password, data.name)
+      await signup(data.email, data.password, data.name);
       // Navigation is handled by the auth context
     } catch (err) {
       // Error is handled by the useSignup hook
-      console.error('Signup error:', err)
+      console.error("Signup error:", err);
     }
-  }
+  };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword)
-  }
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   // Password strength checker
   const getPasswordStrength = (password: string) => {
-    let strength = 0
+    let strength = 0;
     const checks = {
       length: password.length >= 8,
       lowercase: /[a-z]/.test(password),
       uppercase: /[A-Z]/.test(password),
       number: /\d/.test(password),
       special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    }
+    };
 
-    Object.values(checks).forEach(check => {
-      if (check) strength++
-    })
+    Object.values(checks).forEach((check) => {
+      if (check) strength++;
+    });
 
-    return { strength, checks }
-  }
+    return { strength, checks };
+  };
 
-  const passwordStrength = getPasswordStrength(password || '')
+  const passwordStrength = getPasswordStrength(password || "");
 
   // Show loading spinner if checking auth state
   if (authLoading) {
@@ -137,7 +157,7 @@ function SignupPageContent() {
           <Spinner size="lg" />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -173,11 +193,13 @@ function SignupPageContent() {
                   Sign up to sync your account with the Chrome extension
                   <div className="flex items-center justify-center mt-2 text-knugget-600">
                     <Chrome className="mr-2 h-4 w-4" />
-                    <span className="text-sm font-medium">Chrome Extension Signup</span>
+                    <span className="text-sm font-medium">
+                      Chrome Extension Signup
+                    </span>
                   </div>
                 </>
               ) : (
-                'Start generating AI-powered summaries in seconds'
+                "Start generating AI-powered summaries in seconds"
               )}
             </CardDescription>
           </div>
@@ -205,14 +227,12 @@ function SignupPageContent() {
                       type="text"
                       placeholder="Enter your full name"
                       className="pl-10"
-                      {...form.register('name')}
+                      {...form.register("name")}
                       disabled={isLoading}
                     />
                   </div>
                 </FormControl>
-                <FormMessage>
-                  {form.formState.errors.name?.message}
-                </FormMessage>
+                <FormMessage>{form.formState.errors.name?.message}</FormMessage>
               </FormItem>
 
               {/* Email Field */}
@@ -226,7 +246,7 @@ function SignupPageContent() {
                       type="email"
                       placeholder="Enter your email"
                       className="pl-10"
-                      {...form.register('email')}
+                      {...form.register("email")}
                       disabled={isLoading}
                     />
                   </div>
@@ -244,10 +264,10 @@ function SignupPageContent() {
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
                       className="pl-10 pr-10"
-                      {...form.register('password')}
+                      {...form.register("password")}
                       disabled={isLoading}
                     />
                     <button
@@ -275,39 +295,72 @@ function SignupPageContent() {
                       {[1, 2, 3, 4, 5].map((level) => (
                         <div
                           key={level}
-                          className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength.strength >= level
-                            ? passwordStrength.strength < 3
-                              ? 'bg-red-500'
-                              : passwordStrength.strength < 4
-                                ? 'bg-yellow-500'
-                                : 'bg-green-500'
-                            : 'bg-gray-200'
-                            }`}
+                          className={`h-1 flex-1 rounded-full transition-colors ${
+                            passwordStrength.strength >= level
+                              ? passwordStrength.strength < 3
+                                ? "bg-red-500"
+                                : passwordStrength.strength < 4
+                                  ? "bg-yellow-500"
+                                  : "bg-green-500"
+                              : "bg-gray-200"
+                          }`}
                         />
                       ))}
                     </div>
                     <div className="text-xs space-y-1">
                       <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-3 w-3 ${passwordStrength.checks.length ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className={passwordStrength.checks.length ? 'text-green-600' : 'text-gray-500'}>
+                        <CheckCircle
+                          className={`h-3 w-3 ${passwordStrength.checks.length ? "text-green-500" : "text-gray-300"}`}
+                        />
+                        <span
+                          className={
+                            passwordStrength.checks.length
+                              ? "text-green-600"
+                              : "text-gray-500"
+                          }
+                        >
                           At least 8 characters
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-3 w-3 ${passwordStrength.checks.lowercase ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className={passwordStrength.checks.lowercase ? 'text-green-600' : 'text-gray-500'}>
+                        <CheckCircle
+                          className={`h-3 w-3 ${passwordStrength.checks.lowercase ? "text-green-500" : "text-gray-300"}`}
+                        />
+                        <span
+                          className={
+                            passwordStrength.checks.lowercase
+                              ? "text-green-600"
+                              : "text-gray-500"
+                          }
+                        >
                           One lowercase letter
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-3 w-3 ${passwordStrength.checks.uppercase ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className={passwordStrength.checks.uppercase ? 'text-green-600' : 'text-gray-500'}>
+                        <CheckCircle
+                          className={`h-3 w-3 ${passwordStrength.checks.uppercase ? "text-green-500" : "text-gray-300"}`}
+                        />
+                        <span
+                          className={
+                            passwordStrength.checks.uppercase
+                              ? "text-green-600"
+                              : "text-gray-500"
+                          }
+                        >
                           One uppercase letter
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-3 w-3 ${passwordStrength.checks.number ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className={passwordStrength.checks.number ? 'text-green-600' : 'text-gray-500'}>
+                        <CheckCircle
+                          className={`h-3 w-3 ${passwordStrength.checks.number ? "text-green-500" : "text-gray-300"}`}
+                        />
+                        <span
+                          className={
+                            passwordStrength.checks.number
+                              ? "text-green-600"
+                              : "text-gray-500"
+                          }
+                        >
                           One number
                         </span>
                       </div>
@@ -318,16 +371,18 @@ function SignupPageContent() {
 
               {/* Confirm Password Field */}
               <FormItem>
-                <FormLabel htmlFor="confirmPassword">Confirm password</FormLabel>
+                <FormLabel htmlFor="confirmPassword">
+                  Confirm password
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
+                      type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your password"
                       className="pl-10 pr-10"
-                      {...form.register('confirmPassword')}
+                      {...form.register("confirmPassword")}
                       disabled={isLoading}
                     />
                     <button
@@ -350,18 +405,14 @@ function SignupPageContent() {
               </FormItem>
 
               {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Spinner size="sm" className="mr-2" />
                     Creating account...
                   </>
                 ) : (
-                  'Create account'
+                  "Create account"
                 )}
               </Button>
             </form>
@@ -384,7 +435,7 @@ function SignupPageContent() {
           {/* Sign In Link */}
           <div className="text-center">
             <Link
-              href={`/register${isFromExtension ? '?source=extension' : ''}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ''}`}
+              href={`/register${isFromExtension ? "?source=extension" : ""}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ""}`}
               className="text-sm text-knugget-600 hover:text-knugget-500 transition-colors font-medium"
             >
               Sign in to your account
@@ -428,30 +479,32 @@ function SignupPageContent() {
       {/* Footer */}
       <div className="mt-8 text-center text-xs text-muted-foreground">
         <p>
-          By creating an account, you agree to our{' '}
+          By creating an account, you agree to our{" "}
           <Link href="/terms" className="underline hover:text-foreground">
             Terms of Service
-          </Link>{' '}
-          and{' '}
+          </Link>{" "}
+          and{" "}
           <Link href="/privacy" className="underline hover:text-foreground">
             Privacy Policy
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={
-      <div className="auth-container">
-        <div className="flex items-center justify-center">
-          <Spinner size="lg" />
+    <Suspense
+      fallback={
+        <div className="auth-container">
+          <div className="flex items-center justify-center">
+            <Spinner size="lg" />
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <SignupPageContent />
     </Suspense>
-  )
+  );
 }

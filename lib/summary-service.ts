@@ -50,7 +50,7 @@ import {
   SUMMARY_ENDPOINTS,
 } from "@/types/summary";
 import { getApiBaseUrl } from "@/lib/utils";
-import { authService } from "@/lib/auth-service";
+import { auth } from "@/lib/firebase";
 
 class SummaryService {
   private baseUrl: string;
@@ -68,7 +68,8 @@ class SummaryService {
   ): Promise<ApiResponse<T>> {
     try {
       const url = `${this.baseUrl}${endpoint}`;
-      const token = authService.getAccessToken();
+      const currentUser = auth.currentUser;
+      const token = currentUser ? await currentUser.getIdToken() : null;
 
       const response = await fetch(url, {
         headers: {
@@ -85,10 +86,21 @@ class SummaryService {
       if (!response.ok) {
         // Handle token expiration
         if (response.status === 401) {
-          const refreshed = await authService.autoRefreshToken();
-          if (refreshed) {
-            // Retry the request with new token
-            return this.makeRequest(endpoint, options);
+          // Firebase automatically refreshes tokens, so just retry once
+          const currentUser = auth.currentUser;
+          if (currentUser) {
+            const newToken = await currentUser.getIdToken(true); // Force refresh
+            if (newToken) {
+              // Update the options with new token and retry
+              const updatedOptions = {
+                ...options,
+                headers: {
+                  ...options.headers,
+                  Authorization: `Bearer ${newToken}`,
+                },
+              };
+              return this.makeRequest(endpoint, updatedOptions);
+            }
           }
         }
 

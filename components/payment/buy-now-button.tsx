@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/additional";
 import { BuyNowModal } from "./buy-now-modal";
 import { PremiumStatusModal } from "./premium-status-modal";
-import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/firebase-auth-context";
 
 interface BuyNowButtonProps {
   variant?: "card" | "button";

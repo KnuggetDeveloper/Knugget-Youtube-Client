@@ -412,6 +412,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  // Forgot password
+  async function forgotPassword(email: string): Promise<{ success: boolean }> {
+    try {
+      const response = await authService.forgotPassword(email);
+      return { success: response.success };
+    } catch (error) {
+      console.error("❌ Forgot password failed:", error);
+      return { success: false };
+    }
+  }
+
   function clearError() {
     dispatch({ type: "AUTH_CLEAR_ERROR" });
   }
@@ -427,6 +438,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     refreshAuth,
     clearError,
     updateProfile,
+    forgotPassword,
   };
 
   return (
