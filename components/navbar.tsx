@@ -127,9 +127,27 @@ export function Navbar() {
                         {user?.email}
                       </p>
                       <div className="flex items-center space-x-2 mt-2">
-                        <span className="text-xs text-muted-foreground">
-                          {user?.credits} credits
-                        </span>
+                        {user?.plan === "FREE" ? (
+                          <span className="text-xs text-muted-foreground">
+                            {user?.credits} credits
+                          </span>
+                        ) : (
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                            <span>
+                              {user?.inputTokensRemaining
+                                ? `${Math.round(user.inputTokensRemaining / 1000)}K`
+                                : "0"}{" "}
+                              input
+                            </span>
+                            <span>•</span>
+                            <span>
+                              {user?.outputTokensRemaining
+                                ? `${Math.round(user.outputTokensRemaining / 1000)}K`
+                                : "0"}{" "}
+                              output
+                            </span>
+                          </div>
+                        )}
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${
                             user?.plan === "PREMIUM"

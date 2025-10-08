@@ -17,6 +17,10 @@ export interface UserProfile {
   emailVerified: boolean;
   createdAt: string;
   lastLoginAt: string | null;
+  // Token management for premium users
+  inputTokensRemaining?: number;
+  outputTokensRemaining?: number;
+  tokenResetDate?: string | null;
 }
 
 export interface UserStats {
@@ -30,6 +34,10 @@ export interface UserStats {
   totalInputTokens: number;
   totalOutputTokens: number;
   totalTokens: number;
+  // Premium token stats
+  inputTokensRemaining?: number;
+  outputTokensRemaining?: number;
+  tokenResetDate?: string | null;
 }
 
 export interface UpdateProfileRequest {
@@ -126,6 +134,9 @@ export function useProfile() {
         emailVerified: user.emailVerified,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
+        inputTokensRemaining: user.inputTokensRemaining,
+        outputTokensRemaining: user.outputTokensRemaining,
+        tokenResetDate: user.tokenResetDate,
       });
       setIsLoading(false);
 

@@ -12,6 +12,10 @@ export interface User {
   emailVerified: boolean;
   createdAt: string;
   lastLoginAt: string | null;
+  // Token management for premium users
+  inputTokensRemaining?: number;
+  outputTokensRemaining?: number;
+  tokenResetDate?: string | null;
 }
 
 export interface AuthData {

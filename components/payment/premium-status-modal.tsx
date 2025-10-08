@@ -17,6 +17,9 @@ interface PremiumStatusModalProps {
     email: string;
     name: string | null;
     subscriptionId?: string | null;
+    inputTokensRemaining?: number;
+    outputTokensRemaining?: number;
+    tokenResetDate?: string | null;
   };
 }
 
@@ -163,10 +166,43 @@ export function PremiumStatusModal({
                   <span className="text-muted-foreground">Email:</span>
                   <span>{user.email}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Credits:</span>
-                  <span>{user.credits}</span>
-                </div>
+                {user.plan === "FREE" ? (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Credits:</span>
+                    <span>{user.credits}</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        Input Tokens:
+                      </span>
+                      <span className="font-mono">
+                        {user.inputTokensRemaining?.toLocaleString() || "0"} /
+                        9,000,000
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        Output Tokens:
+                      </span>
+                      <span className="font-mono">
+                        {user.outputTokensRemaining?.toLocaleString() || "0"} /
+                        600,000
+                      </span>
+                    </div>
+                    {user.tokenResetDate && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          Token Reset:
+                        </span>
+                        <span>
+                          {new Date(user.tokenResetDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
 
               {/* Actions */}

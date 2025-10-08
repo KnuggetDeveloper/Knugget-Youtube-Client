@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummaries } from "@/hooks/use-summaries";
 import { useUserStats } from "@/hooks/profile-hooks";
 import { BuyNowButton } from "@/components/payment/buy-now-button";
+import { TokenUsageDisplay } from "@/components/token/token-usage-display";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
 // import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Button } from "@/components/ui/button";
@@ -151,21 +152,28 @@ export function GlobalSidebar() {
         </div>
       )}
 
-      {/* Token Usage */}
+      {/* Token Usage for Premium Users */}
+      {!sidebarCollapsed && user?.plan === "PREMIUM" && (
+        <div className="px-4 py-3 border-t border-gray-800">
+          <TokenUsageDisplay compact={true} showRefresh={false} />
+        </div>
+      )}
+
+      {/* OpenAI Usage Stats for All Users */}
       {!sidebarCollapsed && user && stats && (
         <div className="px-4 py-3 border-t border-gray-800">
           <div className="text-xs text-gray-400 mb-2 font-medium">
-            OpenAI Usage
+            Total Usage
           </div>
           <div className="space-y-1">
             <div className="flex justify-between text-xs">
-              <span className="text-gray-400">Total Input:</span>
+              <span className="text-gray-400">Input:</span>
               <span className="text-white font-mono">
                 {stats.totalInputTokens.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-400">Total Output:</span>
+              <span className="text-gray-400">Output:</span>
               <span className="text-white font-mono">
                 {stats.totalOutputTokens.toLocaleString()}
               </span>
