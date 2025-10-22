@@ -3,136 +3,31 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  Youtube,
-  Linkedin,
-  Globe,
-  Twitter,
-  Sparkles,
-  Clock,
-  Brain,
-  Shield,
-  Check,
-  Star,
-  ChevronDown,
-  Menu,
-  X,
-} from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/additional";
 
-const features = [
-  {
-    icon: Youtube,
-    title: "YouTube Summaries",
-    description: "Get AI-powered summaries of any YouTube video in seconds",
-    color: "text-red-500",
-  },
-  {
-    icon: Linkedin,
-    title: "LinkedIn Posts",
-    description:
-      "Save and organize important LinkedIn content with smart insights",
-    color: "text-blue-500",
-  },
-  {
-    icon: Globe,
-    title: "Web Articles",
-    description: "Extract key insights from any article or blog post",
-    color: "text-green-500",
-  },
-  {
-    icon: Twitter,
-    title: "Social Content",
-    description: "Capture and summarize content from across social platforms",
-    color: "text-blue-400",
-  },
-];
-
-const benefits = [
-  {
-    icon: Clock,
-    title: "Save Time",
-    description: "Get the essence of long-form content in minutes, not hours",
-  },
-  {
-    icon: Brain,
-    title: "AI-Powered",
-    description: "Advanced AI extracts key insights and actionable takeaways",
-  },
-  {
-    icon: Shield,
-    title: "Privacy First",
-    description: "Your data is secure and never shared with third parties",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "Product Manager",
-    company: "TechCorp",
-    content:
-      "Knugget has transformed how I consume content. I can now stay up-to-date with industry trends without spending hours reading.",
-    rating: 5,
-  },
-  {
-    name: "Marcus Johnson",
-    role: "Content Creator",
-    company: "Independent",
-    content:
-      "The YouTube summaries are incredibly accurate. It's like having a personal assistant that watches videos for me.",
-    rating: 5,
-  },
-  {
-    name: "Elena Rodriguez",
-    role: "Research Lead",
-    company: "Innovation Labs",
-    content:
-      "Perfect for research. I can quickly extract insights from dozens of articles and organize them efficiently.",
-    rating: 5,
-  },
-];
-
-const pricingPlans = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    features: [
-      "10 AI summaries per month",
-      "Chrome extension access",
-      "Basic transcript viewing",
-      "Community support",
-    ],
-    cta: "Get Started Free",
-    popular: false,
-  },
-  {
-    name: "Premium",
-    price: "$9.99",
-    period: "per month",
-    features: [
-      "Unlimited AI summaries",
-      "Advanced summarization",
-      "Export to multiple formats",
-      "Search and organize summaries",
-      "Priority support",
-      "Early access to new features",
-    ],
-    cta: "Start Free Trial",
-    popular: true,
-  },
+// Floating icons for the background
+const floatingIcons = [
+  { icon: "🔬", id: "icon-1", delay: "0s" },
+  { icon: "👍", id: "icon-2", delay: "1s" },
+  { icon: "📹", id: "icon-3", delay: "2s" },
+  { icon: "🎤", id: "icon-4", delay: "3s" },
+  { icon: "🧠", id: "icon-5", delay: "4s" },
+  { icon: "🚀", id: "icon-6", delay: "5s" },
+  { icon: "👤", id: "icon-7", delay: "0.5s" },
+  { icon: "⭐", id: "icon-8", delay: "1.5s" },
+  { icon: "🦄", id: "icon-9", delay: "2.5s" },
+  { icon: "⚔️", id: "icon-10", delay: "3.5s" },
 ];
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState("Insightful");
+  const [selectedView, setSelectedView] = useState("List");
+  const [selectedLength, setSelectedLength] = useState("Auto");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -150,134 +45,207 @@ export default function LandingPage() {
     }
   };
 
+  const handleInstallClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Add ripple effect
+    const button = e.currentTarget;
+    const ripple = document.createElement("div");
+    ripple.className = "absolute rounded-full bg-orange-300/30 animate-ping";
+    ripple.style.width = "20px";
+    ripple.style.height = "20px";
+    ripple.style.left = "50%";
+    ripple.style.top = "50%";
+    ripple.style.transform = "translate(-50%, -50%)";
+
+    button.style.position = "relative";
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+
+    // Handle actual install logic here
+    handleGetStarted();
+  };
+
+  const handleVideoClick = () => {
+    // Simulate video play/pause
+    console.log("Video clicked");
+  };
+
+  const handleControlClick = (control: string) => {
+    console.log(`Control clicked: ${control}`);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundColor: "var(--primary-bg)",
+        color: "var(--text-primary)",
+        fontFamily: "var(--font-primary)",
+      }}
+    >
       {/* Navigation */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-gray-950/95 backdrop-blur-md border-b border-gray-800"
-            : "bg-transparent"
+          scrolled ? "backdrop-blur-md border-b" : ""
         }`}
+        style={{
+          background: scrolled ? "rgba(0, 0, 0, 0.95)" : "rgba(0, 0, 0, 0.9)",
+          borderBottomColor: scrolled
+            ? "rgba(255, 107, 53, 0.3)"
+            : "var(--border-color)",
+        }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg knugget-gradient flex items-center justify-center">
-                <span className="text-white font-bold text-lg">K</span>
+              <div
+                className="h-8 w-8 rounded flex items-center justify-center"
+                style={{
+                  filter: "drop-shadow(0 0 10px rgba(255, 107, 53, 0.5))",
+                }}
+              >
+                <span
+                  className="text-lg font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  K
+                </span>
               </div>
-              <span className="text-xl font-bold">Knugget AI</span>
+              <span
+                className="text-xl font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Knugget
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <Link
-                href="#features"
-                className="text-gray-300 hover:text-white transition-colors"
+                href="#"
+                className="transition-colors"
+                style={{
+                  color: "var(--text-secondary)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-secondary)")
+                }
               >
-                Features
-              </Link>
-              <Link
-                href="#pricing"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link
-                href="#testimonials"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Reviews
               </Link>
               {isAuthenticated ? (
                 <Button
                   onClick={() => router.push("/")}
-                  className="bg-orange-500 hover:bg-orange-600"
+                  className="px-6 py-2 rounded font-semibold transition-all duration-300 hover:transform hover:translate-y-[-2px]"
+                  style={{
+                    background: "var(--accent-gradient)",
+                    color: "var(--primary-bg)",
+                    boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "var(--accent-glow-strong)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 rgba(255, 107, 53, 0)";
+                  }}
                 >
                   Go to Dashboard
                 </Button>
               ) : (
-                <div className="flex items-center space-x-4">
-                  <Link
-                    href="/login"
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Button
-                    onClick={handleGetStarted}
-                    className="bg-orange-500 hover:bg-orange-600"
-                  >
-                    Get Started
-                  </Button>
-                </div>
+                <button
+                  onClick={handleGetStarted}
+                  className="px-6 py-2 rounded font-semibold transition-all duration-300 hover:transform hover:translate-y-[-2px]"
+                  style={{
+                    background: "var(--accent-gradient)",
+                    color: "var(--primary-bg)",
+                    boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "var(--accent-glow-strong)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 rgba(255, 107, 53, 0)";
+                  }}
+                >
+                  G Sign In
+                </button>
               )}
             </div>
 
             {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+            <button
+              className="md:hidden p-2 rounded transition-colors"
+              style={{ color: "var(--text-secondary)" }}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "var(--text-primary)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--text-secondary)")
+              }
             >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
+              {mobileMenuOpen ? "✕" : "☰"}
+            </button>
           </div>
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-800">
+            <div
+              className="md:hidden py-4 border-t"
+              style={{ borderTopColor: "var(--border-color)" }}
+            >
               <div className="space-y-4">
                 <Link
-                  href="#features"
-                  className="block text-gray-300 hover:text-white transition-colors"
+                  href="#"
+                  className="block transition-colors"
+                  style={{ color: "var(--text-secondary)" }}
                   onClick={() => setMobileMenuOpen(false)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--text-primary)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--text-secondary)")
+                  }
                 >
-                  Features
-                </Link>
-                <Link
-                  href="#pricing"
-                  className="block text-gray-300 hover:text-white transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Pricing
-                </Link>
-                <Link
-                  href="#testimonials"
-                  className="block text-gray-300 hover:text-white transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Reviews
+                  EN
                 </Link>
                 {isAuthenticated ? (
                   <Button
-                    onClick={() => router.push("/")}
-                    className="w-full bg-orange-500 hover:bg-orange-600"
+                    onClick={() => {
+                      router.push("/");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full px-6 py-2 rounded font-semibold"
+                    style={{
+                      background: "var(--accent-gradient)",
+                      color: "var(--primary-bg)",
+                    }}
                   >
                     Go to Dashboard
                   </Button>
                 ) : (
-                  <div className="space-y-2">
-                    <Link
-                      href="/login"
-                      className="block text-gray-300 hover:text-white transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                    <Button
-                      onClick={handleGetStarted}
-                      className="w-full bg-orange-500 hover:bg-orange-600"
-                    >
-                      Get Started
-                    </Button>
-                  </div>
+                  <button
+                    onClick={() => {
+                      handleGetStarted();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full px-6 py-2 rounded font-semibold"
+                    style={{
+                      background: "var(--accent-gradient)",
+                      color: "var(--primary-bg)",
+                    }}
+                  >
+                    G Sign In
+                  </button>
                 )}
               </div>
             </div>
@@ -286,391 +254,412 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-8">
-            <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/20 mb-4">
-              <Sparkles className="w-3 h-3 mr-1" />
-              AI-Powered Content Intelligence
-            </Badge>
-          </div>
+      <section
+        className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 relative overflow-hidden"
+        style={{
+          background: "var(--primary-bg)",
+          paddingTop: "70px",
+        }}
+      >
+        <div className="max-w-6xl mx-auto text-center relative z-10">
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Turn Any Content Into
-            <span className="block knugget-gradient-text">
-              Actionable Insights
-            </span>
+          {/* Main Title */}
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-tight fade-in"
+            style={{ animationDelay: "0.2s" }}
+          >
+            <div style={{ color: "var(--text-primary)" }} className="mb-4">
+              Summarize Videos Within YouTube
+            </div>
+            <div className="knugget-gradient-text">
+              Save Time, Get Insights Instantly!
+            </div>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Get AI-powered summaries of YouTube videos, LinkedIn posts,
-            articles, and more. Save hours of reading and never miss important
-            insights.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button
-              onClick={handleGetStarted}
-              size="lg"
-              className="bg-orange-500 hover:bg-orange-600 text-lg px-8 py-6"
+          {/* CTA Button */}
+          <div className="mb-8 fade-in" style={{ animationDelay: "0.3s" }}>
+            <button
+              onClick={handleInstallClick}
+              className="inline-flex items-center px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 relative overflow-hidden hover:transform hover:translate-y-[-3px]"
+              style={{
+                background: "var(--text-primary)",
+                color: "var(--primary-bg)",
+                boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 15px 35px rgba(255, 107, 53, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 0 rgba(255, 107, 53, 0)";
+              }}
             >
-              Start for Free
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 text-lg px-8 py-6"
-            >
-              Watch Demo
-            </Button>
+              <span className="mr-3 text-xl">🌐</span>
+              <span>Install on Chrome</span>
+            </button>
           </div>
+        </div>
 
-          {/* Platform Icons */}
-          <div className="flex justify-center items-center space-x-8 text-gray-500">
-            <div className="flex items-center space-x-2">
-              <Youtube className="w-6 h-6 text-red-500" />
-              <span className="text-sm">YouTube</span>
+        {/* Background Icons */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          {floatingIcons.map((item, index) => (
+            <div
+              key={item.id}
+              className="absolute text-2xl float-animation"
+              style={{
+                color: "rgba(255, 107, 53, 0.1)",
+                animationDelay: item.delay,
+                top: `${10 + index * 7}%`,
+                left: index % 2 === 0 ? `${10 + index * 2}%` : "auto",
+                right: index % 2 === 1 ? `${10 + index * 2}%` : "auto",
+              }}
+            >
+              {item.icon}
             </div>
-            <div className="flex items-center space-x-2">
-              <Linkedin className="w-6 h-6 text-blue-500" />
-              <span className="text-sm">LinkedIn</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Globe className="w-6 h-6 text-green-500" />
-              <span className="text-sm">Websites</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Twitter className="w-6 h-6 text-blue-400" />
-              <span className="text-sm">Twitter</span>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything You Need to Stay Informed
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Powerful AI tools to help you consume and organize content more
-              efficiently
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-            {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-all duration-300"
-              >
-                <CardContent className="p-6 text-center">
-                  <feature.icon
-                    className={`w-12 h-12 ${feature.color} mx-auto mb-4`}
-                  />
-                  <h3 className="text-xl font-semibold mb-3 text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-400">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="text-center">
-                <benefit.icon className="w-16 h-16 text-orange-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-3 text-white">
-                  {benefit.title}
-                </h3>
-                <p className="text-gray-400 text-lg">{benefit.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
+      {/* Main Content Section */}
       <section
-        id="testimonials"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900"
+        className="py-16 min-h-screen"
+        style={{ background: "var(--secondary-bg)" }}
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Loved by Professionals Worldwide
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              See how Knugget is helping people save time and stay informed
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-gray-800 border-gray-700">
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 text-yellow-500 fill-current"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-300 mb-6 italic">
-                    &quot;{testimonial.content}&quot;
-                  </p>
-                  <div>
-                    <p className="font-semibold text-white">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      {testimonial.role} at {testimonial.company}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Start free and upgrade when you need more power
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <Card
-                key={index}
-                className={`relative bg-gray-800 border-gray-700 ${
-                  plan.popular ? "border-orange-500 ring-1 ring-orange-500" : ""
-                }`}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* Left Column - Video Player */}
+            <div className="space-y-6">
+              {/* Featured Video */}
+              <div
+                className="rounded-xl border overflow-hidden transition-all duration-300 hover:transform hover:translate-y-[-5px]"
+                style={{
+                  background: "var(--card-bg)",
+                  borderColor: "var(--border-color)",
+                  boxShadow: "var(--shadow-lg)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "var(--accent-glow)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "var(--shadow-lg)";
+                }}
               >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-orange-500 text-white">
-                      Most Popular
-                    </Badge>
+                <div
+                  className="relative h-[300px] flex items-center justify-center cursor-pointer"
+                  style={{
+                    background: "linear-gradient(135deg, #333 0%, #555 100%)",
+                  }}
+                  onClick={handleVideoClick}
+                >
+                  <div
+                    className="text-4xl transition-transform duration-300 hover:scale-110"
+                    style={{
+                      color: "var(--accent-primary)",
+                      textShadow: "var(--accent-glow)",
+                    }}
+                  >
+                    ▶
                   </div>
-                )}
+                  <div className="absolute bottom-4 right-4">
+                    <div
+                      className="px-3 py-1 rounded text-sm font-medium"
+                      style={{
+                        background: "rgba(0, 0, 0, 0.8)",
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      2:26:45
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3
+                    className="text-xl font-semibold mb-2 leading-tight"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    30 Years of Business Knowledge in 2hrs 26mins
+                  </h3>
+                  <p
+                    className="text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    © Simon Squibb
+                  </p>
+                </div>
+              </div>
 
-                <CardContent className="p-8">
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold mb-2 text-white">
-                      {plan.name}
-                    </h3>
-                    <div className="mb-4">
-                      <span className="text-4xl font-bold text-white">
-                        {plan.price}
-                      </span>
-                      <span className="text-gray-400 ml-2">{plan.period}</span>
+              {/* Related Videos */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { title: "$0 → $1m" },
+                  { title: "Lex Fridman #438" },
+                  { title: "HOW TO STUDY & LEARN" },
+                ].map((video, index) => (
+                  <div
+                    key={index}
+                    className="rounded-lg border overflow-hidden cursor-pointer transition-all duration-300 hover:transform hover:translate-y-[-3px]"
+                    style={{
+                      background: "var(--card-bg)",
+                      borderColor: "var(--border-color)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor =
+                        "var(--accent-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "var(--border-color)";
+                    }}
+                  >
+                    <div
+                      className="h-[120px] flex items-center justify-center"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #444 0%, #666 100%)",
+                      }}
+                    >
+                      <div
+                        className="px-3 py-2 rounded text-xs font-medium text-center"
+                        style={{
+                          background: "rgba(0, 0, 0, 0.8)",
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        {video.title}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Summary Panel */}
+            <div
+              className="rounded-xl border overflow-hidden h-fit"
+              style={{
+                background: "var(--card-bg)",
+                borderColor: "var(--border-color)",
+                boxShadow: "var(--shadow-lg)",
+              }}
+            >
+              {/* Controls/Tabs */}
+              <div
+                className="p-4 border-b flex items-center justify-between flex-wrap gap-4"
+                style={{
+                  background: "var(--secondary-bg)",
+                  borderBottomColor: "var(--border-color)",
+                }}
+              >
+                <div className="flex gap-2">
+                  {[
+                    { icon: "💎", active: true },
+                    { icon: "📋", active: false },
+                    { icon: "💬", active: false },
+                    { icon: "📝", active: false },
+                  ].map((btn, index) => (
+                    <button
+                      key={index}
+                      className="w-10 h-10 flex items-center justify-center rounded border transition-all duration-300"
+                      style={{
+                        borderColor: btn.active
+                          ? "var(--accent-primary)"
+                          : "var(--border-color)",
+                        color: btn.active
+                          ? "var(--accent-primary)"
+                          : "var(--text-secondary)",
+                        boxShadow: btn.active ? "var(--accent-glow)" : "none",
+                      }}
+                      onClick={() => handleControlClick(btn.icon)}
+                      onMouseEnter={(e) => {
+                        if (!btn.active) {
+                          e.currentTarget.style.borderColor =
+                            "var(--accent-primary)";
+                          e.currentTarget.style.color = "var(--accent-primary)";
+                          e.currentTarget.style.boxShadow =
+                            "var(--accent-glow)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!btn.active) {
+                          e.currentTarget.style.borderColor =
+                            "var(--border-color)";
+                          e.currentTarget.style.color = "var(--text-secondary)";
+                          e.currentTarget.style.boxShadow = "none";
+                        }
+                      }}
+                    >
+                      {btn.icon}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    className="w-10 h-10 flex items-center justify-center rounded border transition-all duration-300"
+                    style={{
+                      borderColor: "var(--border-color)",
+                      color: "var(--text-secondary)",
+                    }}
+                    onClick={() => handleControlClick("share")}
+                  >
+                    📤
+                  </button>
+                  <button
+                    className="w-10 h-10 flex items-center justify-center rounded border transition-all duration-300"
+                    style={{
+                      borderColor: "var(--border-color)",
+                      color: "var(--text-secondary)",
+                    }}
+                    onClick={() => handleControlClick("settings")}
+                  >
+                    ⚙️
+                  </button>
+                </div>
+
+                <div className="flex gap-2">
+                  {[
+                    {
+                      value: selectedFormat,
+                      options: ["Insightful", "Detailed", "Brief"],
+                    },
+                    {
+                      value: selectedView,
+                      options: ["List", "Cards", "Timeline"],
+                    },
+                    {
+                      value: selectedLength,
+                      options: ["Auto", "Short", "Long"],
+                    },
+                  ].map((dropdown, index) => (
+                    <select
+                      key={index}
+                      value={dropdown.value}
+                      onChange={(e) => {
+                        if (index === 0) setSelectedFormat(e.target.value);
+                        if (index === 1) setSelectedView(e.target.value);
+                        if (index === 2) setSelectedLength(e.target.value);
+                      }}
+                      className="px-3 py-2 rounded border text-sm cursor-pointer transition-colors"
+                      style={{
+                        background: "var(--card-bg)",
+                        borderColor: "var(--border-color)",
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      {dropdown.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ))}
+                </div>
+              </div>
+
+              {/* Summary Content */}
+              <div className="p-6 max-h-[600px] overflow-y-auto">
+                <div className="space-y-8">
+                  {/* Business Fundamentals Section */}
+                  <div>
+                    <h4
+                      className="text-xl font-semibold mb-4 relative"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Business Fundamentals
+                      <div
+                        className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+                        style={{ background: "var(--accent-gradient)" }}
+                      />
+                    </h4>
+                    <div className="space-y-4">
+                      {[
+                        {
+                          icon: "🔥",
+                          text: "Start a business with passion, not an idea: combine forces with others to execute on what you love, like marketing and graphic illustrations, rather than starting with an original idea and trying to do it alone.",
+                        },
+                        {
+                          icon: "🎯",
+                          text: "Install a purpose bigger than yourself in your business to manage people and reduce stress, as managing people is one of the biggest stresses of building a company.",
+                        },
+                        {
+                          icon: "💰",
+                          text: "Delay gratification and focus on building value for users: build a brand, not a business, and wait to monetize until you have a massive user base, like Facebook and Instagram did.",
+                        },
+                      ].map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex gap-4 items-start p-2 rounded transition-all duration-300"
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                              "rgba(255, 107, 53, 0.05)";
+                            e.currentTarget.style.margin = "0 -8px";
+                            e.currentTarget.style.padding = "8px";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.margin = "0";
+                            e.currentTarget.style.padding = "8px 0";
+                          }}
+                        >
+                          <span className="text-lg flex-shrink-0 mt-0.5">
+                            {item.icon}
+                          </span>
+                          <span
+                            className="text-sm leading-relaxed"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {item.text}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  <ul className="space-y-4 mb-8">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center">
-                        <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    onClick={handleGetStarted}
-                    className={`w-full ${
-                      plan.popular
-                        ? "bg-orange-500 hover:bg-orange-600"
-                        : "bg-gray-700 hover:bg-gray-600"
-                    }`}
-                  >
-                    {plan.cta}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-500 to-orange-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-            Ready to Transform How You Consume Content?
-          </h2>
-          <p className="text-xl mb-8 text-orange-100">
-            Join thousands of professionals who use Knugget to stay informed and
-            save time.
-          </p>
-          <Button
-            onClick={handleGetStarted}
-            size="lg"
-            className="bg-white text-orange-600 hover:bg-gray-100 text-lg px-8 py-6"
-          >
-            Start Your Free Trial
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-900 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
-            <div className="space-y-4">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-lg knugget-gradient flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">K</span>
+                  {/* Strategy and Growth Section */}
+                  <div>
+                    <h4
+                      className="text-xl font-semibold mb-4 relative"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Strategy and Growth
+                      <div
+                        className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+                        style={{ background: "var(--accent-gradient)" }}
+                      />
+                    </h4>
+                    <div className="space-y-4">
+                      <div
+                        className="flex gap-4 items-start p-2 rounded transition-all duration-300"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background =
+                            "rgba(255, 107, 53, 0.05)";
+                          e.currentTarget.style.margin = "0 -8px";
+                          e.currentTarget.style.padding = "8px";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
+                          e.currentTarget.style.margin = "0";
+                          e.currentTarget.style.padding = "8px 0";
+                        }}
+                      >
+                        <span className="text-lg flex-shrink-0 mt-0.5">💡</span>
+                        <span
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Use mind maps instead of business plans: start in the
+                          middle with your hobby or passion, then add the
+                          business, allowing for infinite thinking and mapping
+                          out different directions
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xl font-bold">Knugget AI</span>
-              </Link>
-              <p className="text-gray-400">
-                AI-powered content intelligence for the modern professional.
-              </p>
-            </div>
-
-            {/* Product */}
-            <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="#features"
-                    className="hover:text-white transition-colors"
-                  >
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#pricing"
-                    className="hover:text-white transition-colors"
-                  >
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/chrome-extension"
-                    className="hover:text-white transition-colors"
-                  >
-                    Chrome Extension
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/about"
-                    className="hover:text-white transition-colors"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/blog"
-                    className="hover:text-white transition-colors"
-                  >
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-white transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h3 className="text-white font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/help"
-                    className="hover:text-white transition-colors"
-                  >
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="hover:text-white transition-colors"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="hover:text-white transition-colors"
-                  >
-                    Terms of Service
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} Knugget AI. All rights reserved.
-            </p>
-            <div className="flex space-x-4 mt-4 sm:mt-0">
-              <Link
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </Link>
+              </div>
             </div>
           </div>
         </div>
-      </footer>
-
-      {/* Scroll to top indicator */}
-      <Link
-        href="#"
-        className="fixed bottom-8 right-8 bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-75 hover:opacity-100"
-        onClick={(e) => {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      >
-        <ChevronDown className="w-5 h-5 rotate-180" />
-      </Link>
+      </section>
     </div>
   );
 }
