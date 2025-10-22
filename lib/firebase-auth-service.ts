@@ -110,14 +110,37 @@ class FirebaseAuthService {
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
 
-      // Get ID token and sync with backend
+      // Get ID token and sync with backend with retry logic
       const idToken = await firebaseUser.getIdToken();
-      const backendUser = await this.syncWithBackend(idToken);
+      let backendUser = await this.syncWithBackend(idToken);
+
+      // If first sync fails, retry once after a short delay
+      if (!backendUser) {
+        console.log("First backend sync failed, retrying...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        backendUser = await this.syncWithBackend(idToken);
+      }
 
       if (backendUser) {
         return { success: true, user: backendUser };
       } else {
-        throw new Error("Failed to sync with backend");
+        // Even if backend sync fails, Firebase auth succeeded
+        // Return a basic user object from Firebase data
+        const basicUser: User = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email || "",
+          name: firebaseUser.displayName || "",
+          avatar: firebaseUser.photoURL || "",
+          plan: "FREE",
+          credits: 3,
+          subscriptionId: null,
+          emailVerified: firebaseUser.emailVerified,
+          createdAt: new Date().toISOString(),
+          lastLoginAt: new Date().toISOString(),
+        };
+
+        console.warn("Backend sync failed, using Firebase user data");
+        return { success: true, user: basicUser };
       }
     } catch (error: any) {
       return {
