@@ -18,14 +18,6 @@ import {
 } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/firebase-auth-context";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +30,7 @@ import {
 import { useSignup } from "@/hooks/use-auth-form";
 import { GoogleSignInButton } from "@/components/auth/google-signin-button";
 import { Suspense } from "react";
+import Image from "next/image";
 
 // Form validation schema
 const signupSchema = z
@@ -153,360 +146,669 @@ function SignupPageContent() {
   // Show loading spinner if checking auth state
   if (authLoading) {
     return (
-      <div className="auth-container">
-        <div className="flex items-center justify-center">
-          <Spinner size="lg" />
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="auth-container">
-      <Card className="auth-card">
-        <CardHeader className="space-y-4">
-          {/* Back to website link for extension users */}
-          {isFromExtension && (
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* Navigation */}
+      <nav className="absolute top-0 left-0 right-0 z-10 p-6">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <div className="flex items-center space-x-3">
+            <Image
+              src="/logo.png"
+              alt="Knugget Logo"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
+            <span className="text-2xl font-bold text-white">Knugget</span>
+          </div>
+          <div className="flex items-center space-x-6">
             <Link
-              href="/"
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              href="#"
+              className="text-gray-400 hover:text-orange-500 transition-colors"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to website
+              EN
             </Link>
-          )}
+            <Link
+              href="#"
+              className="text-gray-400 hover:text-orange-500 transition-colors"
+            >
+              Need Help?
+            </Link>
+          </div>
+        </div>
+      </nav>
 
-          {/* Logo */}
-          <div className="flex justify-center">
-            <div className="h-12 w-12 rounded-xl knugget-gradient flex items-center justify-center">
-              <span className="text-white font-bold text-xl">K</span>
+      {/* Background Icons */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-20 left-10 text-4xl opacity-20 animate-bounce"
+          style={{ animationDelay: "0s" }}
+        >
+          🔬
+        </div>
+        <div
+          className="absolute top-32 right-20 text-3xl opacity-20 animate-bounce"
+          style={{ animationDelay: "0.5s" }}
+        >
+          👍
+        </div>
+        <div
+          className="absolute top-60 left-1/4 text-5xl opacity-20 animate-bounce"
+          style={{ animationDelay: "1s" }}
+        >
+          📹
+        </div>
+        <div
+          className="absolute bottom-40 right-10 text-4xl opacity-20 animate-bounce"
+          style={{ animationDelay: "1.5s" }}
+        >
+          🎤
+        </div>
+        <div
+          className="absolute bottom-20 left-20 text-3xl opacity-20 animate-bounce"
+          style={{ animationDelay: "2s" }}
+        >
+          🧠
+        </div>
+        <div
+          className="absolute top-1/2 right-1/4 text-4xl opacity-20 animate-bounce"
+          style={{ animationDelay: "2.5s" }}
+        >
+          🚀
+        </div>
+        <div
+          className="absolute bottom-60 left-1/3 text-3xl opacity-20 animate-bounce"
+          style={{ animationDelay: "3s" }}
+        >
+          👤
+        </div>
+        <div
+          className="absolute top-40 right-1/3 text-4xl opacity-20 animate-bounce"
+          style={{ animationDelay: "3.5s" }}
+        >
+          ⭐
+        </div>
+        <div
+          className="absolute bottom-32 right-1/2 text-5xl opacity-20 animate-bounce"
+          style={{ animationDelay: "4s" }}
+        >
+          🦄
+        </div>
+        <div
+          className="absolute top-80 left-1/2 text-3xl opacity-20 animate-bounce"
+          style={{ animationDelay: "4.5s" }}
+        >
+          ⚔️
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex items-center justify-center min-h-screen pt-20 pb-10 px-4">
+        <div
+          className="flex max-w-6xl w-full rounded-2xl shadow-2xl overflow-hidden"
+          style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333" }}
+        >
+          {/* Signup Card */}
+          <div className="flex-1 p-8 lg:p-12 flex flex-col items-center justify-center">
+            <div className="w-full max-w-md mx-auto">
+              {/* Back to website link for extension users */}
+              {isFromExtension && (
+                <Link
+                  href="/"
+                  className="inline-flex items-center text-sm hover:text-white transition-colors mb-6"
+                  style={{ color: "#cccccc" }}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to website
+                </Link>
+              )}
+
+              <div>
+                <div className="text-center mb-8">
+                  <h1 className="text-3xl font-bold mb-2 knugget-gradient-text">
+                    Create your Knugget account
+                  </h1>
+                  <p style={{ color: "#cccccc" }}>
+                    {isFromExtension ? (
+                      <>
+                        Sign up to sync your account with the Chrome extension
+                        <div
+                          className="flex items-center justify-center mt-2"
+                          style={{ color: "#ff6b35" }}
+                        >
+                          <Chrome className="mr-2 h-4 w-4" />
+                          <span className="text-sm font-medium">
+                            Chrome Extension Signup
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      "Start generating AI-powered summaries in seconds"
+                    )}
+                  </p>
+                </div>
+
+                {/* Error Alert */}
+                {error && (
+                  <Alert variant="destructive" className="mb-6">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Signup Form */}
+                <FormProvider {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
+                    {/* Name Field */}
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="name"
+                        className="font-medium"
+                        style={{ color: "#cccccc" }}
+                      >
+                        Full name
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <User
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
+                            style={{ color: "#888888" }}
+                          />
+                          <Input
+                            id="name"
+                            type="text"
+                            placeholder="Enter your full name"
+                            className="pl-10 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                            style={{
+                              backgroundColor: "#111111",
+                              border: "1px solid #333333",
+                              color: "#ffffff",
+                            }}
+                            {...form.register("name")}
+                            disabled={isLoading}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage
+                        className="text-sm"
+                        style={{ color: "#ff4444" }}
+                      >
+                        {form.formState.errors.name?.message}
+                      </FormMessage>
+                    </FormItem>
+
+                    {/* Email Field */}
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="email"
+                        className="font-medium"
+                        style={{ color: "#cccccc" }}
+                      >
+                        Email address
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
+                            style={{ color: "#888888" }}
+                          />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            className="pl-10 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                            style={{
+                              backgroundColor: "#111111",
+                              border: "1px solid #333333",
+                              color: "#ffffff",
+                            }}
+                            {...form.register("email")}
+                            disabled={isLoading}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage
+                        className="text-sm"
+                        style={{ color: "#ff4444" }}
+                      >
+                        {form.formState.errors.email?.message}
+                      </FormMessage>
+                    </FormItem>
+
+                    {/* Password Field */}
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="password"
+                        className="font-medium"
+                        style={{ color: "#cccccc" }}
+                      >
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
+                            style={{ color: "#888888" }}
+                          />
+                          <Input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Create a strong password"
+                            className="pl-10 pr-10 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                            style={{
+                              backgroundColor: "#111111",
+                              border: "1px solid #333333",
+                              color: "#ffffff",
+                            }}
+                            {...form.register("password")}
+                            disabled={isLoading}
+                          />
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:text-orange-500 transition-colors"
+                            style={{ color: "#888888" }}
+                            disabled={isLoading}
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage
+                        className="text-sm"
+                        style={{ color: "#ff4444" }}
+                      >
+                        {form.formState.errors.password?.message}
+                      </FormMessage>
+
+                      {/* Password Strength Indicator */}
+                      {password && (
+                        <div className="mt-2 space-y-2">
+                          <div className="flex space-x-1">
+                            {[1, 2, 3, 4, 5].map((level) => (
+                              <div
+                                key={level}
+                                className={`h-1 flex-1 rounded-full transition-colors ${
+                                  passwordStrength.strength >= level
+                                    ? passwordStrength.strength < 3
+                                      ? "bg-red-500"
+                                      : passwordStrength.strength < 4
+                                        ? "bg-yellow-500"
+                                        : "bg-green-500"
+                                    : "bg-gray-600"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <div className="text-xs space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <CheckCircle
+                                className={`h-3 w-3 ${passwordStrength.checks.length ? "text-green-400" : "text-gray-500"}`}
+                              />
+                              <span
+                                className={
+                                  passwordStrength.checks.length
+                                    ? "text-green-400"
+                                    : "text-gray-400"
+                                }
+                              >
+                                At least 8 characters
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <CheckCircle
+                                className={`h-3 w-3 ${passwordStrength.checks.lowercase ? "text-green-400" : "text-gray-500"}`}
+                              />
+                              <span
+                                className={
+                                  passwordStrength.checks.lowercase
+                                    ? "text-green-400"
+                                    : "text-gray-400"
+                                }
+                              >
+                                One lowercase letter
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <CheckCircle
+                                className={`h-3 w-3 ${passwordStrength.checks.uppercase ? "text-green-400" : "text-gray-500"}`}
+                              />
+                              <span
+                                className={
+                                  passwordStrength.checks.uppercase
+                                    ? "text-green-400"
+                                    : "text-gray-400"
+                                }
+                              >
+                                One uppercase letter
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <CheckCircle
+                                className={`h-3 w-3 ${passwordStrength.checks.number ? "text-green-400" : "text-gray-500"}`}
+                              />
+                              <span
+                                className={
+                                  passwordStrength.checks.number
+                                    ? "text-green-400"
+                                    : "text-gray-400"
+                                }
+                              >
+                                One number
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </FormItem>
+
+                    {/* Confirm Password Field */}
+                    <FormItem>
+                      <FormLabel
+                        htmlFor="confirmPassword"
+                        className="font-medium"
+                        style={{ color: "#cccccc" }}
+                      >
+                        Confirm password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
+                            style={{ color: "#888888" }}
+                          />
+                          <Input
+                            id="confirmPassword"
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="Confirm your password"
+                            className="pl-10 pr-10 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                            style={{
+                              backgroundColor: "#111111",
+                              border: "1px solid #333333",
+                              color: "#ffffff",
+                            }}
+                            {...form.register("confirmPassword")}
+                            disabled={isLoading}
+                          />
+                          <button
+                            type="button"
+                            onClick={toggleConfirmPasswordVisibility}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:text-orange-500 transition-colors"
+                            style={{ color: "#888888" }}
+                            disabled={isLoading}
+                          >
+                            {showConfirmPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage
+                        className="text-sm"
+                        style={{ color: "#ff4444" }}
+                      >
+                        {form.formState.errors.confirmPassword?.message}
+                      </FormMessage>
+                    </FormItem>
+
+                    {/* Submit Button */}
+                    <Button
+                      type="submit"
+                      className="w-full text-white py-3 px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 hover:opacity-90"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%)",
+                      }}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner size="sm" className="mr-2" />
+                          Creating account...
+                        </>
+                      ) : (
+                        "Create account"
+                      )}
+                    </Button>
+
+                    {/* Divider */}
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <span
+                          className="w-full border-t"
+                          style={{ borderColor: "#333333" }}
+                        />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span
+                          className="px-2"
+                          style={{
+                            backgroundColor: "#1a1a1a",
+                            color: "#888888",
+                          }}
+                        >
+                          Or
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Google Sign-In */}
+                    <GoogleSignInButton
+                      text="Sign up with Google"
+                      className="w-full bg-white text-black hover:opacity-90 py-3 px-4 rounded-lg font-medium transition-colors border-none"
+                      disabled={isLoading}
+                    />
+                  </form>
+                </FormProvider>
+
+                {/* Sign In Link */}
+                <div className="text-center mt-6">
+                  <span style={{ color: "#cccccc" }}>
+                    Already have an account?{" "}
+                  </span>
+                  <Link
+                    href={`/login${isFromExtension ? "?source=extension" : ""}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ""}`}
+                    className="font-medium hover:underline transition-colors"
+                    style={{ color: "#ff6b35" }}
+                  >
+                    Sign in here
+                  </Link>
+                </div>
+
+                {/* Free Plan Benefits */}
+                <div
+                  className="mt-8 p-4 rounded-lg border"
+                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
+                >
+                  <h4
+                    className="text-sm font-medium mb-2"
+                    style={{ color: "#4caf50" }}
+                  >
+                    What&apos;s included in your free account:
+                  </h4>
+                  <ul
+                    className="text-xs space-y-1"
+                    style={{ color: "#cccccc" }}
+                  >
+                    <li>• 10 free AI summaries per month</li>
+                    <li>• Chrome extension access</li>
+                    <li>• Summary history and search</li>
+                    <li>• Key insights extraction</li>
+                  </ul>
+                </div>
+
+                {/* Extension Benefits */}
+                {isFromExtension && (
+                  <div
+                    className="mt-4 p-4 rounded-lg border"
+                    style={{
+                      backgroundColor: "rgba(255, 107, 53, 0.1)",
+                      borderColor: "rgba(255, 107, 53, 0.2)",
+                    }}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <Chrome
+                        className="h-5 w-5 mt-0.5 flex-shrink-0"
+                        style={{ color: "#ff6b35" }}
+                      />
+                      <div className="space-y-2">
+                        <h4
+                          className="text-sm font-medium"
+                          style={{ color: "#ff6b35" }}
+                        >
+                          Chrome Extension Benefits
+                        </h4>
+                        <ul
+                          className="text-xs space-y-1"
+                          style={{ color: "#cccccc" }}
+                        >
+                          <li>• Generate summaries directly on YouTube</li>
+                          <li>• Sync across all your devices</li>
+                          <li>• Access your saved summaries anywhere</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Header */}
-          <div className="text-center space-y-2">
-            <CardTitle className="text-2xl font-bold">
-              Create your Knugget account
-            </CardTitle>
-            <CardDescription>
-              {isFromExtension ? (
-                <>
-                  Sign up to sync your account with the Chrome extension
-                  <div className="flex items-center justify-center mt-2 text-knugget-600">
-                    <Chrome className="mr-2 h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      Chrome Extension Signup
-                    </span>
+          {/* Side Panel */}
+          <div
+            className="hidden lg:flex lg:flex-1 p-12 items-center"
+            style={{
+              backgroundColor: "#1a1a1a",
+              borderLeft: "1px solid #333333",
+            }}
+          >
+            <div className="max-w-md">
+              <div className="text-6xl mb-6 text-center animate-pulse">🎯</div>
+              <h2 className="text-3xl font-bold mb-4 text-white text-center">
+                Join the Revolution
+              </h2>
+              <p
+                className="mb-8 text-lg leading-relaxed text-center"
+                style={{ color: "#cccccc" }}
+              >
+                Transform how you consume content. Join{" "}
+                <span className="font-bold knugget-gradient-text">
+                  500,000+
+                </span>{" "}
+                users who are already saving hours every day.
+              </p>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div
+                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
+                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
+                >
+                  <div className="text-xl font-bold knugget-gradient-text">
+                    500K+
                   </div>
-                </>
-              ) : (
-                "Start generating AI-powered summaries in seconds"
-              )}
-            </CardDescription>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          {/* Error Alert */}
-          {error && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Signup Form */}
-          <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {/* Name Field */}
-              <FormItem>
-                <FormLabel htmlFor="name">Full name</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      className="pl-10"
-                      {...form.register("name")}
-                      disabled={isLoading}
-                    />
+                  <div className="text-xs" style={{ color: "#888888" }}>
+                    Happy Users
                   </div>
-                </FormControl>
-                <FormMessage>{form.formState.errors.name?.message}</FormMessage>
-              </FormItem>
-
-              {/* Email Field */}
-              <FormItem>
-                <FormLabel htmlFor="email">Email address</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className="pl-10"
-                      {...form.register("email")}
-                      disabled={isLoading}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage>
-                  {form.formState.errors.email?.message}
-                </FormMessage>
-              </FormItem>
-
-              {/* Password Field */}
-              <FormItem>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
-                      className="pl-10 pr-10"
-                      {...form.register("password")}
-                      disabled={isLoading}
-                    />
-                    <button
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={isLoading}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage>
-                  {form.formState.errors.password?.message}
-                </FormMessage>
-
-                {/* Password Strength Indicator */}
-                {password && (
-                  <div className="mt-2 space-y-2">
-                    <div className="flex space-x-1">
-                      {[1, 2, 3, 4, 5].map((level) => (
-                        <div
-                          key={level}
-                          className={`h-1 flex-1 rounded-full transition-colors ${
-                            passwordStrength.strength >= level
-                              ? passwordStrength.strength < 3
-                                ? "bg-red-500"
-                                : passwordStrength.strength < 4
-                                  ? "bg-yellow-500"
-                                  : "bg-green-500"
-                              : "bg-gray-200"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <div className="text-xs space-y-1">
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle
-                          className={`h-3 w-3 ${passwordStrength.checks.length ? "text-green-500" : "text-gray-300"}`}
-                        />
-                        <span
-                          className={
-                            passwordStrength.checks.length
-                              ? "text-green-600"
-                              : "text-gray-500"
-                          }
-                        >
-                          At least 8 characters
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle
-                          className={`h-3 w-3 ${passwordStrength.checks.lowercase ? "text-green-500" : "text-gray-300"}`}
-                        />
-                        <span
-                          className={
-                            passwordStrength.checks.lowercase
-                              ? "text-green-600"
-                              : "text-gray-500"
-                          }
-                        >
-                          One lowercase letter
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle
-                          className={`h-3 w-3 ${passwordStrength.checks.uppercase ? "text-green-500" : "text-gray-300"}`}
-                        />
-                        <span
-                          className={
-                            passwordStrength.checks.uppercase
-                              ? "text-green-600"
-                              : "text-gray-500"
-                          }
-                        >
-                          One uppercase letter
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle
-                          className={`h-3 w-3 ${passwordStrength.checks.number ? "text-green-500" : "text-gray-300"}`}
-                        />
-                        <span
-                          className={
-                            passwordStrength.checks.number
-                              ? "text-green-600"
-                              : "text-gray-500"
-                          }
-                        >
-                          One number
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </FormItem>
-
-              {/* Confirm Password Field */}
-              <FormItem>
-                <FormLabel htmlFor="confirmPassword">
-                  Confirm password
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      className="pl-10 pr-10"
-                      {...form.register("confirmPassword")}
-                      disabled={isLoading}
-                    />
-                    <button
-                      type="button"
-                      onClick={toggleConfirmPasswordVisibility}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      disabled={isLoading}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage>
-                  {form.formState.errors.confirmPassword?.message}
-                </FormMessage>
-              </FormItem>
-
-              {/* Submit Button */}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Spinner size="sm" className="mr-2" />
-                    Creating account...
-                  </>
-                ) : (
-                  "Create account"
-                )}
-              </Button>
-
-              {/* Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or
+                <div
+                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
+                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
+                >
+                  <div className="text-xl font-bold knugget-gradient-text">
+                    10M+
+                  </div>
+                  <div className="text-xs" style={{ color: "#888888" }}>
+                    Videos Summarized
+                  </div>
+                </div>
+                <div
+                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
+                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
+                >
+                  <div className="text-xl font-bold knugget-gradient-text">
+                    95%
+                  </div>
+                  <div className="text-xs" style={{ color: "#888888" }}>
+                    Time Saved
+                  </div>
+                </div>
+                <div
+                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
+                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
+                >
+                  <div className="text-xl font-bold knugget-gradient-text">
+                    4.9★
+                  </div>
+                  <div className="text-xs" style={{ color: "#888888" }}>
+                    User Rating
+                  </div>
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">⚡</span>
+                  <span className="font-medium" style={{ color: "#cccccc" }}>
+                    Instant AI Summaries
+                  </span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">📱</span>
+                  <span className="font-medium" style={{ color: "#cccccc" }}>
+                    Access Anywhere
+                  </span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🎯</span>
+                  <span className="font-medium" style={{ color: "#cccccc" }}>
+                    Save Time & Focus
                   </span>
                 </div>
               </div>
-
-              {/* Google Sign-In */}
-              <GoogleSignInButton
-                text="Sign up with Google"
-                disabled={isLoading}
-              />
-            </form>
-          </FormProvider>
-        </CardContent>
-
-        <CardFooter className="flex flex-col space-y-4">
-          {/* Divider */}
-          <div className="relative w-full">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Already have an account?
-              </span>
             </div>
           </div>
+        </div>
 
-          {/* Sign In Link */}
-          <div className="text-center">
+        {/* Footer */}
+        <div
+          className="mt-8 text-center text-xs max-w-md mx-auto"
+          style={{ color: "#888888" }}
+        >
+          <p>
+            By creating an account, you agree to our{" "}
             <Link
-              href={`/register${isFromExtension ? "?source=extension" : ""}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ""}`}
-              className="text-sm text-knugget-600 hover:text-knugget-500 transition-colors font-medium"
+              href="/terms"
+              className="underline hover:text-white transition-colors"
+              style={{ color: "#ff6b35" }}
             >
-              Sign in to your account
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy"
+              className="underline hover:text-white transition-colors"
+              style={{ color: "#ff6b35" }}
+            >
+              Privacy Policy
             </Link>
-          </div>
-
-          {/* Free Plan Benefits */}
-          <div className="mt-6 p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-            <h4 className="text-sm font-medium text-green-900 dark:text-green-100 mb-2">
-              What&apos;s included in your free account:
-            </h4>
-            <ul className="text-xs text-green-700 dark:text-green-300 space-y-1">
-              <li>• 10 free AI summaries per month</li>
-              <li>• Chrome extension access</li>
-              <li>• Summary history and search</li>
-              <li>• Key insights extraction</li>
-            </ul>
-          </div>
-
-          {/* Extension Benefits */}
-          {isFromExtension && (
-            <div className="p-4 bg-knugget-50 dark:bg-knugget-950 rounded-lg border border-knugget-200 dark:border-knugget-800">
-              <div className="flex items-start space-x-3">
-                <Chrome className="h-5 w-5 text-knugget-600 mt-0.5 flex-shrink-0" />
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-knugget-900 dark:text-knugget-100">
-                    Chrome Extension Benefits
-                  </h4>
-                  <ul className="text-xs text-knugget-700 dark:text-knugget-300 space-y-1">
-                    <li>• Generate summaries directly on YouTube</li>
-                    <li>• Sync across all your devices</li>
-                    <li>• Access your saved summaries anywhere</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-        </CardFooter>
-      </Card>
-
-      {/* Footer */}
-      <div className="mt-8 text-center text-xs text-muted-foreground">
-        <p>
-          By creating an account, you agree to our{" "}
-          <Link href="/terms" className="underline hover:text-foreground">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="underline hover:text-foreground">
-            Privacy Policy
-          </Link>
-        </p>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -516,10 +818,8 @@ export default function SignupPage() {
   return (
     <Suspense
       fallback={
-        <div className="auth-container">
-          <div className="flex items-center justify-center">
-            <Spinner size="lg" />
-          </div>
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
         </div>
       }
     >
