@@ -34,8 +34,7 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: "Knugget AI",
     NEXT_PUBLIC_APP_DESCRIPTION: "AI-powered YouTube video summarization",
     NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL ||
-      "https://knugget-youtube-client.vercel.app",
+      process.env.NEXT_PUBLIC_APP_URL || "https://www.getknugget.com",
     NEXT_PUBLIC_API_BASE_URL:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://knugget-youtube-backend.onrender.com/api",
@@ -70,7 +69,7 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value:
               process.env.NODE_ENV === "production"
-                ? "https://knugget-youtube-client.vercel.app"
+                ? "https://www.getknugget.com,https://getknugget.com,https://knugget-youtube-client.vercel.app"
                 : "*",
           },
           {
