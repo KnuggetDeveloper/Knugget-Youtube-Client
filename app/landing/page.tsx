@@ -25,9 +25,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState("Insightful");
-  const [selectedView, setSelectedView] = useState("List");
-  const [selectedLength, setSelectedLength] = useState("Auto");
+  const [activeContentView, setActiveContentView] = useState("summary"); // "transcript" or "summary"
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,8 +134,7 @@ export default function LandingPage() {
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.color = "var(--text-secondary)")
                 }
-              >
-              </Link>
+              ></Link>
               {isAuthenticated ? (
                 <Button
                   onClick={() => router.push("/")}
@@ -262,7 +259,6 @@ export default function LandingPage() {
         }}
       >
         <div className="max-w-6xl mx-auto text-center relative z-10">
-
           {/* Main Title */}
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-tight fade-in"
@@ -282,13 +278,12 @@ export default function LandingPage() {
               onClick={handleInstallClick}
               className="inline-flex items-center px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 relative overflow-hidden hover:transform hover:translate-y-[-3px]"
               style={{
-                background: "var(--text-primary)",
+                background: "var(--accent-gradient)",
                 color: "var(--primary-bg)",
                 boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 15px 35px rgba(255, 107, 53, 0.4)";
+                e.currentTarget.style.boxShadow = "var(--accent-glow-strong)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = "0 0 0 rgba(255, 107, 53, 0)";
@@ -451,26 +446,29 @@ export default function LandingPage() {
               >
                 <div className="flex gap-2">
                   {[
-                    { icon: "💎", active: true },
-                    { icon: "📋", active: false },
-                    { icon: "💬", active: false },
-                    { icon: "📝", active: false },
+                    { icon: "🔍", view: "transcript", label: "Transcript" },
+                    { icon: "💬", view: "summary", label: "Summary" },
                   ].map((btn, index) => (
                     <button
                       key={index}
                       className="w-10 h-10 flex items-center justify-center rounded border transition-all duration-300"
                       style={{
-                        borderColor: btn.active
-                          ? "var(--accent-primary)"
-                          : "var(--border-color)",
-                        color: btn.active
-                          ? "var(--accent-primary)"
-                          : "var(--text-secondary)",
-                        boxShadow: btn.active ? "var(--accent-glow)" : "none",
+                        borderColor:
+                          activeContentView === btn.view
+                            ? "var(--accent-primary)"
+                            : "var(--border-color)",
+                        color:
+                          activeContentView === btn.view
+                            ? "var(--accent-primary)"
+                            : "var(--text-secondary)",
+                        boxShadow:
+                          activeContentView === btn.view
+                            ? "var(--accent-glow)"
+                            : "none",
                       }}
-                      onClick={() => handleControlClick(btn.icon)}
+                      onClick={() => setActiveContentView(btn.view)}
                       onMouseEnter={(e) => {
-                        if (!btn.active) {
+                        if (activeContentView !== btn.view) {
                           e.currentTarget.style.borderColor =
                             "var(--accent-primary)";
                           e.currentTarget.style.color = "var(--accent-primary)";
@@ -479,7 +477,7 @@ export default function LandingPage() {
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (!btn.active) {
+                        if (activeContentView !== btn.view) {
                           e.currentTarget.style.borderColor =
                             "var(--border-color)";
                           e.currentTarget.style.color = "var(--text-secondary)";
@@ -514,79 +512,236 @@ export default function LandingPage() {
                     ⚙️
                   </button>
                 </div>
-
-                <div className="flex gap-2">
-                  {[
-                    {
-                      value: selectedFormat,
-                      options: ["Insightful", "Detailed", "Brief"],
-                    },
-                    {
-                      value: selectedView,
-                      options: ["List", "Cards", "Timeline"],
-                    },
-                    {
-                      value: selectedLength,
-                      options: ["Auto", "Short", "Long"],
-                    },
-                  ].map((dropdown, index) => (
-                    <select
-                      key={index}
-                      value={dropdown.value}
-                      onChange={(e) => {
-                        if (index === 0) setSelectedFormat(e.target.value);
-                        if (index === 1) setSelectedView(e.target.value);
-                        if (index === 2) setSelectedLength(e.target.value);
-                      }}
-                      className="px-3 py-2 rounded border text-sm cursor-pointer transition-colors"
-                      style={{
-                        background: "var(--card-bg)",
-                        borderColor: "var(--border-color)",
-                        color: "var(--text-primary)",
-                      }}
-                    >
-                      {dropdown.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ))}
-                </div>
               </div>
 
-              {/* Summary Content */}
+              {/* Content Area - Transcript or Summary */}
               <div className="p-6 max-h-[600px] overflow-y-auto">
-                <div className="space-y-8">
-                  {/* Business Fundamentals Section */}
-                  <div>
-                    <h4
-                      className="text-xl font-semibold mb-4 relative"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      Business Fundamentals
+                {activeContentView === "transcript" ? (
+                  /* Transcript View */
+                  <div className="space-y-2">
+                    {[
+                      {
+                        time: "0:00",
+                        text: "Welcome to this comprehensive business masterclass",
+                      },
+                      {
+                        time: "0:07",
+                        text: "which was named the number one restaurant in New York City",
+                      },
+                      { time: "0:10", text: "by 'The New York Times.'" },
+                      { time: "0:11", text: "I used to be a chef" },
+                      {
+                        time: "0:12",
+                        text: "at the world-renowned Eleven Madison Park,",
+                      },
+                      {
+                        time: "0:14",
+                        text: "which is a three Michelin-starred restaurant.",
+                      },
+                      {
+                        time: "0:16",
+                        text: "I really wanted to cook food that was more my style",
+                      },
+                      { time: "0:19", text: "that speaks out to me." },
+                      {
+                        time: "0:21",
+                        text: "As the chef de cuisine, I am responsible for everything,",
+                      },
+                      {
+                        time: "0:24",
+                        text: "from ordering ingredients to managing the restaurant",
+                      },
+                      {
+                        time: "0:28",
+                        text: "and making sure that every dish that goes out",
+                      },
+                      { time: "0:31", text: "is exactly how I want it to be." },
+                      {
+                        time: "0:34",
+                        text: "The most important thing in business is passion.",
+                      },
+                      {
+                        time: "0:37",
+                        text: "You need to love what you do because",
+                      },
+                      {
+                        time: "0:40",
+                        text: "there will be many challenges along the way.",
+                      },
+                      {
+                        time: "0:43",
+                        text: "Building a successful restaurant requires",
+                      },
+                      {
+                        time: "0:46",
+                        text: "attention to detail in every aspect,",
+                      },
+                      {
+                        time: "0:49",
+                        text: "from the food quality to customer service.",
+                      },
+                      {
+                        time: "0:52",
+                        text: "We focus on creating memorable experiences",
+                      },
+                      {
+                        time: "0:55",
+                        text: "that keep customers coming back.",
+                      },
+                      {
+                        time: "0:58",
+                        text: "Innovation is key in the culinary world.",
+                      },
+                      {
+                        time: "1:01",
+                        text: "We constantly experiment with new flavors",
+                      },
+                      {
+                        time: "1:04",
+                        text: "and techniques to stay ahead of trends.",
+                      },
+                      {
+                        time: "1:07",
+                        text: "Team management is crucial for success.",
+                      },
+                      {
+                        time: "1:10",
+                        text: "Every team member needs to understand",
+                      },
+                      { time: "1:13", text: "our vision and standards." },
+                      {
+                        time: "1:16",
+                        text: "Financial planning cannot be overlooked.",
+                      },
+                      {
+                        time: "1:19",
+                        text: "You need to manage costs while maintaining quality.",
+                      },
+                      {
+                        time: "1:22",
+                        text: "Marketing and brand building are essential",
+                      },
+                      { time: "1:25", text: "for long-term sustainability." },
+                      {
+                        time: "1:28",
+                        text: "Customer feedback drives our improvements.",
+                      },
+                      {
+                        time: "1:31",
+                        text: "We listen carefully to what our guests say",
+                      },
+                      { time: "1:34", text: "and adapt accordingly." },
+                    ].map((item, index) => (
                       <div
-                        className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
-                        style={{ background: "var(--accent-gradient)" }}
-                      />
-                    </h4>
-                    <div className="space-y-4">
-                      {[
-                        {
-                          icon: "🔥",
-                          text: "Start a business with passion, not an idea: combine forces with others to execute on what you love, like marketing and graphic illustrations, rather than starting with an original idea and trying to do it alone.",
-                        },
-                        {
-                          icon: "🎯",
-                          text: "Install a purpose bigger than yourself in your business to manage people and reduce stress, as managing people is one of the biggest stresses of building a company.",
-                        },
-                        {
-                          icon: "💰",
-                          text: "Delay gratification and focus on building value for users: build a brand, not a business, and wait to monetize until you have a massive user base, like Facebook and Instagram did.",
-                        },
-                      ].map((item, index) => (
+                        key={index}
+                        className="flex gap-4 items-start py-2 px-3 rounded transition-all duration-300 cursor-pointer hover:bg-opacity-50"
+                        style={{
+                          borderLeft: "3px solid transparent",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background =
+                            "rgba(255, 107, 53, 0.05)";
+                          e.currentTarget.style.borderLeftColor =
+                            "var(--accent-primary)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
+                          e.currentTarget.style.borderLeftColor = "transparent";
+                        }}
+                      >
+                        <span
+                          className="text-xs font-mono px-2 py-1 rounded flex-shrink-0"
+                          style={{
+                            background: "var(--accent-primary)",
+                            color: "var(--primary-bg)",
+                            minWidth: "45px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {item.time}
+                        </span>
+                        <span
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {item.text}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  /* Summary View */
+                  <div className="space-y-8">
+                    {/* Business Fundamentals Section */}
+                    <div>
+                      <h4
+                        className="text-xl font-semibold mb-4 relative"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        Business Fundamentals
                         <div
-                          key={index}
+                          className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+                          style={{ background: "var(--accent-gradient)" }}
+                        />
+                      </h4>
+                      <div className="space-y-4">
+                        {[
+                          {
+                            icon: "🔥",
+                            text: "Start a business with passion, not an idea: combine forces with others to execute on what you love, like marketing and graphic illustrations, rather than starting with an original idea and trying to do it alone.",
+                          },
+                          {
+                            icon: "🎯",
+                            text: "Install a purpose bigger than yourself in your business to manage people and reduce stress, as managing people is one of the biggest stresses of building a company.",
+                          },
+                          {
+                            icon: "💰",
+                            text: "Delay gratification and focus on building value for users: build a brand, not a business, and wait to monetize until you have a massive user base, like Facebook and Instagram did.",
+                          },
+                        ].map((item, index) => (
+                          <div
+                            key={index}
+                            className="flex gap-4 items-start p-2 rounded transition-all duration-300"
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "rgba(255, 107, 53, 0.05)";
+                              e.currentTarget.style.margin = "0 -8px";
+                              e.currentTarget.style.padding = "8px";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent";
+                              e.currentTarget.style.margin = "0";
+                              e.currentTarget.style.padding = "8px 0";
+                            }}
+                          >
+                            <span className="text-lg flex-shrink-0 mt-0.5">
+                              {item.icon}
+                            </span>
+                            <span
+                              className="text-sm leading-relaxed"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              {item.text}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Strategy and Growth Section */}
+                    <div>
+                      <h4
+                        className="text-xl font-semibold mb-4 relative"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        Strategy and Growth
+                        <div
+                          className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+                          style={{ background: "var(--accent-gradient)" }}
+                        />
+                      </h4>
+                      <div className="space-y-4">
+                        <div
                           className="flex gap-4 items-start p-2 rounded transition-all duration-300"
                           onMouseEnter={(e) => {
                             e.currentTarget.style.background =
@@ -601,60 +756,22 @@ export default function LandingPage() {
                           }}
                         >
                           <span className="text-lg flex-shrink-0 mt-0.5">
-                            {item.icon}
+                            💡
                           </span>
                           <span
                             className="text-sm leading-relaxed"
                             style={{ color: "var(--text-secondary)" }}
                           >
-                            {item.text}
+                            Use mind maps instead of business plans: start in
+                            the middle with your hobby or passion, then add the
+                            business, allowing for infinite thinking and mapping
+                            out different directions
                           </span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Strategy and Growth Section */}
-                  <div>
-                    <h4
-                      className="text-xl font-semibold mb-4 relative"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      Strategy and Growth
-                      <div
-                        className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
-                        style={{ background: "var(--accent-gradient)" }}
-                      />
-                    </h4>
-                    <div className="space-y-4">
-                      <div
-                        className="flex gap-4 items-start p-2 rounded transition-all duration-300"
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background =
-                            "rgba(255, 107, 53, 0.05)";
-                          e.currentTarget.style.margin = "0 -8px";
-                          e.currentTarget.style.padding = "8px";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "transparent";
-                          e.currentTarget.style.margin = "0";
-                          e.currentTarget.style.padding = "8px 0";
-                        }}
-                      >
-                        <span className="text-lg flex-shrink-0 mt-0.5">💡</span>
-                        <span
-                          className="text-sm leading-relaxed"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          Use mind maps instead of business plans: start in the
-                          middle with your hobby or passion, then add the
-                          business, allowing for infinite thinking and mapping
-                          out different directions
-                        </span>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

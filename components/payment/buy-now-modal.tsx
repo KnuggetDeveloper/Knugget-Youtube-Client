@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Crown, Check, X, CreditCard } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
+import { X } from "lucide-react";
 import { paymentService } from "@/lib/payment-service";
 import { toast } from "sonner";
 
@@ -23,21 +20,18 @@ export function BuyNowModal({
 
   if (!isOpen) return null;
 
-  const handlePayment = async () => {
+  const handlePayment = async (planType: "lite" | "pro") => {
     setIsLoading(true);
 
     try {
-      await paymentService.processPayment(
-        "subscription", // Only subscription type supported
-        undefined, // No billing info - let DODOpayment handle it
-        {
-          metadata: {
-            currentPlan,
-            upgradeType: "subscription",
-          },
-          openInNewTab: false,
-        }
-      );
+      await paymentService.processPayment("subscription", undefined, {
+        metadata: {
+          currentPlan,
+          upgradeType: "subscription",
+          selectedPlan: planType,
+        },
+        openInNewTab: false,
+      });
     } catch (error) {
       console.error("Subscription payment failed:", error);
 
@@ -59,122 +53,308 @@ export function BuyNowModal({
     }
   };
 
-  const plans = {
-    FREE: {
-      name: "Free",
-      price: "$0",
-      features: [
-        "10 monthly credits",
-        "Basic AI summaries",
-        "Standard support",
-        "Limited features",
-      ],
-      buttonText: "Current Plan",
-      disabled: true,
-    },
-    PREMIUM: {
-      name: "Premium",
-      price: "$9.99/month",
-      period: "per month",
-      features: [
-        "1,000 monthly credits",
-        "Advanced AI summaries",
-        "Priority support",
-        "Full feature access",
-        "Export capabilities",
-        "Custom templates",
-        "API access",
-        "Advanced analytics",
-        "14-day free trial",
-        "Cancel anytime",
-      ],
-      buttonText: "Start Free Trial",
-      disabled: false,
-      popular: true,
-    },
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md bg-card">
-        <CardContent className="p-6">
-          <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Crown className="h-6 w-6 text-knugget-500" />
-                <h2 className="text-xl font-bold">Upgrade to Premium</h2>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onClose}
-                className="h-8 w-8 p-0"
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 p-4"
+      style={{
+        background: "rgba(0, 0, 0, 0.8)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <div
+        className="relative w-full max-w-2xl rounded-xl overflow-hidden"
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--border-color)",
+          boxShadow: "var(--shadow-lg)",
+        }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 z-10"
+          style={{
+            background: "var(--secondary-bg)",
+            color: "var(--text-secondary)",
+            border: "1px solid var(--border-color)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--accent-primary)";
+            e.currentTarget.style.color = "var(--primary-bg)";
+            e.currentTarget.style.borderColor = "var(--accent-primary)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--secondary-bg)";
+            e.currentTarget.style.color = "var(--text-secondary)";
+            e.currentTarget.style.borderColor = "var(--border-color)";
+          }}
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Header */}
+        <div
+          className="p-6 text-center border-b"
+          style={{
+            background: "var(--secondary-bg)",
+            borderBottomColor: "var(--border-color)",
+          }}
+        >
+          <h2
+            className="text-2xl font-bold mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Upgrade to Premium
+          </h2>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            Unlock unlimited summaries and get more done faster
+          </p>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Lite Plan */}
+            <div
+              className="rounded-lg border overflow-hidden transition-all duration-300 hover:transform hover:translate-y-[-2px]"
+              style={{
+                background: "var(--secondary-bg)",
+                borderColor: "var(--border-color)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--accent-primary)";
+                e.currentTarget.style.boxShadow = "var(--accent-glow)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-color)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              {/* Badge */}
+              <div
+                className="px-4 py-2 text-center text-sm font-medium"
+                style={{
+                  background: "var(--accent-primary)",
+                  color: "var(--primary-bg)",
+                }}
               >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Pricing */}
-            <div className="text-center">
-              <div className="text-3xl font-bold text-knugget-500 mb-1">
-                $9.99
+                Lite
               </div>
-              <p className="text-sm text-muted-foreground">
-                per month • 14-day free trial
-              </p>
-            </div>
 
-            {/* Features */}
-            <div className="space-y-3">
-              <h3 className="font-semibold">What you&apos;ll get:</h3>
-              <div className="space-y-2">
-                {plans.PREMIUM.features.slice(0, 4).map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>{feature}</span>
+              <div className="p-6">
+                {/* Price */}
+                <div className="text-center mb-6">
+                  <div className="flex items-baseline justify-center">
+                    <span
+                      className="text-2xl font-bold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      $
+                    </span>
+                    <span
+                      className="text-4xl font-bold mx-1"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      5
+                    </span>
+                    <span
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      /month
+                    </span>
                   </div>
-                ))}
+                </div>
+
+                {/* Main Feature */}
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <span className="text-2xl">📹</span>
+                  <div className="text-center">
+                    <div
+                      className="text-xl font-bold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      100 Videos
+                    </div>
+                    <div
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      per month
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-3 mb-6">
+                  {["AI-powered summaries", "Key insights extraction"].map(
+                    (feature, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <span
+                          className="text-sm font-bold"
+                          style={{ color: "var(--accent-primary)" }}
+                        >
+                          ✓
+                        </span>
+                        <span
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {feature}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {/* Button */}
+                <button
+                  onClick={() => handlePayment("lite")}
+                  disabled={isLoading}
+                  className="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:transform hover:translate-y-[-1px]"
+                  style={{
+                    background: "var(--accent-gradient)",
+                    color: "var(--primary-bg)",
+                    boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--accent-glow)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 0 rgba(255, 107, 53, 0)";
+                  }}
+                >
+                  {isLoading ? "Processing..." : "Get Started"}
+                </button>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={onClose}
-                className="flex-1"
-                disabled={isLoading}
+            {/* Pro Plan */}
+            <div
+              className="rounded-lg border overflow-hidden transition-all duration-300 hover:transform hover:translate-y-[-2px] relative"
+              style={{
+                background: "var(--secondary-bg)",
+                borderColor: "var(--accent-primary)",
+                boxShadow: "var(--accent-glow)",
+              }}
+            >
+              {/* Featured Badge */}
+              <div
+                className="px-4 py-2 text-center text-sm font-medium flex items-center justify-center gap-2"
+                style={{
+                  background: "var(--accent-gradient)",
+                  color: "var(--primary-bg)",
+                }}
               >
-                Maybe Later
-              </Button>
-              <Button
-                onClick={handlePayment}
-                disabled={isLoading}
-                className="flex-1 bg-gradient-to-r from-knugget-500 to-knugget-600 hover:from-knugget-600 hover:to-knugget-700 text-white"
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <Spinner size="sm" />
-                    Starting...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="h-4 w-4" />
-                    Start Free Trial
-                  </div>
-                )}
-              </Button>
-            </div>
+                <span>💎</span>
+                <span>Most Popular</span>
+              </div>
 
-            {/* Trust indicators */}
-            <div className="flex justify-center gap-4 text-xs text-muted-foreground">
-              <span>✓ Cancel anytime</span>
-              <span>✓ Secure payment</span>
+              <div className="p-6">
+                {/* Price */}
+                <div className="text-center mb-6">
+                  <div className="flex items-baseline justify-center">
+                    <span
+                      className="text-2xl font-bold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      $
+                    </span>
+                    <span
+                      className="text-4xl font-bold mx-1"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      15
+                    </span>
+                    <span
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      /month
+                    </span>
+                  </div>
+                </div>
+
+                {/* Main Feature */}
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <span className="text-2xl">🚀</span>
+                  <div className="text-center">
+                    <div
+                      className="text-xl font-bold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      300 Videos
+                    </div>
+                    <div
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      per month
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-3 mb-6">
+                  {["AI-powered summaries", "Key insights extraction"].map(
+                    (feature, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <span
+                          className="text-sm font-bold"
+                          style={{ color: "var(--accent-primary)" }}
+                        >
+                          ✓
+                        </span>
+                        <span
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {feature}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {/* Button */}
+                <button
+                  onClick={() => handlePayment("pro")}
+                  disabled={isLoading}
+                  className="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:transform hover:translate-y-[-1px]"
+                  style={{
+                    background: "var(--accent-gradient)",
+                    color: "var(--primary-bg)",
+                    boxShadow: "var(--accent-glow)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "var(--accent-glow-strong)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--accent-glow)";
+                  }}
+                >
+                  {isLoading ? "Processing..." : "Get Started"}
+                </button>
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Footer */}
+          <div className="text-center mt-6">
+            <p
+              className="text-sm flex items-center justify-center gap-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <span>🔒</span>
+              <span>
+                Secure payment • Cancel anytime • 30-day money-back guarantee
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
