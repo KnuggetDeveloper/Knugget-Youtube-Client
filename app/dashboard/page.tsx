@@ -239,17 +239,31 @@ function DashboardContent() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="p-6 border-gray-800">
+        <div
+          className="p-6 border-b transition-all duration-300"
+          style={{
+            background: "rgba(0, 0, 0, 0.6)",
+            borderBottomColor: "rgba(255, 107, 53, 0.2)",
+          }}
+        >
           <div className="flex items-center justify-between">
             <div className="w-full">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 transition-colors duration-300"
+                  style={{ color: "rgba(255, 107, 53, 0.7)" }}
+                />
                 <Input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search your knuggets..."
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-orange-500 w-full"
+                  className="pl-10 bg-black border-gray-800 text-orange-500 placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 w-full transition-all duration-300"
+                  style={{
+                    background: "rgba(0, 0, 0, 0.8)",
+                    borderColor: "rgba(255, 107, 53, 0.3)",
+                    color: "#ff6b35",
+                  }}
                 />
               </div>
             </div>
