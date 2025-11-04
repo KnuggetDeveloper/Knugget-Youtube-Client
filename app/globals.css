@@ -136,7 +136,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: var(--accent-glow);
+    display: inline-block;
+    line-height: 1.2;
   }
 
   /* Floating animation for background icons */

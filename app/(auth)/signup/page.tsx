@@ -184,79 +184,15 @@ function SignupPageContent() {
         </div>
       </nav>
 
-      {/* Background Icons */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-20 left-10 text-4xl opacity-20 animate-bounce"
-          style={{ animationDelay: "0s" }}
-        >
-          🔬
-        </div>
-        <div
-          className="absolute top-32 right-20 text-3xl opacity-20 animate-bounce"
-          style={{ animationDelay: "0.5s" }}
-        >
-          👍
-        </div>
-        <div
-          className="absolute top-60 left-1/4 text-5xl opacity-20 animate-bounce"
-          style={{ animationDelay: "1s" }}
-        >
-          📹
-        </div>
-        <div
-          className="absolute bottom-40 right-10 text-4xl opacity-20 animate-bounce"
-          style={{ animationDelay: "1.5s" }}
-        >
-          🎤
-        </div>
-        <div
-          className="absolute bottom-20 left-20 text-3xl opacity-20 animate-bounce"
-          style={{ animationDelay: "2s" }}
-        >
-          🧠
-        </div>
-        <div
-          className="absolute top-1/2 right-1/4 text-4xl opacity-20 animate-bounce"
-          style={{ animationDelay: "2.5s" }}
-        >
-          🚀
-        </div>
-        <div
-          className="absolute bottom-60 left-1/3 text-3xl opacity-20 animate-bounce"
-          style={{ animationDelay: "3s" }}
-        >
-          👤
-        </div>
-        <div
-          className="absolute top-40 right-1/3 text-4xl opacity-20 animate-bounce"
-          style={{ animationDelay: "3.5s" }}
-        >
-          ⭐
-        </div>
-        <div
-          className="absolute bottom-32 right-1/2 text-5xl opacity-20 animate-bounce"
-          style={{ animationDelay: "4s" }}
-        >
-          🦄
-        </div>
-        <div
-          className="absolute top-80 left-1/2 text-3xl opacity-20 animate-bounce"
-          style={{ animationDelay: "4.5s" }}
-        >
-          ⚔️
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="flex items-center justify-center min-h-screen pt-20 pb-10 px-4">
-        <div
-          className="flex max-w-6xl w-full rounded-2xl shadow-2xl overflow-hidden"
-          style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333" }}
-        >
-          {/* Signup Card */}
-          <div className="flex-1 p-8 lg:p-12 flex flex-col items-center justify-center">
-            <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-md mx-auto">
+          <div
+            className="rounded-2xl shadow-2xl p-8 lg:p-12"
+            style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333" }}
+          >
+            {/* Signup Card */}
+            <div className="w-full">
               {/* Back to website link for extension users */}
               {isFromExtension && (
                 <Link
@@ -629,28 +565,6 @@ function SignupPageContent() {
                   </Link>
                 </div>
 
-                {/* Free Plan Benefits */}
-                <div
-                  className="mt-8 p-4 rounded-lg border"
-                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
-                >
-                  <h4
-                    className="text-sm font-medium mb-2"
-                    style={{ color: "#4caf50" }}
-                  >
-                    What&apos;s included in your free account:
-                  </h4>
-                  <ul
-                    className="text-xs space-y-1"
-                    style={{ color: "#cccccc" }}
-                  >
-                    <li>• 10 free AI summaries per month</li>
-                    <li>• Chrome extension access</li>
-                    <li>• Summary history and search</li>
-                    <li>• Key insights extraction</li>
-                  </ul>
-                </div>
-
                 {/* Extension Benefits */}
                 {isFromExtension && (
                   <div
@@ -688,126 +602,30 @@ function SignupPageContent() {
             </div>
           </div>
 
-          {/* Side Panel */}
+          {/* Footer */}
           <div
-            className="hidden lg:flex lg:flex-1 p-12 items-center"
-            style={{
-              backgroundColor: "#1a1a1a",
-              borderLeft: "1px solid #333333",
-            }}
+            className="mt-8 text-center text-xs"
+            style={{ color: "#888888" }}
           >
-            <div className="max-w-md">
-              <div className="text-6xl mb-6 text-center animate-pulse">🎯</div>
-              <h2 className="text-3xl font-bold mb-4 text-white text-center">
-                Join the Revolution
-              </h2>
-              <p
-                className="mb-8 text-lg leading-relaxed text-center"
-                style={{ color: "#cccccc" }}
+            <p>
+              By creating an account, you agree to our{" "}
+              <Link
+                href="/terms"
+                className="underline hover:text-white transition-colors"
+                style={{ color: "#ff6b35" }}
               >
-                Transform how you consume content. Join{" "}
-                <span className="font-bold knugget-gradient-text">
-                  500,000+
-                </span>{" "}
-                users who are already saving hours every day.
-              </p>
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div
-                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
-                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
-                >
-                  <div className="text-xl font-bold knugget-gradient-text">
-                    500K+
-                  </div>
-                  <div className="text-xs" style={{ color: "#888888" }}>
-                    Happy Users
-                  </div>
-                </div>
-                <div
-                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
-                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
-                >
-                  <div className="text-xl font-bold knugget-gradient-text">
-                    10M+
-                  </div>
-                  <div className="text-xs" style={{ color: "#888888" }}>
-                    Videos Summarized
-                  </div>
-                </div>
-                <div
-                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
-                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
-                >
-                  <div className="text-xl font-bold knugget-gradient-text">
-                    95%
-                  </div>
-                  <div className="text-xs" style={{ color: "#888888" }}>
-                    Time Saved
-                  </div>
-                </div>
-                <div
-                  className="text-center p-4 rounded-lg border hover:border-orange-500 transition-colors"
-                  style={{ backgroundColor: "#111111", borderColor: "#333333" }}
-                >
-                  <div className="text-xl font-bold knugget-gradient-text">
-                    4.9★
-                  </div>
-                  <div className="text-xs" style={{ color: "#888888" }}>
-                    User Rating
-                  </div>
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">⚡</span>
-                  <span className="font-medium" style={{ color: "#cccccc" }}>
-                    Instant AI Summaries
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">📱</span>
-                  <span className="font-medium" style={{ color: "#cccccc" }}>
-                    Access Anywhere
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">🎯</span>
-                  <span className="font-medium" style={{ color: "#cccccc" }}>
-                    Save Time & Focus
-                  </span>
-                </div>
-              </div>
-            </div>
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/privacy"
+                className="underline hover:text-white transition-colors"
+                style={{ color: "#ff6b35" }}
+              >
+                Privacy Policy
+              </Link>
+            </p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div
-          className="mt-8 text-center text-xs max-w-md mx-auto"
-          style={{ color: "#888888" }}
-        >
-          <p>
-            By creating an account, you agree to our{" "}
-            <Link
-              href="/terms"
-              className="underline hover:text-white transition-colors"
-              style={{ color: "#ff6b35" }}
-            >
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/privacy"
-              className="underline hover:text-white transition-colors"
-              style={{ color: "#ff6b35" }}
-            >
-              Privacy Policy
-            </Link>
-          </p>
         </div>
       </div>
     </div>

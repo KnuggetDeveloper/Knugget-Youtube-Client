@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
+  },
+
   images: {
-    domains: [
-      "img.youtube.com",
-      "i.ytimg.com",
-      "yt3.ggpht.com",
-      "lh3.googleusercontent.com",
-      "avatars.githubusercontent.com",
-      "knugget.com",
-      "www.knugget.com",
-    ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: "https",
@@ -26,6 +23,26 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "yt3.ggpht.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "knugget.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.knugget.com",
         pathname: "/**",
       },
     ],
@@ -116,8 +133,39 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    // Optimize chunks
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: "all",
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk
+            vendor: {
+              name: "vendor",
+              chunks: "all",
+              test: /node_modules/,
+              priority: 20,
+            },
+            // Common chunk
+            common: {
+              name: "common",
+              minChunks: 2,
+              chunks: "all",
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+          },
+        },
+      };
+    }
+
     return config;
   },
+  // Performance optimizations
   poweredByHeader: false,
   compress: true,
   generateEtags: true,
@@ -132,6 +180,16 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   reactStrictMode: true,
+  // Output optimization
+  swcMinify: true,
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? {
+            exclude: ["error", "warn"],
+          }
+        : false,
+  },
 };
 
 module.exports = nextConfig;
