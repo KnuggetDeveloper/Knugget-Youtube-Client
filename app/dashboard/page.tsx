@@ -224,7 +224,7 @@ function DashboardContent() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-950">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
     );
@@ -235,15 +235,14 @@ function DashboardContent() {
   }
 
   return (
-    <div className="flex h-screen bg-[#1A1A1A] text-orange-500">
+    <div className="flex h-screen bg-black text-orange-500">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden bg-black">
         {/* Header */}
         <div
-          className="p-6 border-b transition-all duration-300"
+          className="p-6 transition-all duration-300"
           style={{
-            background: "rgba(0, 0, 0, 0.6)",
-            borderBottomColor: "rgba(255, 107, 53, 0.2)",
+            background: "black",
           }}
         >
           <div className="flex items-center justify-between">
@@ -271,7 +270,7 @@ function DashboardContent() {
         </div>
 
         {/* Content Grid */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 p-6 overflow-auto bg-black">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold mb-2">{getDisplayTitle()}</h1>
             <p className="text-gray-400 text-sm">
@@ -372,7 +371,7 @@ function DashboardContent() {
 // Loading fallback component
 function DashboardLoading() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-950">
+    <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
     </div>
   );

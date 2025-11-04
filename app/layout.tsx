@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     siteName: "Knugget AI",
     images: [
       {
-        url: "/og-image.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Knugget AI - AI-Powered Content Summaries",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     title: "Knugget AI - AI-Powered Content Summaries",
     description:
       "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
-    images: ["/og-image.png"],
+    images: ["/logo.png"],
     creator: "@knuggetai",
   },
   robots: {
@@ -83,9 +83,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
         {/* Favicon */}
+        <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
 
         {/* Theme Color */}
         <meta name="theme-color" content="#f97316" />
