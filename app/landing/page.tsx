@@ -247,7 +247,7 @@ export default function LandingPage() {
                     color: "var(--primary-bg)",
                   }}
                 >
-                  Get Started
+                  G Sign In
                 </button>
               )}
             </div>
@@ -263,46 +263,41 @@ export default function LandingPage() {
           paddingTop: "70px",
         }}
       >
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          {/* Main Title */}
           <h1
-            className="text-5xl md:text-7xl font-extrabold mb-6 leading-normal"
-            style={{
-              color: "var(--text-primary)",
-            }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-normal fade-in"
+            style={{ animationDelay: "0.2s" }}
           >
-            <span className="knugget-gradient-text">Get Insights</span> from any
-            YouTube video in seconds
+            <div style={{ color: "var(--text-primary)" }} className="mb-4">
+              Summarize Videos Within YouTube
+            </div>
+            <div className="knugget-gradient-text">
+              Save Time, Get Insights Instantly!
+            </div>
           </h1>
-          <p
-            className="text-lg md:text-xl mb-10 leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Transform hours of content into actionable insights with AI-powered
-            summarization
-          </p>
-          <button
-            onClick={handleInstallClick}
-            className="group relative px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:transform hover:scale-105"
-            style={{
-              background: "var(--accent-gradient)",
-              color: "var(--primary-bg)",
-              boxShadow: "var(--accent-glow)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "var(--accent-glow-strong)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "var(--accent-glow)";
-            }}
-          >
-            {isAuthenticated ? "Go to Dashboard" : "Get Started"}
-            <span
-              className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1"
-              aria-hidden="true"
+
+          {/* CTA Button */}
+          <div className="mb-8 fade-in" style={{ animationDelay: "0.3s" }}>
+            <button
+              onClick={handleInstallClick}
+              className="inline-flex items-center px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 relative overflow-hidden hover:transform hover:translate-y-[-3px]"
+              style={{
+                background: "var(--accent-gradient)",
+                color: "var(--primary-bg)",
+                boxShadow: "0 0 0 rgba(255, 107, 53, 0)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "var(--accent-glow-strong)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 0 rgba(255, 107, 53, 0)";
+              }}
             >
-              →
-            </span>
-          </button>
+              <span className="mr-3 text-xl">🌐</span>
+              <span>Install on Chrome</span>
+            </button>
+          </div>
         </div>
 
         {/* Background Icons */}
