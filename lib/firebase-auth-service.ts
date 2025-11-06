@@ -304,9 +304,23 @@ class FirebaseAuthService {
       async (firebaseUser: FirebaseUser | null) => {
         if (firebaseUser) {
           try {
-            const idToken = await firebaseUser.getIdToken();
-            const backendUser = await this.syncWithBackend(idToken);
-            callback(backendUser);
+            // Use Firebase user data directly instead of backend sync
+            // Backend sync already happened during login, no need to do it again
+            const user: User = {
+              id: firebaseUser.uid,
+              email: firebaseUser.email || "",
+              name: firebaseUser.displayName || "",
+              avatar: firebaseUser.photoURL || "",
+              plan: "FREE", // Will be updated by backend sync if premium
+              credits: 3,
+              subscriptionId: null,
+              emailVerified: firebaseUser.emailVerified,
+              createdAt: firebaseUser.metadata.creationTime || new Date().toISOString(),
+              lastLoginAt: firebaseUser.metadata.lastSignInTime || new Date().toISOString(),
+            };
+            
+            console.log("✅ Auth state changed - Using Firebase user data (no backend sync)");
+            callback(user);
           } catch (error) {
             console.error("Auth state change error:", error);
             callback(null);

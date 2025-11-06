@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "sonner";
-import { AUTH_STORAGE_KEYS } from "@/types/auth";
+import { auth } from "@/lib/firebase";
 
 export interface CreateSubscriptionRequest {
   metadata?: Record<string, string | number | boolean>;
@@ -22,26 +22,27 @@ class PaymentService {
   }
 
   /**
-   * Get authentication headers
+   * Get authentication headers with Firebase ID token
    */
-  private getAuthHeaders(): Record<string, string> {
-    // FIXED: Use correct storage key that matches auth service
-    const token = localStorage.getItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
-    const expiresAt = localStorage.getItem(AUTH_STORAGE_KEYS.EXPIRES_AT);
+  private async getAuthHeaders(): Promise<Record<string, string>> {
+    const currentUser = auth.currentUser;
 
-    if (!token) {
+    if (!currentUser) {
       throw new Error("Please log in to continue with payment");
     }
 
-    // Check if token is expired
-    if (expiresAt && Date.now() > parseInt(expiresAt)) {
+    try {
+      // Get fresh Firebase ID token
+      const idToken = await currentUser.getIdToken();
+
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      };
+    } catch (error) {
+      console.error("Failed to get Firebase ID token:", error);
       throw new Error("Your session has expired. Please log in again.");
     }
-
-    return {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
   }
 
   /**
@@ -88,9 +89,10 @@ class PaymentService {
         },
       };
 
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.baseUrl}/payment/create-payment`, {
         method: "POST",
-        headers: this.getAuthHeaders(),
+        headers,
         body: JSON.stringify(request),
       });
 
@@ -144,11 +146,12 @@ class PaymentService {
     nextBillingDate?: string;
   }> {
     try {
+      const headers = await this.getAuthHeaders();
       const response = await fetch(
         `${this.baseUrl}/payment/request-cancellation`,
         {
           method: "POST",
-          headers: this.getAuthHeaders(),
+          headers,
         }
       );
 
@@ -183,11 +186,12 @@ class PaymentService {
     subscription?: any;
   }> {
     try {
+      const headers = await this.getAuthHeaders();
       const response = await fetch(
         `${this.baseUrl}/payment/subscription-status`,
         {
           method: "GET",
-          headers: this.getAuthHeaders(),
+          headers,
         }
       );
 

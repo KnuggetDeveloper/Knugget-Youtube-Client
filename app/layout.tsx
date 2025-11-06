@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/contexts/firebase-auth-context";
 import { MainLayout } from "@/components/layout/main-layout";
+import { QueryProviders } from "@/components/providers/query-providers";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -111,9 +112,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={`${inter.className} dark bg-gray-950 text-white`}
         suppressHydrationWarning={true}
       >
-        <AuthProvider>
-          <MainLayout>{children}</MainLayout>
-        </AuthProvider>
+        <QueryProviders>
+          <AuthProvider>
+            <MainLayout>{children}</MainLayout>
+          </AuthProvider>
+        </QueryProviders>
 
         {/* Development helpers */}
         {process.env.NODE_ENV === "development" && <DevTools />}

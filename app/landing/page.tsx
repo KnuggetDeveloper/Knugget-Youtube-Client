@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { Button } from "@/components/ui/button";
-import { floatingIcons } from "@/data/videoData";
 import VideoDemo from "@/components/landing/VideoDemo";
 
 export default function LandingPage() {
@@ -298,24 +297,6 @@ export default function LandingPage() {
               <span>Install on Chrome</span>
             </button>
           </div>
-        </div>
-
-        {/* Background Icons */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          {floatingIcons.map((item, index) => (
-            <div
-              key={item.id}
-              className="absolute text-2xl float-animation"
-              style={{
-                top: `${15 + Math.sin(index) * 70}%`,
-                left: `${10 + ((index * 11) % 85)}%`,
-                animationDelay: item.delay,
-                opacity: 0.15,
-              }}
-            >
-              {item.icon}
-            </div>
-          ))}
         </div>
       </section>
 

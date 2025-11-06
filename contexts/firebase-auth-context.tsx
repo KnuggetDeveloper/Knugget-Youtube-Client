@@ -104,6 +104,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
 
+        // Trigger profile refresh to get correct plan/credits from backend
+        window.dispatchEvent(new Event('creditsUpdated'));
+
         // Redirect to dashboard or intended page
         const returnUrl = new URLSearchParams(window.location.search).get(
           "returnUrl"
@@ -130,6 +133,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
+        
+        // Trigger profile refresh to get correct plan/credits from backend
+        window.dispatchEvent(new Event('creditsUpdated'));
+        
         router.push("/dashboard");
       } else {
         const errorMessage = result.error || "Signup failed";
@@ -152,6 +159,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
+        
+        // Trigger profile refresh to get correct plan/credits from backend
+        window.dispatchEvent(new Event('creditsUpdated'));
+        
         router.push("/dashboard");
       } else {
         const errorMessage = result.error || "Google sign in failed";

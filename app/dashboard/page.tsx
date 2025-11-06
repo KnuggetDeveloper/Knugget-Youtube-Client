@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
-import { useSummaries } from "@/hooks/use-summaries";
+import { useSummariesQuery } from "@/hooks/use-summaries-query";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
 // import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Input } from "@/components/ui/input";
@@ -52,10 +52,14 @@ function DashboardContent() {
     filterParam || "all"
   );
 
-  // Fetch data from hooks
-  const { summaries, isLoading: summariesLoading } = useSummaries({
-    limit: 50,
-  });
+  // Fetch data from hooks using React Query
+  const { data: summariesData, isLoading: summariesLoading } =
+    useSummariesQuery({
+      limit: 50,
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
+  const summaries = summariesData?.data || [];
   // LinkedIn posts disabled - can be re-enabled via feature flags
   // const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
   //   { limit: 50 }

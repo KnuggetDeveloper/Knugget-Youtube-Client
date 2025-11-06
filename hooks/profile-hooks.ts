@@ -148,15 +148,24 @@ export function useProfile() {
     }
   }, [isAuthenticated, user, fetchProfile]);
 
-  // Periodic refresh to catch subscription updates from webhooks
+  // Event-based refresh - only when needed
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const interval = setInterval(() => {
+    // Listen for subscription update events (from webhooks or payment success)
+    const handleSubscriptionUpdate = () => {
+      console.log('Subscription updated, refreshing profile...');
       fetchProfile();
-    }, 60000); // Refresh every 60 seconds
+    };
 
-    return () => clearInterval(interval);
+    // Listen for custom events
+    window.addEventListener('subscriptionUpdated', handleSubscriptionUpdate);
+    window.addEventListener('creditsUpdated', handleSubscriptionUpdate);
+    
+    return () => {
+      window.removeEventListener('subscriptionUpdated', handleSubscriptionUpdate);
+      window.removeEventListener('creditsUpdated', handleSubscriptionUpdate);
+    };
   }, [isAuthenticated, fetchProfile]);
 
   return {
