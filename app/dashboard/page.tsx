@@ -59,7 +59,6 @@ function DashboardContent() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
-  const summaries = summariesData?.data || [];
   // LinkedIn posts disabled - can be re-enabled via feature flags
   // const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
   //   { limit: 50 }
@@ -86,6 +85,7 @@ function DashboardContent() {
   // Combine all data sources using useMemo to prevent infinite loops
   const allItems = useMemo(() => {
     const items: KnuggetItem[] = [];
+    const summaries = summariesData?.data || [];
 
     // Add summaries (YouTube)
     summaries.forEach((summary) => {
@@ -133,7 +133,7 @@ function DashboardContent() {
     );
 
     return items;
-  }, [summaries]);
+  }, [summariesData?.data]);
 
   // FIXED: Filter items based on search and active filter using useMemo
   const filteredItems = useMemo(() => {

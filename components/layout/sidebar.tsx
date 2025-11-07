@@ -9,7 +9,6 @@ import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
 import { useUserStatsQuery } from "@/hooks/use-profile-query";
 import { BuyNowButton } from "@/components/payment/buy-now-button";
-import { TokenUsageDisplay } from "@/components/token/token-usage-display";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
 // import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Button } from "@/components/ui/button";
@@ -30,6 +29,7 @@ export function GlobalSidebar() {
   const summaries = summariesData?.data || [];
 
   // Get user stats for token usage
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: stats } = useUserStatsQuery();
 
   // Don't show sidebar on auth pages or landing page for non-authenticated users
@@ -92,8 +92,8 @@ export function GlobalSidebar() {
         <div className="flex items-center justify-between">
           {!sidebarCollapsed && (
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-r flex items-center justify-center">
-                <img src="/logo.png" alt="Knugget" className="h-10 w-10" />
+              <div className="h-5 w-5 rounded-lg bg-gradient-to-r flex items-center justify-center">
+                <img src="/logo.png" alt="Knugget" className="h-5 w-5" />
               </div>
               <span className="text-lg font-semibold text-white">Knugget</span>
             </Link>
@@ -180,36 +180,6 @@ export function GlobalSidebar() {
       {!sidebarCollapsed && user && (
         <div className="px-4 py-3 border-t border-gray-800">
           <BuyNowButton variant="button" size="default" className="w-full" />
-        </div>
-      )}
-
-      {/* Token Usage for Premium Users */}
-      {!sidebarCollapsed && user?.plan === "PREMIUM" && (
-        <div className="px-4 py-3 border-t border-gray-800">
-          <TokenUsageDisplay compact={true} showRefresh={false} />
-        </div>
-      )}
-
-      {/* OpenAI Usage Stats for All Users */}
-      {!sidebarCollapsed && user && stats && (
-        <div className="px-4 py-3 border-t border-gray-800">
-          <div className="text-xs text-gray-400 mb-2 font-medium">
-            Total Usage
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-400">Input:</span>
-              <span className="text-white font-mono">
-                {stats.totalInputTokens.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-400">Output:</span>
-              <span className="text-white font-mono">
-                {stats.totalOutputTokens.toLocaleString()}
-              </span>
-            </div>
-          </div>
         </div>
       )}
 
