@@ -16,12 +16,18 @@ export function BuyNowModal({
   onClose,
   currentPlan,
 }: BuyNowModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingLite, setIsLoadingLite] = useState(false);
+  const [isLoadingPro, setIsLoadingPro] = useState(false);
 
   if (!isOpen) return null;
 
   const handlePayment = async (planType: "lite" | "pro") => {
-    setIsLoading(true);
+    // Set loading state based on plan type
+    if (planType === "lite") {
+      setIsLoadingLite(true);
+    } else {
+      setIsLoadingPro(true);
+    }
 
     try {
       await paymentService.processPayment("subscription", undefined, {
@@ -49,7 +55,12 @@ export function BuyNowModal({
         toast.error("Subscription payment failed. Please try again.");
       }
     } finally {
-      setIsLoading(false);
+      // Reset loading state based on plan type
+      if (planType === "lite") {
+        setIsLoadingLite(false);
+      } else {
+        setIsLoadingPro(false);
+      }
     }
   };
 
@@ -210,7 +221,7 @@ export function BuyNowModal({
                 {/* Button */}
                 <button
                   onClick={() => handlePayment("lite")}
-                  disabled={isLoading}
+                  disabled={isLoadingLite}
                   className="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:transform hover:translate-y-[-1px]"
                   style={{
                     background: "var(--accent-gradient)",
@@ -225,7 +236,7 @@ export function BuyNowModal({
                       "0 0 0 rgba(255, 107, 53, 0)";
                   }}
                 >
-                  {isLoading ? "Processing..." : "Get Started"}
+                  {isLoadingLite ? "Processing..." : "Get Started"}
                 </button>
               </div>
             </div>
@@ -320,7 +331,7 @@ export function BuyNowModal({
                 {/* Button */}
                 <button
                   onClick={() => handlePayment("pro")}
-                  disabled={isLoading}
+                  disabled={isLoadingPro}
                   className="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 hover:transform hover:translate-y-[-1px]"
                   style={{
                     background: "var(--accent-gradient)",
@@ -335,7 +346,7 @@ export function BuyNowModal({
                     e.currentTarget.style.boxShadow = "var(--accent-glow)";
                   }}
                 >
-                  {isLoading ? "Processing..." : "Get Started"}
+                  {isLoadingPro ? "Processing..." : "Get Started"}
                 </button>
               </div>
             </div>
