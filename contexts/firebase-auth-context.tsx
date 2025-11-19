@@ -104,7 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
 
-        // Trigger profile refresh to get correct plan/credits from backend
+        // Trigger profile refresh to get correct plan/tokens from backend
         window.dispatchEvent(new Event('subscriptionUpdated'));
 
         // Redirect to dashboard or intended page
@@ -134,7 +134,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
         
-        // Trigger profile refresh to get correct plan/credits from backend
+        // Trigger profile refresh to get correct plan/tokens from backend
         window.dispatchEvent(new Event('subscriptionUpdated'));
         
         router.push("/dashboard");
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (result.success && result.user) {
         dispatch({ type: "AUTH_SUCCESS", payload: result.user });
         
-        // Trigger profile refresh to get correct plan/credits from backend
+        // Trigger profile refresh to get correct plan/tokens from backend
         window.dispatchEvent(new Event('subscriptionUpdated'));
         
         router.push("/dashboard");

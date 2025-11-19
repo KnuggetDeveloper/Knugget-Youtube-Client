@@ -163,10 +163,8 @@ export function useProfile() {
 
     // Listen for custom events
     window.addEventListener('subscriptionUpdated', handleSubscriptionUpdate);
-    window.addEventListener('subscriptionUpdated', handleSubscriptionUpdate);
     
     return () => {
-      window.removeEventListener('subscriptionUpdated', handleSubscriptionUpdate);
       window.removeEventListener('subscriptionUpdated', handleSubscriptionUpdate);
     };
   }, [isAuthenticated, fetchProfile]);
