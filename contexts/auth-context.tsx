@@ -355,9 +355,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       typeof (user as User).email === "string" &&
       (user as User).email.includes("@") &&
       typeof (user as User).name === "string" &&
-      ["FREE", "PREMIUM"].includes((user as User).plan) &&
-      typeof (user as User).credits === "number" &&
-      (user as User).credits >= 0
+      ["FREE", "LITE", "PRO"].includes((user as User).plan)
     );
   }
 

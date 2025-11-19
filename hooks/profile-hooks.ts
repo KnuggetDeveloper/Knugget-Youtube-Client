@@ -11,13 +11,14 @@ export interface UserProfile {
   email: string;
   name: string | null;
   avatar: string | null;
-  plan: "FREE" | "PREMIUM";
-  credits: number;
+  plan: "FREE" | "LITE" | "PRO";
   subscriptionId: string | null;
   emailVerified: boolean;
   createdAt: string;
   lastLoginAt: string | null;
-  // Token management for premium users
+  // Video limits and token management for all plans
+  videosProcessedThisMonth?: number;
+  videoResetDate?: string | null;
   inputTokensRemaining?: number;
   outputTokensRemaining?: number;
   tokenResetDate?: string | null;
@@ -26,15 +27,16 @@ export interface UserProfile {
 export interface UserStats {
   totalSummaries: number;
   summariesThisMonth: number;
-  creditsUsed: number;
-  creditsRemaining: number;
-  planStatus: "FREE" | "PREMIUM";
+  videosProcessed: number;
+  videoLimit: number;
+  videosRemaining: number;
+  planStatus: "FREE" | "LITE" | "PRO";
   joinedDate: string;
   // OpenAI Usage stats
   totalInputTokens: number;
   totalOutputTokens: number;
   totalTokens: number;
-  // Premium token stats
+  // Token stats per plan
   inputTokensRemaining?: number;
   outputTokensRemaining?: number;
   tokenResetDate?: string | null;
@@ -46,7 +48,7 @@ export interface UpdateProfileRequest {
 }
 
 export interface UpgradePlanRequest {
-  plan: "PREMIUM";
+  plan: "LITE" | "PRO";
   paymentMethod?: string;
 }
 

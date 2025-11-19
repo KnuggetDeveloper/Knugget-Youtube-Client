@@ -53,15 +53,15 @@ export function TokenUsageDisplay({
   };
 
   useEffect(() => {
-    if (user?.plan === "PREMIUM") {
+    if (user) {
       fetchTokenStatus();
     } else {
       setIsLoading(false);
     }
   }, [user]);
 
-  // Don't show for free users
-  if (!user || user.plan !== "PREMIUM") {
+  // Show for all authenticated users
+  if (!user) {
     return null;
   }
 
@@ -109,8 +109,20 @@ export function TokenUsageDisplay({
     return null;
   }
 
-  const inputTotal = 9000000; // 9M tokens
-  const outputTotal = 600000; // 600K tokens
+  // Get token totals based on user plan
+  const getTokenLimits = (plan: string) => {
+    switch (plan) {
+      case "PRO":
+        return { input: 9000000, output: 600000 };
+      case "LITE":
+        return { input: 3000000, output: 200000 };
+      case "FREE":
+      default:
+        return { input: 150000, output: 10000 };
+    }
+  };
+
+  const { input: inputTotal, output: outputTotal } = getTokenLimits(user.plan);
 
   const inputUsagePercentage = tokenService.calculateUsagePercentage(
     tokenStatus.inputTokensRemaining,

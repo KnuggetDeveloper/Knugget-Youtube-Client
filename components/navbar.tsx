@@ -127,30 +127,28 @@ export function Navbar() {
                         {user?.email}
                       </p>
                       <div className="flex items-center space-x-2 mt-2">
-                        {user?.plan === "FREE" ? (
-                          <span className="text-xs text-muted-foreground">
-                            {user?.credits} credits
+                        <span className="text-xs text-muted-foreground">
+                          {user?.videosProcessedThisMonth ?? 0} videos this month
+                        </span>
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                          <span>•</span>
+                          <span>
+                            {user?.inputTokensRemaining
+                              ? `${Math.round(user.inputTokensRemaining / 1000)}K`
+                              : "0"}{" "}
+                            input
                           </span>
-                        ) : (
-                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                            <span>
-                              {user?.inputTokensRemaining
-                                ? `${Math.round(user.inputTokensRemaining / 1000)}K`
-                                : "0"}{" "}
-                              input
-                            </span>
-                            <span>•</span>
-                            <span>
-                              {user?.outputTokensRemaining
-                                ? `${Math.round(user.outputTokensRemaining / 1000)}K`
-                                : "0"}{" "}
-                              output
-                            </span>
-                          </div>
-                        )}
+                          <span>•</span>
+                          <span>
+                            {user?.outputTokensRemaining
+                              ? `${Math.round(user.outputTokensRemaining / 1000)}K`
+                              : "0"}{" "}
+                            output
+                          </span>
+                        </div>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${
-                            user?.plan === "PREMIUM"
+                            user?.plan === "LITE" || user?.plan === "PRO"
                               ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
                               : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                           }`}

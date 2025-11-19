@@ -13,13 +13,14 @@ interface PremiumStatusModalProps {
   onClose: () => void;
   user: {
     plan: string;
-    credits: number;
+    videosProcessedThisMonth?: number;
     email: string;
     name: string | null;
     subscriptionId?: string | null;
     inputTokensRemaining?: number;
     outputTokensRemaining?: number;
     tokenResetDate?: string | null;
+    videoResetDate?: string | null;
   };
 }
 
@@ -41,7 +42,7 @@ export function PremiumStatusModal({
 
   // Fetch subscription status when modal opens
   useEffect(() => {
-    if (isOpen && user?.plan === "PREMIUM") {
+    if (isOpen && (user?.plan === "LITE" || user?.plan === "PRO")) {
       fetchSubscriptionStatus();
     }
   }, [isOpen, user?.plan]);
@@ -166,31 +167,28 @@ export function PremiumStatusModal({
                   <span className="text-muted-foreground">Email:</span>
                   <span>{user.email}</span>
                 </div>
-                {user.plan === "FREE" ? (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Credits:</span>
-                    <span>{user.credits}</span>
-                  </div>
-                ) : (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Videos This Month:</span>
+                  <span>{user.videosProcessedThisMonth ?? 0}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    Input Tokens:
+                  </span>
+                  <span className="font-mono">
+                    {user.inputTokensRemaining?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    Output Tokens:
+                  </span>
+                  <span className="font-mono">
+                    {user.outputTokensRemaining?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                {user.plan !== "FREE" && (
                   <>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        Input Tokens:
-                      </span>
-                      <span className="font-mono">
-                        {user.inputTokensRemaining?.toLocaleString() || "0"} /
-                        9,000,000
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        Output Tokens:
-                      </span>
-                      <span className="font-mono">
-                        {user.outputTokensRemaining?.toLocaleString() || "0"} /
-                        600,000
-                      </span>
-                    </div>
                     {user.tokenResetDate && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">

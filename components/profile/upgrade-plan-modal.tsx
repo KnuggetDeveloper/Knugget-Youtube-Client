@@ -15,7 +15,7 @@ interface UpgradePlanModalProps {
   onClose: () => void
   onUpgrade: (data: UpgradePlanRequest) => Promise<boolean>
   isLoading?: boolean
-  currentPlan: 'FREE' | 'PREMIUM'
+  currentPlan: 'FREE' | 'LITE' | 'PRO'
 }
 
 export function UpgradePlanModal({
@@ -29,9 +29,9 @@ export function UpgradePlanModal({
 
   if (!isOpen) return null
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = async (plan: 'LITE' | 'PRO') => {
     const success = await onUpgrade({
-      plan: 'PREMIUM',
+      plan: plan,
       paymentMethod: selectedPaymentMethod,
     })
     
@@ -45,38 +45,58 @@ export function UpgradePlanModal({
       name: 'Free',
       price: '$0',
       period: 'forever',
-      credits: 10,
+      videos: 5,
       features: [
-        '10 AI summaries per month',
+        '5 videos per month',
+        '150K input tokens',
+        '10K output tokens',
         'Chrome extension access',
-        'Basic transcript viewing',
-        'Community support',
+        'Basic features',
       ],
       limitations: [
-        'Limited summaries',
-        'Basic features only',
-        'No priority support',
+        'Limited videos',
+        'Limited tokens',
+        'Community support only',
       ]
     },
-    PREMIUM: {
-      name: 'Premium',
+    LITE: {
+      name: 'Lite',
       price: '$9.99',
       period: 'per month',
-      credits: 1000,
+      videos: 100,
       features: [
-        'Unlimited AI summaries',
+        '100 videos per month',
+        '3M input tokens',
+        '200K output tokens',
         'Advanced summarization',
-        'Export to multiple formats',
-        'Search and organize summaries',
+        'Export capabilities',
         'Priority support',
-        'Early access to new features',
-        'Chrome extension premium features',
+      ],
+      highlights: [
+        'Perfect for regular users',
+        'Great for students',
+        'Affordable pricing',
+      ]
+    },
+    PRO: {
+      name: 'Pro',
+      price: '$29.99',
+      period: 'per month',
+      videos: 300,
+      features: [
+        '300 videos per month',
+        '9M input tokens',
+        '600K output tokens',
+        'Advanced summarization',
+        'Export to all formats',
+        'Priority support',
+        'Early access to features',
         'Bulk processing',
       ],
       highlights: [
-        'Save 5+ hours per week',
-        '10x more productive research',
-        'Professional-grade features',
+        'For power users',
+        'Maximum productivity',
+        'Professional features',
       ]
     }
   }

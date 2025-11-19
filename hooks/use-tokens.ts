@@ -19,7 +19,7 @@ export function useTokens() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchTokenStatus = useCallback(async () => {
-    if (!isAuthenticated || user?.plan !== "PREMIUM") {
+    if (!isAuthenticated) {
       setIsLoading(false);
       return;
     }
@@ -39,11 +39,11 @@ export function useTokens() {
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, user?.plan]);
+  }, [isAuthenticated]);
 
   const checkTokenAvailability = useCallback(
     async (request: TokenAvailabilityRequest): Promise<boolean> => {
-      if (!isAuthenticated || user?.plan !== "PREMIUM") {
+      if (!isAuthenticated) {
         return true; // Free users don't use tokens
       }
 
@@ -80,7 +80,7 @@ export function useTokens() {
 
   // Auto-refresh every 5 minutes for premium users
   useEffect(() => {
-    if (!isAuthenticated || user?.plan !== "PREMIUM") return;
+    if (!isAuthenticated) return;
 
     const interval = setInterval(
       () => {

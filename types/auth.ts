@@ -6,13 +6,14 @@ export interface User {
   email: string;
   name: string | null;
   avatar: string | null;
-  plan: "FREE" | "PREMIUM";
-  credits: number;
+  plan: "FREE" | "LITE" | "PRO";
   subscriptionId: string | null;
   emailVerified: boolean;
   createdAt: string;
   lastLoginAt: string | null;
-  // Token management for premium users
+  // Video limits and token management for all plans
+  videosProcessedThisMonth?: number;
+  videoResetDate?: string | null;
   inputTokensRemaining?: number;
   outputTokensRemaining?: number;
   tokenResetDate?: string | null;
@@ -116,7 +117,7 @@ export interface ExtensionAuthData {
     id: string;
     name: string | null;
     email: string;
-    credits: number;
+    videosProcessedThisMonth?: number;
     plan: string;
   };
   expiresAt: number;
@@ -210,13 +211,24 @@ export const AUTH_ERROR_CODES = {
 export const USER_PLANS = {
   FREE: {
     name: "Free",
-    credits: 10,
-    features: ["Basic summaries", "Chrome extension"],
+    videos: 5,
+    inputTokens: 150000,
+    outputTokens: 10000,
+    features: ["5 videos/month", "150K input tokens", "10K output tokens", "Chrome extension"],
   },
-  PREMIUM: {
-    name: "Premium",
-    credits: 1000,
-    features: ["Unlimited summaries", "Priority support", "Advanced features"],
+  LITE: {
+    name: "Lite",
+    videos: 100,
+    inputTokens: 3000000,
+    outputTokens: 200000,
+    features: ["100 videos/month", "3M input tokens", "200K output tokens", "Priority support"],
+  },
+  PRO: {
+    name: "Pro",
+    videos: 300,
+    inputTokens: 9000000,
+    outputTokens: 600000,
+    features: ["300 videos/month", "9M input tokens", "600K output tokens", "Priority support", "Advanced features"],
   },
 } as const;
 

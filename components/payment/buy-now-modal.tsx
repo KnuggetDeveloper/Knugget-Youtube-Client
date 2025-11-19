@@ -8,7 +8,7 @@ import { toast } from "sonner";
 interface BuyNowModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPlan: "FREE" | "PREMIUM";
+  currentPlan: "FREE" | "LITE" | "PRO";
 }
 
 export function BuyNowModal({

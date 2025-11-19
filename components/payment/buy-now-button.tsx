@@ -37,30 +37,31 @@ export function BuyNowButton({
   };
 
   if (variant === "button") {
-    const isPremium = user?.plan === "PREMIUM";
+    const isPaid = user?.plan === "LITE" || user?.plan === "PRO";
+    const planLabel = user?.plan === "PRO" ? "Pro" : user?.plan === "LITE" ? "Lite" : "Free";
 
     return (
       <>
         <Button
           onClick={handleOpenModal}
           className={`${
-            isPremium
+            isPaid
               ? "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
               : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
           } text-white ${className}`}
           size={size}
         >
           <Crown className="h-4 w-4 mr-2" />
-          {isPremium ? "Premium" : "Upgrade to Premium"}
+          {isPaid ? planLabel : "Upgrade Plan"}
         </Button>
 
-        {isPremium ? (
+        {isPaid ? (
           <PremiumStatusModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             user={{
               plan: user.plan,
-              credits: user.credits,
+              videosProcessedThisMonth: user.videosProcessedThisMonth,
               email: user.email,
               name: user.name,
               subscriptionId: user.subscriptionId,
@@ -77,13 +78,14 @@ export function BuyNowButton({
     );
   }
 
-  const isPremium = user?.plan === "PREMIUM";
+  const isPaid = user?.plan === "LITE" || user?.plan === "PRO";
+  const planLabel = user?.plan === "PRO" ? "Pro Plan" : user?.plan === "LITE" ? "Lite Plan" : "Free Plan";
 
   return (
     <>
       <Card
         className={`relative overflow-hidden border-2 ${
-          isPremium
+          isPaid
             ? "border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950"
             : "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950"
         } cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] ${className}`}
@@ -96,7 +98,7 @@ export function BuyNowButton({
             <div className="flex items-center gap-3">
               <div
                 className={`p-2 rounded-lg ${
-                  isPremium
+                  isPaid
                     ? "bg-gradient-to-r from-green-500 to-emerald-500"
                     : "bg-gradient-to-r from-purple-500 to-pink-500"
                 }`}
@@ -105,29 +107,29 @@ export function BuyNowButton({
               </div>
               <div>
                 <h3 className="text-lg font-semibold">
-                  {isPremium ? "Premium Subscription" : "Upgrade to Premium"}
+                  {isPaid ? `${planLabel} Subscription` : "Upgrade Plan"}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {isPremium
+                  {isPaid
                     ? "Manage your subscription"
-                    : "Unlock unlimited AI summaries"}
+                    : "Unlock more videos and tokens"}
                 </p>
               </div>
             </div>
             <Badge
               className={`${
-                isPremium
+                isPaid
                   ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
                   : "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
               }`}
             >
               <Star className="h-3 w-3 mr-1" />
-              {isPremium ? "Active" : "Popular"}
+              {isPaid ? "Active" : "Popular"}
             </Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {isPremium ? (
+            {isPaid ? (
               // Premium user features
               <>
                 <div className="space-y-3">
@@ -195,14 +197,14 @@ export function BuyNowButton({
           </div>
 
           <div className="flex items-center justify-between">
-            {isPremium ? (
+            {isPaid ? (
               // Premium user display
               <div className="flex items-center gap-4 flex-1">
                 <div className="text-center">
                   <div className="text-xs text-muted-foreground">Status</div>
                   <div className="text-xl font-bold text-green-600">Active</div>
                   <div className="text-xs text-muted-foreground">
-                    Premium Plan
+                    {planLabel}
                   </div>
                 </div>
                 <div className="text-center">
@@ -234,28 +236,29 @@ export function BuyNowButton({
 
             <Button
               className={`${
-                isPremium
+                isPaid
                   ? "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
                   : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
               } text-white`}
               onClick={handleOpenModal}
             >
               <CreditCard className="h-4 w-4 mr-2" />
-              {isPremium ? "Manage" : "Buy Now"}
+              {isPaid ? "Manage" : "Buy Now"}
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {isPremium ? (
+      {isPaid ? (
         <PremiumStatusModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           user={{
             plan: user.plan,
-            credits: user.credits,
+            videosProcessedThisMonth: user.videosProcessedThisMonth,
             email: user.email,
             name: user.name,
+            subscriptionId: user.subscriptionId,
           }}
         />
       ) : (
