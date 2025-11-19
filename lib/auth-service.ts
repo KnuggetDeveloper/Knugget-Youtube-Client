@@ -243,7 +243,7 @@ class AuthService {
           id: authData.user.id,
           name: authData.user.name,
           email: authData.user.email,
-          credits: authData.user.credits,
+          videosProcessedThisMonth: authData.user.videosProcessedThisMonth,
           plan: authData.user.plan.toLowerCase(),
         },
         expiresAt: authData.expiresAt,

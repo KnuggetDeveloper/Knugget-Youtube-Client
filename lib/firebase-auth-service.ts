@@ -132,11 +132,15 @@ class FirebaseAuthService {
           name: firebaseUser.displayName || "",
           avatar: firebaseUser.photoURL || "",
           plan: "FREE",
-          credits: 3,
           subscriptionId: null,
           emailVerified: firebaseUser.emailVerified,
           createdAt: new Date().toISOString(),
           lastLoginAt: new Date().toISOString(),
+          videosProcessedThisMonth: 0,
+          videoResetDate: null,
+          inputTokensRemaining: 150000, // FREE plan defaults
+          outputTokensRemaining: 10000,
+          tokenResetDate: null,
         };
 
         console.warn("Backend sync failed, using Firebase user data");
@@ -312,11 +316,15 @@ class FirebaseAuthService {
               name: firebaseUser.displayName || "",
               avatar: firebaseUser.photoURL || "",
               plan: "FREE", // Will be updated by backend sync if premium
-              credits: 3,
               subscriptionId: null,
               emailVerified: firebaseUser.emailVerified,
               createdAt: firebaseUser.metadata.creationTime || new Date().toISOString(),
               lastLoginAt: firebaseUser.metadata.lastSignInTime || new Date().toISOString(),
+              videosProcessedThisMonth: 0,
+              videoResetDate: null,
+              inputTokensRemaining: 150000, // FREE plan defaults
+              outputTokensRemaining: 10000,
+              tokenResetDate: null,
             };
             
             console.log("✅ Auth state changed - Using Firebase user data (no backend sync)");

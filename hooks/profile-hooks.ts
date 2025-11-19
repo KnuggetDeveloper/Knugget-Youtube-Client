@@ -131,11 +131,12 @@ export function useProfile() {
         name: user.name,
         avatar: user.avatar,
         plan: user.plan,
-        credits: user.credits,
         subscriptionId: user.subscriptionId,
         emailVerified: user.emailVerified,
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
+        videosProcessedThisMonth: user.videosProcessedThisMonth,
+        videoResetDate: user.videoResetDate,
         inputTokensRemaining: user.inputTokensRemaining,
         outputTokensRemaining: user.outputTokensRemaining,
         tokenResetDate: user.tokenResetDate,
@@ -162,11 +163,11 @@ export function useProfile() {
 
     // Listen for custom events
     window.addEventListener('subscriptionUpdated', handleSubscriptionUpdate);
-    window.addEventListener('creditsUpdated', handleSubscriptionUpdate);
+    window.addEventListener('subscriptionUpdated', handleSubscriptionUpdate);
     
     return () => {
       window.removeEventListener('subscriptionUpdated', handleSubscriptionUpdate);
-      window.removeEventListener('creditsUpdated', handleSubscriptionUpdate);
+      window.removeEventListener('subscriptionUpdated', handleSubscriptionUpdate);
     };
   }, [isAuthenticated, fetchProfile]);
 

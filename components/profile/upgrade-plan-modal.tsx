@@ -176,12 +176,12 @@ export function UpgradePlanModal({
                 </CardContent>
               </Card>
 
-              {/* Premium Plan */}
+              {/* Pro Plan */}
               <Card className="relative border-2 border-gradient-to-r from-purple-500 to-pink-500">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                     <Star className="h-3 w-3 mr-1" />
-                    Recommended
+                    Most Popular
                   </Badge>
                 </div>
                 
@@ -189,11 +189,11 @@ export function UpgradePlanModal({
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <Crown className="h-5 w-5 text-purple-500" />
-                      {plans.PREMIUM.name}
+                      {plans.PRO.name}
                     </CardTitle>
                     <div className="text-right">
-                      <div className="text-2xl font-bold">{plans.PREMIUM.price}</div>
-                      <div className="text-xs text-muted-foreground">{plans.PREMIUM.period}</div>
+                      <div className="text-2xl font-bold">{plans.PRO.price}</div>
+                      <div className="text-xs text-muted-foreground">{plans.PRO.period}</div>
                     </div>
                   </div>
                 </CardHeader>
@@ -201,7 +201,7 @@ export function UpgradePlanModal({
                   <div className="space-y-2">
                     <h4 className="font-medium text-sm">Everything in Free, plus:</h4>
                     <ul className="space-y-1">
-                      {plans.PREMIUM.features.map((feature, index) => (
+                      {plans.PRO.features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2 text-sm">
                           <Check className="h-3 w-3 text-green-500" />
                           {feature}
@@ -217,7 +217,7 @@ export function UpgradePlanModal({
                       Why upgrade?
                     </h4>
                     <ul className="space-y-1">
-                      {plans.PREMIUM.highlights.map((highlight, index) => (
+                      {plans.PRO.highlights.map((highlight, index) => (
                         <li key={index} className="flex items-center gap-2 text-sm font-medium">
                           <Zap className="h-3 w-3 text-yellow-500" />
                           {highlight}
@@ -311,7 +311,7 @@ export function UpgradePlanModal({
               <Button variant="outline" onClick={onClose} disabled={isLoading}>
                 Maybe Later
               </Button>
-              <Button onClick={handleUpgrade} disabled={isLoading}>
+              <Button onClick={() => handleUpgrade("PRO")} disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Spinner size="sm" className="mr-2" />
@@ -320,7 +320,7 @@ export function UpgradePlanModal({
                 ) : (
                   <>
                     <Crown className="h-4 w-4 mr-2" />
-                    Upgrade to Premium
+                    Upgrade to Pro
                   </>
                 )}
               </Button>
