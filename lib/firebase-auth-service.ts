@@ -370,7 +370,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Listen for auth state changes
+  // Listen for auth state changes and setup token refresh
   onAuthStateChanged(callback: (user: User | null) => void) {
     return onAuthStateChanged(
       auth,
@@ -402,16 +402,67 @@ class FirebaseAuthService {
             console.log(
               "✅ Auth state changed - Using Firebase user data (no backend sync)"
             );
+            
+            // Start periodic token refresh to extension
+            this.startTokenRefreshInterval(firebaseUser, user);
+            
             callback(user);
           } catch (error) {
             console.error("Auth state change error:", error);
             callback(null);
           }
         } else {
+          // Stop token refresh when user logs out
+          this.stopTokenRefreshInterval();
           callback(null);
         }
       }
     );
+  }
+
+  private tokenRefreshInterval: NodeJS.Timeout | null = null;
+
+  // Periodically refresh and sync Firebase ID token to extension
+  private startTokenRefreshInterval(firebaseUser: FirebaseUser, user: User) {
+    // Clear any existing interval
+    this.stopTokenRefreshInterval();
+
+    // Sync immediately
+    this.refreshAndSyncToken(firebaseUser, user);
+
+    // Then sync every 45 minutes (before 1-hour expiration)
+    this.tokenRefreshInterval = setInterval(() => {
+      this.refreshAndSyncToken(firebaseUser, user);
+    }, 45 * 60 * 1000); // 45 minutes
+
+    console.log("🔄 Started token refresh interval (every 45 minutes)");
+  }
+
+  private stopTokenRefreshInterval() {
+    if (this.tokenRefreshInterval) {
+      clearInterval(this.tokenRefreshInterval);
+      this.tokenRefreshInterval = null;
+      console.log("⏹️ Stopped token refresh interval");
+    }
+  }
+
+  // Get fresh Firebase ID token and sync to extension
+  private async refreshAndSyncToken(firebaseUser: FirebaseUser, user: User) {
+    try {
+      console.log("🔄 Refreshing Firebase ID token...");
+      
+      // Force refresh to get a new token
+      const freshToken = await firebaseUser.getIdToken(true);
+      
+      console.log("✅ Got fresh Firebase ID token");
+      
+      // Sync to extension
+      await this.syncWithExtension(freshToken, user);
+      
+      console.log("✅ Fresh token synced to extension successfully");
+    } catch (error) {
+      console.error("❌ Failed to refresh and sync token:", error);
+    }
   }
 
   // Get current Firebase user
