@@ -21,7 +21,7 @@ class FirebaseAuthService {
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://knugget-youtube-backend.onrender.com/api";
-    
+
     // Listen for connector ready message
     if (typeof window !== "undefined") {
       this.setupConnectorListener();
@@ -200,12 +200,55 @@ class FirebaseAuthService {
         console.warn("Backend logout failed:", error);
       }
 
+      // Notify extension about logout
+      await this.notifyExtensionLogout();
+
       return { success: true };
     } catch (error: any) {
       return {
         success: false,
         error: error.message || "Sign out failed",
       };
+    }
+  }
+
+  // Notify extension about logout
+  private async notifyExtensionLogout(): Promise<void> {
+    try {
+      if (typeof window === "undefined") {
+        return;
+      }
+
+      console.log("🚪 Notifying extension about logout...");
+
+      // Method 1: Try direct Chrome API
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        const extensionId = localStorage.getItem("knugget_extension_id");
+        if (extensionId) {
+          try {
+            await chrome.runtime.sendMessage(extensionId, {
+              type: "KNUGGET_LOGOUT",
+              timestamp: new Date().toISOString(),
+            });
+            console.log("✅ Logout notified via Chrome API");
+            return;
+          } catch {
+            console.log("ℹ️ Chrome API failed, trying postMessage...");
+          }
+        }
+      }
+
+      // Method 2: Use postMessage to content script
+      window.postMessage(
+        {
+          target: "KNUGGET_EXTENSION",
+          type: "LOGOUT",
+        },
+        "*"
+      );
+      console.log("✅ Logout notification posted to content script");
+    } catch (error) {
+      console.error("❌ Failed to notify extension about logout:", error);
     }
   }
 
@@ -326,7 +369,9 @@ class FirebaseAuthService {
       if (syncConfirmed) {
         console.log("✅ Auth sync confirmed by extension");
       } else {
-        console.log("⚠️ Auth sync not confirmed (extension may not be installed)");
+        console.log(
+          "⚠️ Auth sync not confirmed (extension may not be installed)"
+        );
       }
     } catch (error) {
       console.error("❌ Failed to sync with extension:", error);
