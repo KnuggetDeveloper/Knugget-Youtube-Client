@@ -15,11 +15,34 @@ import { User, ApiResponse } from "@/types/auth";
 
 class FirebaseAuthService {
   private baseUrl: string;
+  private connectorReady: boolean = false;
 
   constructor() {
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://knugget-youtube-backend.onrender.com/api";
+    
+    // Listen for connector ready message
+    if (typeof window !== "undefined") {
+      this.setupConnectorListener();
+    }
+  }
+
+  // Setup listener for extension connector
+  private setupConnectorListener(): void {
+    window.addEventListener("message", (event) => {
+      if (
+        event.data?.target === "KNUGGET_WEBPAGE" &&
+        event.data?.type === "CONNECTOR_READY"
+      ) {
+        this.connectorReady = true;
+        const extensionId = event.data.extensionId;
+        if (extensionId) {
+          localStorage.setItem("knugget_extension_id", extensionId);
+          console.log("✅ Extension connector ready, ID stored:", extensionId);
+        }
+      }
+    });
   }
 
   // Sign in with email and password
@@ -237,12 +260,8 @@ class FirebaseAuthService {
   private async syncWithExtension(idToken: string, user: User): Promise<void> {
     try {
       // Check if Chrome extension API is available
-      if (
-        typeof window === "undefined" ||
-        typeof chrome === "undefined" ||
-        !chrome.runtime
-      ) {
-        console.log("ℹ️ Chrome extension API not available");
+      if (typeof window === "undefined") {
+        console.log("ℹ️ Window not available (SSR)");
         return;
       }
 
@@ -274,25 +293,67 @@ class FirebaseAuthService {
         expiresAt: new Date(expiresAt).toISOString(),
       });
 
-      // Try to send message to extension
-      const extensionId = localStorage.getItem("knugget_extension_id");
-      if (extensionId) {
-        try {
-          await chrome.runtime.sendMessage(extensionId, {
-            type: "KNUGGET_AUTH_SUCCESS",
-            payload: authData,
-          });
-          console.log("✅ Auth synced to extension successfully");
-        } catch (error) {
-          console.log(
-            "ℹ️ Extension not responding (may not be installed):",
-            error
-          );
+      // Method 1: Try direct Chrome API (if available)
+      if (typeof chrome !== "undefined" && chrome.runtime) {
+        const extensionId = localStorage.getItem("knugget_extension_id");
+        if (extensionId) {
+          try {
+            await chrome.runtime.sendMessage(extensionId, {
+              type: "KNUGGET_AUTH_SUCCESS",
+              payload: authData,
+            });
+            console.log("✅ Auth synced via Chrome API");
+            return; // Success, no need to try other methods
+          } catch (error) {
+            console.log("ℹ️ Chrome API failed, trying postMessage...", error);
+          }
         }
+      }
+
+      // Method 2: Use postMessage to content script (more reliable)
+      window.postMessage(
+        {
+          target: "KNUGGET_EXTENSION",
+          type: "SYNC_AUTH",
+          payload: authData,
+        },
+        "*"
+      );
+      console.log("✅ Auth sync message posted to content script");
+
+      // Wait for confirmation (with timeout)
+      const syncConfirmed = await this.waitForSyncConfirmation();
+      if (syncConfirmed) {
+        console.log("✅ Auth sync confirmed by extension");
+      } else {
+        console.log("⚠️ Auth sync not confirmed (extension may not be installed)");
       }
     } catch (error) {
       console.error("❌ Failed to sync with extension:", error);
     }
+  }
+
+  // Wait for sync confirmation from content script
+  private async waitForSyncConfirmation(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        window.removeEventListener("message", handler);
+        resolve(false);
+      }, 2000); // 2 second timeout
+
+      const handler = (event: MessageEvent) => {
+        if (
+          event.data?.target === "KNUGGET_WEBPAGE" &&
+          event.data?.type === "AUTH_SYNC_COMPLETE"
+        ) {
+          clearTimeout(timeout);
+          window.removeEventListener("message", handler);
+          resolve(true);
+        }
+      };
+
+      window.addEventListener("message", handler);
+    });
   }
 
   // Get current user from backend
