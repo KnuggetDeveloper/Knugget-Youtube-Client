@@ -92,7 +92,6 @@ function LoginPageContent() {
               alt="Knugget Logo"
               width={20}
               height={20}
-              className="rounded-lg"
             />
             <span className="text-2xl font-bold text-white">Knugget</span>
           </div>

@@ -307,36 +307,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           {/* Content Area */}
           <div className="bg-[#313130] rounded-lg p-6">
             {activeTab === "summary" ? (
-              <div>
-                <h2 className="text-lg font-semibold text-white mb-4">
-                  Key Takeaways
-                </h2>
-                <div className="space-y-4">
-                  {summary.keyPoints && summary.keyPoints.length > 0 ? (
-                    summary.keyPoints.map((point, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="w-2 h-2 rounded-full bg-white mt-2 flex-shrink-0"></div>
-                        <p className="text-gray-300 text-sm leading-relaxed">
-                          {point}
-                        </p>
-                      </div>
-                    ))
-                  ) : summary.fullSummary ? (
-                    <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 rounded-full bg-white mt-2 flex-shrink-0"></div>
-                      <p className="text-gray-300 text-sm leading-relaxed">
-                        {summary.fullSummary}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-400">
-                        No summary available for this video.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <SummarySection summary={summary} />
             ) : (
               <div>
                 <h2 className="text-lg font-semibold text-white mb-4">
@@ -376,4 +347,321 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
       </div>
     </div>
   );
+}
+
+// Summary Section Component with 4-part structure
+interface SummarySectionProps {
+  summary: {
+    keyPoints?: string[];
+    fullSummary?: string;
+  };
+}
+
+function SummarySection({ summary }: SummarySectionProps) {
+  const sections = parseSummaryIntoSections(summary.fullSummary || "");
+
+  // Check if we have structured content
+  const hasStructuredContent =
+    sections.keyTakeaways.length > 0 ||
+    sections.quotes.length > 0 ||
+    sections.examples.length > 0 ||
+    sections.detailedNotes.length > 0;
+
+  // Fallback to simple display if no structured content
+  if (!hasStructuredContent) {
+    return (
+      <div>
+        <h2 className="text-lg font-semibold text-white mb-4">Summary</h2>
+        <div className="space-y-4">
+          {summary.keyPoints && summary.keyPoints.length > 0 ? (
+            summary.keyPoints.map((point: string, index: number) => (
+              <div key={index} className="flex items-start space-x-3">
+                <span className="text-lg flex-shrink-0 mt-0.5">📝</span>
+                <p className="text-gray-300 text-sm leading-relaxed">{point}</p>
+              </div>
+            ))
+          ) : summary.fullSummary ? (
+            <div className="flex items-start space-x-3">
+              <span className="text-lg flex-shrink-0 mt-0.5">📝</span>
+              <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                {summary.fullSummary}
+              </p>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-400">
+                No summary available for this video.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Display structured summary
+  return (
+    <div className="space-y-8">
+      {/* Top 3 Key Takeaways */}
+      {sections.keyTakeaways.length > 0 && (
+        <div>
+          <h4 className="text-xl font-semibold mb-4 relative text-white">
+            Top 3 Key Takeaways
+            <div
+              className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+              style={{
+                background:
+                  "linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%)",
+              }}
+            />
+          </h4>
+          <div className="space-y-4">
+            {sections.keyTakeaways.map((item, index) => (
+              <div
+                key={index}
+                className="flex gap-4 items-start p-2 rounded transition-all duration-300 hover:bg-[rgba(255,107,53,0.05)]"
+              >
+                <span className="text-lg flex-shrink-0 mt-0.5">
+                  {getKeyTakeawayIcon(index)}
+                </span>
+                <span className="text-sm leading-relaxed text-gray-300">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Top 3 Memorable Quotes */}
+      {sections.quotes.length > 0 && (
+        <div>
+          <h4 className="text-xl font-semibold mb-4 relative text-white">
+            Top 3 Memorable Quotes
+            <div
+              className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+              style={{
+                background:
+                  "linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%)",
+              }}
+            />
+          </h4>
+          <div className="space-y-4">
+            {sections.quotes.map((item, index) => (
+              <div
+                key={index}
+                className="flex gap-4 items-start p-2 rounded transition-all duration-300 hover:bg-[rgba(255,107,53,0.05)]"
+              >
+                <span className="text-lg flex-shrink-0 mt-0.5">
+                  {getQuoteIcon(index)}
+                </span>
+                <span className="text-sm leading-relaxed italic text-gray-300">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Top 3 Examples */}
+      {sections.examples.length > 0 && (
+        <div>
+          <h4 className="text-xl font-semibold mb-4 relative text-white">
+            Top 3 Examples
+            <div
+              className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+              style={{
+                background:
+                  "linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%)",
+              }}
+            />
+          </h4>
+          <div className="space-y-4">
+            {sections.examples.map((item, index) => (
+              <div
+                key={index}
+                className="flex gap-4 items-start p-2 rounded transition-all duration-300 hover:bg-[rgba(255,107,53,0.05)]"
+              >
+                <span className="text-lg flex-shrink-0 mt-0.5">
+                  {getExampleIcon(index)}
+                </span>
+                <span className="text-sm leading-relaxed text-gray-300">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Detailed Note of All Key Points */}
+      {sections.detailedNotes.length > 0 && (
+        <div>
+          <h4 className="text-xl font-semibold mb-4 relative text-white">
+            Detailed Note of All Key Points
+            <div
+              className="absolute bottom-[-4px] left-0 w-10 h-0.5 rounded"
+              style={{
+                background:
+                  "linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%)",
+              }}
+            />
+          </h4>
+          <div className="space-y-6">
+            {sections.detailedNotes.map((section, index) => (
+              <div
+                key={index}
+                className="p-4 rounded-lg transition-all duration-300"
+                style={{
+                  background: "rgba(255, 107, 53, 0.02)",
+                  border: "1px solid rgba(255, 107, 53, 0.1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 107, 53, 0.05)";
+                  e.currentTarget.style.borderColor = "rgba(255, 107, 53, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 107, 53, 0.02)";
+                  e.currentTarget.style.borderColor = "rgba(255, 107, 53, 0.1)";
+                }}
+              >
+                <h5
+                  className="text-lg font-medium mb-2"
+                  style={{ color: "#ff6b35" }}
+                >
+                  {section.title}
+                </h5>
+                <p className="text-sm leading-relaxed text-gray-300">
+                  {section.content}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Parse AI response into structured sections
+function parseSummaryIntoSections(fullSummary: string): {
+  keyTakeaways: string[];
+  quotes: string[];
+  examples: string[];
+  detailedNotes: Array<{ title: string; content: string }>;
+} {
+  const result: {
+    keyTakeaways: string[];
+    quotes: string[];
+    examples: string[];
+    detailedNotes: Array<{ title: string; content: string }>;
+  } = {
+    keyTakeaways: [],
+    quotes: [],
+    examples: [],
+    detailedNotes: [],
+  };
+
+  const lines = fullSummary
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l);
+  let currentSection = "";
+  let currentItems: string[] = [];
+  let detailedNotesStarted = false;
+  let currentNoteTitle = "";
+  let currentNoteContent: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Detect section headers
+    if (line.match(/top\s*3\s*key\s*takeaways/i)) {
+      saveCurrentSection();
+      currentSection = "takeaways";
+      detailedNotesStarted = false;
+    } else if (line.match(/top\s*3\s*memorable\s*quotes/i)) {
+      saveCurrentSection();
+      currentSection = "quotes";
+      detailedNotesStarted = false;
+    } else if (line.match(/top\s*3\s*examples/i)) {
+      saveCurrentSection();
+      currentSection = "examples";
+      detailedNotesStarted = false;
+    } else if (line.match(/detailed\s*note/i)) {
+      saveCurrentSection();
+      currentSection = "detailed";
+      detailedNotesStarted = true;
+    } else {
+      // Process content based on current section
+      if (detailedNotesStarted) {
+        // Detailed notes section - look for subsections
+        if (line.startsWith("-") || line.match(/^\d+\./)) {
+          // This is a bullet point or numbered item - could be a note title
+          const cleaned = line.replace(/^[-\d.]\s*/, "").trim();
+          if (cleaned) {
+            if (currentNoteTitle && currentNoteContent.length > 0) {
+              result.detailedNotes.push({
+                title: currentNoteTitle,
+                content: currentNoteContent.join(" "),
+              });
+              currentNoteContent = [];
+            }
+            currentNoteTitle = cleaned;
+          }
+        } else if (line.length > 0) {
+          // Regular content line
+          currentNoteContent.push(line);
+        }
+      } else if (
+        currentSection &&
+        (line.startsWith("-") || line.match(/^\d+\./) || line.match(/^[•●]/))
+      ) {
+        // Bullet point for takeaways/quotes/examples
+        const cleaned = line.replace(/^[-\d.•●]\s*/, "").trim();
+        if (cleaned) {
+          currentItems.push(cleaned);
+        }
+      }
+    }
+  }
+
+  // Save last section
+  saveCurrentSection();
+  if (currentNoteTitle && currentNoteContent.length > 0) {
+    result.detailedNotes.push({
+      title: currentNoteTitle,
+      content: currentNoteContent.join(" "),
+    });
+  }
+
+  function saveCurrentSection() {
+    if (currentSection === "takeaways") {
+      result.keyTakeaways = currentItems.slice(0, 3);
+    } else if (currentSection === "quotes") {
+      result.quotes = currentItems.slice(0, 3);
+    } else if (currentSection === "examples") {
+      result.examples = currentItems.slice(0, 3);
+    }
+    currentItems = [];
+  }
+
+  return result;
+}
+
+// Icons for each category
+function getKeyTakeawayIcon(index: number): string {
+  const icons = ["🎯", "💡", "⚡"];
+  return icons[index] || "🎯";
+}
+
+function getQuoteIcon(index: number): string {
+  const icons = ["💬", "📖", "✨"];
+  return icons[index] || "💬";
+}
+
+function getExampleIcon(index: number): string {
+  const icons = ["🔍", "📌", "🎓"];
+  return icons[index] || "🔍";
 }
