@@ -402,10 +402,10 @@ class FirebaseAuthService {
             console.log(
               "✅ Auth state changed - Using Firebase user data (no backend sync)"
             );
-            
+
             // Start periodic token refresh to extension
             this.startTokenRefreshInterval(firebaseUser, user);
-            
+
             callback(user);
           } catch (error) {
             console.error("Auth state change error:", error);
@@ -431,9 +431,12 @@ class FirebaseAuthService {
     this.refreshAndSyncToken(firebaseUser, user);
 
     // Then sync every 45 minutes (before 1-hour expiration)
-    this.tokenRefreshInterval = setInterval(() => {
-      this.refreshAndSyncToken(firebaseUser, user);
-    }, 45 * 60 * 1000); // 45 minutes
+    this.tokenRefreshInterval = setInterval(
+      () => {
+        this.refreshAndSyncToken(firebaseUser, user);
+      },
+      45 * 60 * 1000
+    ); // 45 minutes
 
     console.log("🔄 Started token refresh interval (every 45 minutes)");
   }
@@ -450,15 +453,15 @@ class FirebaseAuthService {
   private async refreshAndSyncToken(firebaseUser: FirebaseUser, user: User) {
     try {
       console.log("🔄 Refreshing Firebase ID token...");
-      
+
       // Force refresh to get a new token
       const freshToken = await firebaseUser.getIdToken(true);
-      
+
       console.log("✅ Got fresh Firebase ID token");
-      
+
       // Sync to extension
       await this.syncWithExtension(freshToken, user);
-      
+
       console.log("✅ Fresh token synced to extension successfully");
     } catch (error) {
       console.error("❌ Failed to refresh and sync token:", error);
