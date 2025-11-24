@@ -598,20 +598,33 @@ function parseSummaryIntoSections(fullSummary: string): {
       if (detailedNotesStarted) {
         // Detailed notes section - look for subsections
         if (line.startsWith("-") || line.match(/^\d+\./)) {
-          // This is a bullet point or numbered item - could be a note title
+          // This is a bullet point - format: "- Title: Content" or "- Title"
           const cleaned = line.replace(/^[-\d.]\s*/, "").trim();
           if (cleaned) {
-            if (currentNoteTitle && currentNoteContent.length > 0) {
+            // Check if there's a colon separating title and content
+            const colonIndex = cleaned.indexOf(":");
+            if (colonIndex > 0) {
+              // Format: "Title: Content"
+              const title = cleaned.substring(0, colonIndex).trim();
+              const content = cleaned.substring(colonIndex + 1).trim();
               result.detailedNotes.push({
-                title: currentNoteTitle,
-                content: currentNoteContent.join(" "),
+                title: title,
+                content: content,
               });
-              currentNoteContent = [];
+            } else {
+              // No colon - save previous note if exists
+              if (currentNoteTitle && currentNoteContent.length > 0) {
+                result.detailedNotes.push({
+                  title: currentNoteTitle,
+                  content: currentNoteContent.join(" "),
+                });
+                currentNoteContent = [];
+              }
+              currentNoteTitle = cleaned;
             }
-            currentNoteTitle = cleaned;
           }
         } else if (line.length > 0) {
-          // Regular content line
+          // Regular content line (for multi-line notes)
           currentNoteContent.push(line);
         }
       } else if (
