@@ -202,7 +202,7 @@ class FirebaseAuthService {
     }
   }
 
-  // Sync Firebase user with backend
+  // Sync Firebase user with backend AND extension
   private async syncWithBackend(idToken: string): Promise<User | null> {
     try {
       const response = await fetch(`${this.baseUrl}/auth/sync`, {
@@ -215,7 +215,14 @@ class FirebaseAuthService {
 
       if (response.ok) {
         const data = await response.json();
-        return data.data;
+        const user = data.data;
+
+        // Sync with extension after backend sync succeeds
+        if (user && idToken) {
+          await this.syncWithExtension(idToken, user);
+        }
+
+        return user;
       } else {
         console.error("Backend sync failed:", response.statusText);
         return null;
@@ -223,6 +230,68 @@ class FirebaseAuthService {
     } catch (error) {
       console.error("Backend sync error:", error);
       return null;
+    }
+  }
+
+  // Sync Firebase ID token with Chrome extension
+  private async syncWithExtension(idToken: string, user: User): Promise<void> {
+    try {
+      // Check if Chrome extension API is available
+      if (
+        typeof window === "undefined" ||
+        typeof chrome === "undefined" ||
+        !chrome.runtime
+      ) {
+        console.log("ℹ️ Chrome extension API not available");
+        return;
+      }
+
+      // Get Firebase user for token expiration
+      const firebaseUser = auth.currentUser;
+      if (!firebaseUser) {
+        console.log("❌ No Firebase user available");
+        return;
+      }
+
+      // Firebase ID tokens expire after 1 hour
+      const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour from now
+
+      const authData = {
+        accessToken: idToken, // Use Firebase ID token as access token
+        refreshToken: idToken, // Extension will refresh by calling Firebase getIdToken(true)
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          credits: user.inputTokensRemaining || 0,
+          plan: user.plan,
+        },
+        expiresAt,
+      };
+
+      console.log("🔄 Syncing auth to extension...", {
+        userEmail: user.email,
+        expiresAt: new Date(expiresAt).toISOString(),
+      });
+
+      // Try to send message to extension
+      const extensionId = localStorage.getItem("knugget_extension_id");
+      if (extensionId) {
+        try {
+          await chrome.runtime.sendMessage(extensionId, {
+            type: "KNUGGET_AUTH_SUCCESS",
+            payload: authData,
+          });
+          console.log("✅ Auth synced to extension successfully");
+        } catch (error) {
+          console.log(
+            "ℹ️ Extension not responding (may not be installed):",
+            error
+          );
+        }
+      }
+    } catch (error) {
+      console.error("❌ Failed to sync with extension:", error);
     }
   }
 
@@ -318,16 +387,21 @@ class FirebaseAuthService {
               plan: "FREE", // Will be updated by backend sync if premium
               subscriptionId: null,
               emailVerified: firebaseUser.emailVerified,
-              createdAt: firebaseUser.metadata.creationTime || new Date().toISOString(),
-              lastLoginAt: firebaseUser.metadata.lastSignInTime || new Date().toISOString(),
+              createdAt:
+                firebaseUser.metadata.creationTime || new Date().toISOString(),
+              lastLoginAt:
+                firebaseUser.metadata.lastSignInTime ||
+                new Date().toISOString(),
               videosProcessedThisMonth: 0,
               videoResetDate: null,
               inputTokensRemaining: 150000, // FREE plan defaults
               outputTokensRemaining: 10000,
               tokenResetDate: null,
             };
-            
-            console.log("✅ Auth state changed - Using Firebase user data (no backend sync)");
+
+            console.log(
+              "✅ Auth state changed - Using Firebase user data (no backend sync)"
+            );
             callback(user);
           } catch (error) {
             console.error("Auth state change error:", error);
