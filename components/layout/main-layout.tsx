@@ -4,9 +4,18 @@
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { usePathname } from "next/navigation";
 import { GlobalSidebar } from "./sidebar";
+import { Suspense } from "react";
 
 interface MainLayoutProps {
   children: React.ReactNode;
+}
+
+function SidebarWrapper() {
+  return (
+    <Suspense fallback={<div className="w-64 bg-[#151515]" />}>
+      <GlobalSidebar />
+    </Suspense>
+  );
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
@@ -27,7 +36,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex h-screen bg-gray-950 text-white">
-      <GlobalSidebar />
+      <SidebarWrapper />
       <main className="flex-1 ml-64 overflow-hidden">
         <div className="h-full overflow-auto">{children}</div>
       </main>

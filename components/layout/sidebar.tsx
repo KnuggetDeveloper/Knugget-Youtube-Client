@@ -3,7 +3,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { LogOut, Youtube, Clock } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
@@ -12,12 +12,15 @@ import { BuyNowButton } from "@/components/payment/buy-now-button";
 // LinkedIn hooks disabled - can be re-enabled via feature flags
 // import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Button } from "@/components/ui/button";
+import { useEffect, useRef } from "react";
 
 export function GlobalSidebar() {
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const sidebarCollapsed = false;
+  const buyNowButtonRef = useRef<HTMLDivElement>(null);
 
   // Get data for counts - Start with 20 most recent, load more on demand
   const { data: summariesData, isLoading: summariesLoading } =
@@ -82,6 +85,25 @@ export function GlobalSidebar() {
   const handleVideoClick = (summaryId: string) => {
     router.push(`/knugget/youtube/${summaryId}`);
   };
+
+  // Auto-open upgrade modal when redirected from extension
+  useEffect(() => {
+    const openUpgrade = searchParams.get("openUpgrade");
+    if (openUpgrade === "true" && buyNowButtonRef.current) {
+      // Small delay to ensure the button is rendered
+      const timer = setTimeout(() => {
+        const button = buyNowButtonRef.current?.querySelector("button");
+        if (button) {
+          button.click();
+          // Clear the parameter from URL
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.delete("openUpgrade");
+          window.history.replaceState({}, "", newUrl.toString());
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   return (
     <div
@@ -178,7 +200,10 @@ export function GlobalSidebar() {
 
       {/* Buy Now Button */}
       {!sidebarCollapsed && user && (
-        <div className="px-4 py-3 border-t border-gray-800">
+        <div
+          ref={buyNowButtonRef}
+          className="px-4 py-3 border-t border-gray-800"
+        >
           <BuyNowButton variant="button" size="default" className="w-full" />
         </div>
       )}
