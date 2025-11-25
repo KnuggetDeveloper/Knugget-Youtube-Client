@@ -35,6 +35,26 @@ export function GlobalSidebar() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: stats } = useUserStatsQuery();
 
+  // Auto-open upgrade modal when redirected from extension
+  // This must be before any conditional returns (React rules of hooks)
+  useEffect(() => {
+    const openUpgrade = searchParams.get("openUpgrade");
+    if (openUpgrade === "true" && buyNowButtonRef.current) {
+      // Small delay to ensure the button is rendered
+      const timer = setTimeout(() => {
+        const button = buyNowButtonRef.current?.querySelector("button");
+        if (button) {
+          button.click();
+          // Clear the parameter from URL
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.delete("openUpgrade");
+          window.history.replaceState({}, "", newUrl.toString());
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
+
   // Don't show sidebar on auth pages or landing page for non-authenticated users
   const hideSidebar =
     !isAuthenticated ||
@@ -85,25 +105,6 @@ export function GlobalSidebar() {
   const handleVideoClick = (summaryId: string) => {
     router.push(`/knugget/youtube/${summaryId}`);
   };
-
-  // Auto-open upgrade modal when redirected from extension
-  useEffect(() => {
-    const openUpgrade = searchParams.get("openUpgrade");
-    if (openUpgrade === "true" && buyNowButtonRef.current) {
-      // Small delay to ensure the button is rendered
-      const timer = setTimeout(() => {
-        const button = buyNowButtonRef.current?.querySelector("button");
-        if (button) {
-          button.click();
-          // Clear the parameter from URL
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.delete("openUpgrade");
-          window.history.replaceState({}, "", newUrl.toString());
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams]);
 
   return (
     <div
