@@ -12,7 +12,7 @@ interface MainLayoutProps {
 
 function SidebarWrapper() {
   return (
-    <Suspense fallback={<div className="w-64 bg-[#151515]" />}>
+    <Suspense fallback={<div className="w-64 bg-black" />}>
       <GlobalSidebar />
     </Suspense>
   );

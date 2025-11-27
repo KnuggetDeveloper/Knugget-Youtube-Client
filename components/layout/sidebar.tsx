@@ -108,7 +108,7 @@ export function GlobalSidebar() {
 
   return (
     <div
-      className={`${sidebarCollapsed ? "w-16" : "w-64"} bg-[#151515] flex flex-col transition-all duration-300 fixed left-0 top-0 h-full z-50`}
+      className={`${sidebarCollapsed ? "w-16" : "w-64"} bg-black flex flex-col transition-all duration-300 fixed left-0 top-0 h-full z-50`}
     >
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
