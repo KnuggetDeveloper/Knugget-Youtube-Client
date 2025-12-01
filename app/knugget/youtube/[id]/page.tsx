@@ -47,16 +47,16 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
       console.log("✅ Real summary data loaded:", summary);
       // Set infographic URL if it exists
       if (summary.infographicUrl) {
-        // Check if it's a data URL or file path
-        if (summary.infographicUrl.startsWith('data:')) {
-          // It's a data URL - use directly (no file storage)
-          setInfographicUrl(summary.infographicUrl);
-        } else {
-          // Legacy file path - construct full URL
+        // Check if it's a relative file path that needs URL construction
+        if (summary.infographicUrl.startsWith("/uploads")) {
+          // It's a relative file path - construct full URL
           const apiBaseUrl =
             process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
           const baseUrl = apiBaseUrl.replace("/api", "");
           setInfographicUrl(`${baseUrl}${summary.infographicUrl}`);
+        } else {
+          // It's either a full URL or data URL - use directly
+          setInfographicUrl(summary.infographicUrl);
         }
       }
     }
