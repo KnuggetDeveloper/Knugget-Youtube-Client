@@ -60,13 +60,8 @@ export async function generateInfographic(
     throw new Error(result.error || "Failed to generate infographic");
   }
 
-  // Convert relative file path to absolute URL
-  // If imageUrl starts with /uploads, prepend backend base URL
-  const backendBaseUrl = API_BASE_URL.replace("/api", "");
-  if (result.data.imageUrl.startsWith("/uploads")) {
-    result.data.imageUrl = `${backendBaseUrl}${result.data.imageUrl}`;
-  }
-
+  // Return the data as-is (relative path /uploads/...)
+  // URL construction will be handled in the component
   return result.data;
 }
 

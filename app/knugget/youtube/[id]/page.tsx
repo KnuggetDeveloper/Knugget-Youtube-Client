@@ -47,15 +47,17 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
       console.log("✅ Real summary data loaded:", summary);
       // Set infographic URL if it exists
       if (summary.infographicUrl) {
-        // Check if it's a relative file path that needs URL construction
+        // Convert relative path to full URL
         if (summary.infographicUrl.startsWith("/uploads")) {
-          // It's a relative file path - construct full URL
           const apiBaseUrl =
             process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
           const baseUrl = apiBaseUrl.replace("/api", "");
-          setInfographicUrl(`${baseUrl}${summary.infographicUrl}`);
+          const fullUrl = `${baseUrl}${summary.infographicUrl}`;
+          console.log("🖼️ Infographic URL:", fullUrl);
+          setInfographicUrl(fullUrl);
         } else {
-          // It's either a full URL or data URL - use directly
+          // Already a full URL or data URL
+          console.log("🖼️ Infographic URL (direct):", summary.infographicUrl);
           setInfographicUrl(summary.infographicUrl);
         }
       }
@@ -131,11 +133,19 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
         transcriptText: summary.transcriptText,
       });
 
-      // Construct full URL for the infographic
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
-      const baseUrl = apiBaseUrl.replace("/api", "");
-      setInfographicUrl(`${baseUrl}${result.imageUrl}`);
+      // Construct full URL if it's a relative path
+      if (result.imageUrl.startsWith("/uploads")) {
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+        const baseUrl = apiBaseUrl.replace("/api", "");
+        const fullUrl = `${baseUrl}${result.imageUrl}`;
+        console.log("🖼️ Generated infographic URL:", fullUrl);
+        setInfographicUrl(fullUrl);
+      } else {
+        // Already a full URL or data URL
+        console.log("🖼️ Generated infographic URL (direct):", result.imageUrl);
+        setInfographicUrl(result.imageUrl);
+      }
       setInfographicError(null);
     } catch (error) {
       console.error("Failed to generate infographic:", error);
