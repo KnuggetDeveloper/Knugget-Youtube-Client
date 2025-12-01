@@ -3,9 +3,17 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ExternalLink, Youtube, Play } from "lucide-react";
+import {
+  ArrowLeft,
+  ExternalLink,
+  Youtube,
+  Play,
+  Loader2,
+  ImageIcon,
+} from "lucide-react";
 import { useSummary } from "@/hooks/use-summaries";
 import { Button } from "@/components/ui/button";
+import { generateInfographic } from "@/lib/infographic-service";
 
 interface YouTubeDetailPageProps {
   params: Promise<{ id: string }>;
@@ -19,6 +27,9 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
     null
   );
+  const [isGeneratingInfographic, setIsGeneratingInfographic] = useState(false);
+  const [infographicError, setInfographicError] = useState<string | null>(null);
+  const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
 
   // This hook fetches real data from your backend API
   const { summary, isLoading, error } = useSummary(
@@ -34,6 +45,13 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
   useEffect(() => {
     if (summary) {
       console.log("✅ Real summary data loaded:", summary);
+      // Set infographic URL if it exists
+      if (summary.infographicUrl) {
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+        const baseUrl = apiBaseUrl.replace("/api", "");
+        setInfographicUrl(`${baseUrl}${summary.infographicUrl}`);
+      }
     }
     if (error) {
       console.error("❌ Error fetching summary:", error);
@@ -89,6 +107,39 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
       month: "short",
       year: "numeric",
     });
+  };
+
+  const handleGenerateInfographic = async () => {
+    if (!summary || !summary.id) {
+      setInfographicError("Summary not available");
+      return;
+    }
+
+    setIsGeneratingInfographic(true);
+    setInfographicError(null);
+
+    try {
+      const result = await generateInfographic({
+        summaryId: summary.id,
+        transcriptText: summary.transcriptText,
+      });
+
+      // Construct full URL for the infographic
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+      const baseUrl = apiBaseUrl.replace("/api", "");
+      setInfographicUrl(`${baseUrl}${result.imageUrl}`);
+      setInfographicError(null);
+    } catch (error) {
+      console.error("Failed to generate infographic:", error);
+      setInfographicError(
+        error instanceof Error
+          ? error.message
+          : "Failed to generate infographic"
+      );
+    } finally {
+      setIsGeneratingInfographic(false);
+    }
   };
 
   // Loading state - shows while fetching real data
@@ -301,6 +352,19 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
                 )}
               </button>
+              <button
+                onClick={() => setActiveTab("infographic")}
+                className={`pb-3 text-sm font-semibold transition-colors relative ${
+                  activeTab === "infographic"
+                    ? "text-white"
+                    : "text-gray-400 hover:text-gray-300"
+                }`}
+              >
+                Infographic
+                {activeTab === "infographic" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
+                )}
+              </button>
             </div>
           </div>
 
@@ -308,6 +372,13 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           <div className="bg-[#313130] rounded-lg p-6">
             {activeTab === "summary" ? (
               <SummarySection summary={summary} />
+            ) : activeTab === "infographic" ? (
+              <InfographicSection
+                infographicUrl={infographicUrl}
+                isGenerating={isGeneratingInfographic}
+                error={infographicError}
+                onGenerate={handleGenerateInfographic}
+              />
             ) : (
               <div>
                 <h2 className="text-lg font-semibold text-white mb-4">
@@ -677,4 +748,101 @@ function getQuoteIcon(index: number): string {
 function getExampleIcon(index: number): string {
   const icons = ["🔍", "📌", "🎓"];
   return icons[index] || "🔍";
+}
+
+// Infographic Section Component
+interface InfographicSectionProps {
+  infographicUrl: string | null;
+  isGenerating: boolean;
+  error: string | null;
+  onGenerate: () => void;
+}
+
+function InfographicSection({
+  infographicUrl,
+  isGenerating,
+  error,
+  onGenerate,
+}: InfographicSectionProps) {
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-white mb-4">Infographic</h2>
+
+      {/* Generate Button */}
+      {!infographicUrl && !isGenerating && (
+        <div className="text-center py-12">
+          <div className="mb-6">
+            <ImageIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <p className="text-gray-400 mb-6">
+              Generate a visual infographic from this video&apos;s transcript
+            </p>
+          </div>
+          <Button
+            onClick={onGenerate}
+            disabled={isGenerating}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+          >
+            Generate Infographic
+          </Button>
+          {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isGenerating && (
+        <div className="text-center py-12">
+          <Loader2 className="w-12 h-12 text-orange-500 mx-auto mb-4 animate-spin" />
+          <p className="text-gray-300 mb-2">Generating your infographic...</p>
+          <p className="text-gray-500 text-sm">This may take up to 2 minutes</p>
+        </div>
+      )}
+
+      {/* Display Generated Infographic */}
+      {infographicUrl && !isGenerating && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-gray-400 text-sm">
+              Your infographic has been generated successfully!
+            </p>
+            <Button
+              onClick={onGenerate}
+              disabled={isGenerating}
+              variant="outline"
+              className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+            >
+              Regenerate
+            </Button>
+          </div>
+
+          <div className="bg-gray-800 rounded-lg p-4 overflow-auto max-h-[600px]">
+            <img
+              src={infographicUrl}
+              alt="Generated Infographic"
+              className="w-full h-auto rounded-lg"
+              onError={(e) => {
+                console.error("Failed to load infographic:", infographicUrl);
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <Button
+              onClick={() => {
+                const link = document.createElement("a");
+                link.href = infographicUrl;
+                link.download = "infographic.png";
+                link.click();
+              }}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              Download
+            </Button>
+          </div>
+
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+        </div>
+      )}
+    </div>
+  );
 }

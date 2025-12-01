@@ -35,6 +35,7 @@ export interface Summary {
   thumbnailUrl?: string;
   transcript?: TranscriptSegment[];
   transcriptText?: string;
+  infographicUrl?: string; // URL of the generated infographic image
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -185,6 +186,31 @@ export const SUMMARY_ENDPOINTS = {
   GET_BY_VIDEO_ID: (videoId: string) => `/summary/video/${videoId}`,
   GENERATE: "/summary/generate",
   STATS: "/summary/stats",
+} as const;
+
+// Infographic types
+export interface InfographicGenerationRequest {
+  summaryId: string;
+  transcriptText?: string;
+}
+
+export interface InfographicGenerationResponse {
+  imageUrl: string;
+  summaryId: string;
+}
+
+export interface ImageGenerationStats {
+  totalGenerations: number;
+  successfulGenerations: number;
+  failedGenerations: number;
+  generationsThisMonth: number;
+}
+
+// Infographic service endpoints
+export const INFOGRAPHIC_ENDPOINTS = {
+  GENERATE: "/infographic/generate",
+  STATS: "/infographic/stats",
+  USAGE: "/infographic/usage",
 } as const;
 
 // Common utility types
