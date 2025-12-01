@@ -14,6 +14,7 @@ export const video1KeyTakeaways = [
   },
 ];
 
+
 export const video1Quotes = [
   {
     icon: "👻",
