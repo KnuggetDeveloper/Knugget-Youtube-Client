@@ -6,16 +6,19 @@ import {
   ApiResponse,
   INFOGRAPHIC_ENDPOINTS,
 } from "@/types/summary";
+import { auth } from "@/lib/firebase";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 
 /**
- * Get authentication token from localStorage
+ * Get authentication token from Firebase
  */
-function getAuthToken(): string | null {
+async function getAuthToken(): Promise<string | null> {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("accessToken");
+  const currentUser = auth.currentUser;
+  if (!currentUser) return null;
+  return await currentUser.getIdToken();
 }
 
 /**
@@ -24,7 +27,7 @@ function getAuthToken(): string | null {
 export async function generateInfographic(
   data: InfographicGenerationRequest
 ): Promise<InfographicGenerationResponse> {
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   if (!token) {
     throw new Error("Authentication required");
@@ -64,7 +67,7 @@ export async function generateInfographic(
  * Get image generation statistics
  */
 export async function getImageGenerationStats(): Promise<ImageGenerationStats> {
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   if (!token) {
     throw new Error("Authentication required");
@@ -104,7 +107,7 @@ export async function getImageGenerationUsage(
   page: number = 1,
   limit: number = 20
 ): Promise<any> {
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   if (!token) {
     throw new Error("Authentication required");
