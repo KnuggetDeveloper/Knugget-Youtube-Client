@@ -785,7 +785,7 @@ function InfographicSection({
     <div>
       <h2 className="text-lg font-semibold text-white mb-4">Infographic</h2>
 
-      {/* Generate Button */}
+      {/* Generate Button - Only shown when no infographic exists */}
       {!infographicUrl && !isGenerating && (
         <div className="text-center py-12">
           <div className="mb-6">
@@ -814,23 +814,9 @@ function InfographicSection({
         </div>
       )}
 
-      {/* Display Generated Infographic */}
+      {/* Display Generated Infographic - No buttons, just the image */}
       {infographicUrl && !isGenerating && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-gray-400 text-sm">
-              Your infographic has been generated successfully!
-            </p>
-            <Button
-              onClick={onGenerate}
-              disabled={isGenerating}
-              variant="outline"
-              className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-            >
-              Regenerate
-            </Button>
-          </div>
-
           <div className="bg-gray-800 rounded-lg p-4 overflow-auto max-h-[600px]">
             <img
               src={infographicUrl}
@@ -842,22 +828,6 @@ function InfographicSection({
               }}
             />
           </div>
-
-          <div className="flex justify-end space-x-2">
-            <Button
-              onClick={() => {
-                const link = document.createElement("a");
-                link.href = infographicUrl;
-                link.download = "infographic.png";
-                link.click();
-              }}
-              className="bg-orange-500 hover:bg-orange-600 text-white"
-            >
-              Download
-            </Button>
-          </div>
-
-          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
         </div>
       )}
     </div>
