@@ -5,16 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
-// LinkedIn hooks disabled - can be re-enabled via feature flags
-// import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
+import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Input } from "@/components/ui/input";
-import { YouTubeCard } from "@/components/content-cards";
-// LinkedIn components disabled
-// import { LinkedInCard } from "@/components/content-cards";
+import { YouTubeCard, LinkedInCard } from "@/components/content-cards";
 
 interface KnuggetItem {
   id: string;
-  type: "youtube"; // | "linkedin" | "website" | "twitter" - disabled platforms
+  type: "youtube" | "linkedin" | "website";
   title: string;
   source: string;
   author?: string;
@@ -59,11 +56,9 @@ function DashboardContent() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
-  // LinkedIn posts disabled - can be re-enabled via feature flags
-  // const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
-  //   { limit: 50 }
-  // );
-  const linkedinLoading = false;
+  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
+    { limit: 50 }
+  );
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -107,24 +102,24 @@ function DashboardContent() {
       });
     });
 
-    // LinkedIn posts disabled - no items added
-    // linkedinPosts.forEach((post) => {
-    //   items.push({
-    //     id: post.id,
-    //     type: "linkedin",
-    //     title: post.title || "",
-    //     source: "LinkedIn",
-    //     author: post.author,
-    //     content: post.content,
-    //     url: post.postUrl,
-    //     tags: [], // LinkedIn posts don't have tags in current structure
-    //     createdAt: post.savedAt,
-    //     metadata: {
-    //       authorImage: post.metadata?.authorImage as string,
-    //       authorAbout: post.metadata?.authorAbout as string,
-    //     },
-    //   });
-    // });
+    // Add LinkedIn posts
+    linkedinPosts.forEach((post) => {
+      items.push({
+        id: post.id,
+        type: "linkedin",
+        title: post.title || "",
+        source: "LinkedIn",
+        author: post.author,
+        content: post.content,
+        url: post.postUrl,
+        tags: [], // LinkedIn posts don't have tags in current structure
+        createdAt: post.savedAt,
+        metadata: {
+          authorImage: post.metadata?.authorImage as string,
+          authorAbout: post.metadata?.authorAbout as string,
+        },
+      });
+    });
 
     // Sort by creation date (newest first)
     items.sort(
@@ -133,7 +128,7 @@ function DashboardContent() {
     );
 
     return items;
-  }, [summariesData?.data]);
+  }, [summariesData?.data, linkedinPosts]);
 
   // FIXED: Filter items based on search and active filter using useMemo
   const filteredItems = useMemo(() => {
@@ -185,13 +180,10 @@ function DashboardContent() {
     switch (activeFilter) {
       case "youtube":
         return "YouTube Videos";
-      // Disabled platforms
-      // case "linkedin":
-      //   return "LinkedIn Posts";
-      // case "website":
-      //   return "Website Articles";
-      // case "twitter":
-      //   return "X Posts";
+      case "linkedin":
+        return "LinkedIn Posts";
+      case "website":
+        return "Website Articles";
       default:
         return "All Knuggets";
     }
@@ -202,16 +194,12 @@ function DashboardContent() {
       case "youtube":
         router.push(`/knugget/youtube/${item.id}`);
         break;
-      // Disabled platforms
-      // case "linkedin":
-      //   router.push(`/knugget/linkedin/${item.id}`);
-      //   break;
-      // case "website":
-      //   router.push(`/knugget/website/${item.id}`);
-      //   break;
-      // case "twitter":
-      //   router.push(`/knugget/twitter/${item.id}`);
-      //   break;
+      case "linkedin":
+        router.push(`/knugget/linkedin/${item.id}`);
+        break;
+      case "website":
+        router.push(`/knugget/website/${item.id}`);
+        break;
     }
   };
 
@@ -313,25 +301,24 @@ function DashboardContent() {
                       onThumbnailClick={() => handleThumbnailClick(item)}
                     />
                   );
-                // LinkedIn cards disabled
-                // case "linkedin":
-                //   return (
-                //     <LinkedInCard
-                //       key={item.id}
-                //       data={{
-                //         id: item.id,
-                //         title: item.title,
-                //         author: item.author || "Unknown Author",
-                //         role: item.metadata?.authorAbout,
-                //         profileImage: item.metadata?.authorImage,
-                //         content: item.content || "",
-                //         url: item.url,
-                //         tags: item.tags,
-                //         createdAt: item.createdAt,
-                //       }}
-                //       onCardClick={() => handleItemClick(item)}
-                //     />
-                //   );
+                case "linkedin":
+                  return (
+                    <LinkedInCard
+                      key={item.id}
+                      data={{
+                        id: item.id,
+                        title: item.title,
+                        author: item.author || "Unknown Author",
+                        role: item.metadata?.authorAbout,
+                        profileImage: item.metadata?.authorImage,
+                        content: item.content || "",
+                        url: item.url,
+                        tags: item.tags,
+                        createdAt: item.createdAt,
+                      }}
+                      onCardClick={() => handleItemClick(item)}
+                    />
+                  );
                 default:
                   return null;
               }
