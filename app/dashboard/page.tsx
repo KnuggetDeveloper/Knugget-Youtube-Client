@@ -58,7 +58,7 @@ function DashboardContent() {
     });
   const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
     { limit: 50 }
-  );
+  );  
 
   // Redirect if not authenticated
   useEffect(() => {
