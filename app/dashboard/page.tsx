@@ -5,13 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
-import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Input } from "@/components/ui/input";
-import { YouTubeCard, LinkedInCard } from "@/components/content-cards";
+import { YouTubeCard } from "@/components/content-cards";
 
 interface KnuggetItem {
   id: string;
-  type: "youtube" | "linkedin" | "website";
+  type: "youtube";
   title: string;
   source: string;
   author?: string;
@@ -56,9 +55,6 @@ function DashboardContent() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
-  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
-    { limit: 50 }
-  );  
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -102,24 +98,6 @@ function DashboardContent() {
       });
     });
 
-    // Add LinkedIn posts
-    linkedinPosts.forEach((post) => {
-      items.push({
-        id: post.id,
-        type: "linkedin",
-        title: post.title || "",
-        source: "LinkedIn",
-        author: post.author,
-        content: post.content,
-        url: post.postUrl,
-        tags: [], // LinkedIn posts don't have tags in current structure
-        createdAt: post.savedAt,
-        metadata: {
-          authorImage: post.metadata?.authorImage as string,
-          authorAbout: post.metadata?.authorAbout as string,
-        },
-      });
-    });
 
     // Sort by creation date (newest first)
     items.sort(
@@ -128,7 +106,7 @@ function DashboardContent() {
     );
 
     return items;
-  }, [summariesData?.data, linkedinPosts]);
+  }, [summariesData?.data]);
 
   // FIXED: Filter items based on search and active filter using useMemo
   const filteredItems = useMemo(() => {
@@ -180,10 +158,6 @@ function DashboardContent() {
     switch (activeFilter) {
       case "youtube":
         return "YouTube Videos";
-      case "linkedin":
-        return "LinkedIn Posts";
-      case "website":
-        return "Website Articles";
       default:
         return "All Knuggets";
     }
@@ -193,12 +167,6 @@ function DashboardContent() {
     switch (item.type) {
       case "youtube":
         router.push(`/knugget/youtube/${item.id}`);
-        break;
-      case "linkedin":
-        router.push(`/knugget/linkedin/${item.id}`);
-        break;
-      case "website":
-        router.push(`/knugget/website/${item.id}`);
         break;
     }
   };
@@ -273,7 +241,7 @@ function DashboardContent() {
           </div>
 
           {/* Loading State */}
-          {(summariesLoading || linkedinLoading) && (
+            {summariesLoading && (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
             </div>
@@ -301,24 +269,6 @@ function DashboardContent() {
                       onThumbnailClick={() => handleThumbnailClick(item)}
                     />
                   );
-                case "linkedin":
-                  return (
-                    <LinkedInCard
-                      key={item.id}
-                      data={{
-                        id: item.id,
-                        title: item.title,
-                        author: item.author || "Unknown Author",
-                        role: item.metadata?.authorAbout,
-                        profileImage: item.metadata?.authorImage,
-                        content: item.content || "",
-                        url: item.url,
-                        tags: item.tags,
-                        createdAt: item.createdAt,
-                      }}
-                      onCardClick={() => handleItemClick(item)}
-                    />
-                  );
                 default:
                   return null;
               }
@@ -327,7 +277,6 @@ function DashboardContent() {
 
           {/* Empty State */}
           {!summariesLoading &&
-            !linkedinLoading &&
             filteredItems.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
