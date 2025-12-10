@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -14,6 +15,12 @@ import {
 import { useSummary } from "@/hooks/use-summaries";
 import { Button } from "@/components/ui/button";
 import { generateInfographic } from "@/lib/infographic-service";
+import {
+  generateCarousel,
+  getCarouselSlides,
+  getFullImageUrl,
+} from "@/lib/carousel-service";
+import { CarouselSlide } from "@/types/summary";
 
 interface YouTubeDetailPageProps {
   params: Promise<{ id: string }>;
@@ -30,6 +37,12 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
   const [isGeneratingInfographic, setIsGeneratingInfographic] = useState(false);
   const [infographicError, setInfographicError] = useState<string | null>(null);
   const [infographicUrl, setInfographicUrl] = useState<string | null>(null);
+
+  // Carousel state
+  const [carouselSlides, setCarouselSlides] = useState<CarouselSlide[]>([]);
+  const [isGeneratingCarousel, setIsGeneratingCarousel] = useState(false);
+  const [carouselError, setCarouselError] = useState<string | null>(null);
+  const [carouselStatus, setCarouselStatus] = useState<string | null>(null);
 
   // This hook fetches real data from your backend API
   const { summary, isLoading, error } = useSummary(
@@ -61,11 +74,28 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           setInfographicUrl(summary.infographicUrl);
         }
       }
+
+      // Fetch existing carousel slides
+      fetchCarouselSlides(summary.id);
     }
     if (error) {
       console.error("❌ Error fetching summary:", error);
     }
   }, [summary, error]);
+
+  // Fetch existing carousel slides
+  const fetchCarouselSlides = async (summaryId: string) => {
+    try {
+      const result = await getCarouselSlides(summaryId);
+      if (result && result.slides.length > 0) {
+        setCarouselSlides(result.slides);
+        setCarouselStatus(result.status);
+        console.log("📊 Carousel slides loaded:", result.slides.length);
+      }
+    } catch (err) {
+      console.log("No existing carousel found");
+    }
+  };
 
   // Check for autoplay parameter and auto-start video
   useEffect(() => {
@@ -156,6 +186,37 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
       );
     } finally {
       setIsGeneratingInfographic(false);
+    }
+  };
+
+  // Handle carousel generation
+  const handleGenerateCarousel = async () => {
+    if (!summary || !summary.id) {
+      setCarouselError("Summary not available");
+      return;
+    }
+
+    setIsGeneratingCarousel(true);
+    setCarouselError(null);
+
+    try {
+      const result = await generateCarousel({
+        summaryId: summary.id,
+        transcriptText: summary.transcriptText,
+      });
+
+      setCarouselSlides(result.slides);
+      setCarouselStatus(result.status);
+      console.log("📊 Carousel generated:", result.slides.length, "slides");
+    } catch (error) {
+      console.error("Failed to generate carousel:", error);
+      setCarouselError(
+        error instanceof Error
+          ? error.message
+          : "Failed to generate carousel"
+      );
+    } finally {
+      setIsGeneratingCarousel(false);
     }
   };
 
@@ -382,6 +443,19 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
                 )}
               </button>
+              <button
+                onClick={() => setActiveTab("carousel")}
+                className={`pb-3 text-sm font-semibold transition-colors relative ${
+                  activeTab === "carousel"
+                    ? "text-white"
+                    : "text-gray-400 hover:text-gray-300"
+                }`}
+              >
+                Carousel
+                {activeTab === "carousel" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
+                )}
+              </button>
             </div>
           </div>
 
@@ -395,6 +469,14 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
                 isGenerating={isGeneratingInfographic}
                 error={infographicError}
                 onGenerate={handleGenerateInfographic}
+              />
+            ) : activeTab === "carousel" ? (
+              <CarouselSection
+                slides={carouselSlides}
+                isGenerating={isGeneratingCarousel}
+                error={carouselError}
+                status={carouselStatus}
+                onGenerate={handleGenerateCarousel}
               />
             ) : (
               <div>
@@ -828,6 +910,168 @@ function InfographicSection({
               }}
             />
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Carousel Section Component
+interface CarouselSectionProps {
+  slides: CarouselSlide[];
+  isGenerating: boolean;
+  error: string | null;
+  status: string | null;
+  onGenerate: () => void;
+}
+
+function CarouselSection({
+  slides,
+  isGenerating,
+  error,
+  status,
+  onGenerate,
+}: CarouselSectionProps) {
+  const hasSlides = slides.length > 0;
+  const completedSlides = slides.filter((s) => s.status === "completed" && s.imageUrl);
+
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-white mb-4">Carousel</h2>
+
+      {/* Generate Button - Only shown when no carousel exists */}
+      {!hasSlides && !isGenerating && (
+        <div className="text-center py-12">
+          <div className="mb-6">
+            <ImageIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <p className="text-gray-400 mb-2">
+              Generate a carousel of slides from this video&apos;s transcript
+            </p>
+            <p className="text-gray-500 text-sm mb-6">
+              Up to 15 beautifully designed slides with key takeaways
+            </p>
+          </div>
+          <Button
+            onClick={onGenerate}
+            disabled={isGenerating}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+          >
+            Generate Carousel
+          </Button>
+          {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isGenerating && (
+        <div className="text-center py-12">
+          <Loader2 className="w-12 h-12 text-orange-500 mx-auto mb-4 animate-spin" />
+          <p className="text-gray-300 mb-2">
+            Generating your carousel slides...
+          </p>
+          <p className="text-gray-500 text-sm">
+            This may take a few minutes for all slides
+          </p>
+          {slides.length > 0 && (
+            <p className="text-orange-400 text-sm mt-2">
+              {completedSlides.length} of {slides.length} slides generated
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Display Generated Carousel - Horizontal scrollable gallery */}
+      {hasSlides && !isGenerating && (
+        <div className="space-y-4">
+          {/* Status indicator */}
+          {status && status !== "completed" && (
+            <div className="text-yellow-400 text-sm mb-2">
+              ⚠️ Some slides may still be generating. {completedSlides.length} of{" "}
+              {slides.length} completed.
+            </div>
+          )}
+
+          {/* Horizontal scrollable gallery */}
+          <div className="relative">
+            <div
+              className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "#4b5563 #1f2937",
+              }}
+            >
+              {slides.map((slide, index) => (
+                <div
+                  key={slide.slideNumber}
+                  className="flex-shrink-0 w-72 bg-gray-800 rounded-lg overflow-hidden"
+                >
+                  {/* Slide Image */}
+                  <div className="relative aspect-square bg-gray-700">
+                    {slide.imageUrl && slide.status === "completed" ? (
+                      <img
+                        src={getFullImageUrl(slide.imageUrl) || ""}
+                        alt={`Slide ${slide.slideNumber}: ${slide.heading}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error(
+                            "Failed to load slide image:",
+                            slide.imageUrl
+                          );
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : slide.status === "generating" ? (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+                      </div>
+                    ) : slide.status === "failed" ? (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <div className="text-center">
+                          <p className="text-red-400 text-sm">Failed</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon className="w-12 h-12 text-gray-500" />
+                      </div>
+                    )}
+
+                    {/* Slide number badge */}
+                    <div className="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                      {slide.slideNumber}/{slides.length}
+                    </div>
+                  </div>
+
+                  {/* Slide Content */}
+                  <div className="p-3">
+                    <h3 className="text-white font-medium text-sm mb-1 line-clamp-2">
+                      {slide.heading}
+                    </h3>
+                    <p className="text-gray-400 text-xs line-clamp-3">
+                      {slide.explanation}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Scroll hint gradient */}
+            {slides.length > 3 && (
+              <div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-[#313130] to-transparent pointer-events-none" />
+            )}
+          </div>
+
+          {/* Slide count */}
+          <p className="text-gray-500 text-sm text-center">
+            {completedSlides.length} slides • Scroll to view all
+          </p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && !isGenerating && !hasSlides && (
+        <div className="text-center py-8">
+          <p className="text-red-400 text-sm">{error}</p>
         </div>
       )}
     </div>
