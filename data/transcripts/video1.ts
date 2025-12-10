@@ -4256,6 +4256,7 @@ export const video1Transcripts = [
     time: "2:20:06",
     text: "solution, and how clever is that? You want to take the student through that progression. There are a lot of other small",
   },
+  
   {
     time: "2:20:11",
     text: "things that make it nice and engaging and interesting. Always prompting the student.",
