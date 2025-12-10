@@ -189,7 +189,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
     }
   };
 
-  // Handle carousel generation
+  // Handle carousel generation with polling for progress
   const handleGenerateCarousel = async () => {
     if (!summary || !summary.id) {
       setCarouselError("Summary not available");
@@ -200,6 +200,7 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
     setCarouselError(null);
 
     try {
+      // Start generation (returns immediately with "generating" status)
       const result = await generateCarousel({
         summaryId: summary.id,
         transcriptText: summary.transcriptText,
@@ -207,7 +208,14 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
 
       setCarouselSlides(result.slides);
       setCarouselStatus(result.status);
-      console.log("📊 Carousel generated:", result.slides.length, "slides");
+      console.log("📊 Carousel generation started:", result.slides.length, "slides");
+
+      // If status is "generating", start polling for progress
+      if (result.status === "generating") {
+        pollCarouselProgress(summary.id);
+      } else {
+        setIsGeneratingCarousel(false);
+      }
     } catch (error) {
       console.error("Failed to generate carousel:", error);
       setCarouselError(
@@ -215,9 +223,43 @@ export default function YouTubeDetailPage({ params }: YouTubeDetailPageProps) {
           ? error.message
           : "Failed to generate carousel"
       );
-    } finally {
       setIsGeneratingCarousel(false);
     }
+  };
+
+  // Poll for carousel generation progress
+  const pollCarouselProgress = async (summaryId: string) => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const result = await getCarouselSlides(summaryId);
+        if (result) {
+          setCarouselSlides(result.slides);
+          setCarouselStatus(result.status);
+          console.log(`📊 Progress: ${result.completedSlides}/${result.totalSlides} slides`);
+
+          // Stop polling when all done or no longer generating
+          if (result.status === "completed" || result.status === "partial") {
+            const pendingCount = result.slides.filter(
+              (s) => s.status === "pending" || s.status === "generating"
+            ).length;
+            
+            if (pendingCount === 0) {
+              clearInterval(pollInterval);
+              setIsGeneratingCarousel(false);
+              console.log("📊 Carousel generation complete!");
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error polling carousel progress:", error);
+      }
+    }, 3000); // Poll every 3 seconds
+
+    // Cleanup: Stop polling after 10 minutes max
+    setTimeout(() => {
+      clearInterval(pollInterval);
+      setIsGeneratingCarousel(false);
+    }, 600000);
   };
 
   // Loading state - shows while fetching real data
@@ -962,31 +1004,42 @@ function CarouselSection({
         </div>
       )}
 
-      {/* Loading State */}
-      {isGenerating && (
+      {/* Loading State - Show when generating but no slides yet */}
+      {isGenerating && !hasSlides && (
         <div className="text-center py-12">
           <Loader2 className="w-12 h-12 text-orange-500 mx-auto mb-4 animate-spin" />
           <p className="text-gray-300 mb-2">
             Generating your carousel slides...
           </p>
           <p className="text-gray-500 text-sm">
-            This may take a few minutes for all slides
+            Preparing slide content from transcript
           </p>
-          {slides.length > 0 && (
-            <p className="text-orange-400 text-sm mt-2">
-              {completedSlides.length} of {slides.length} slides generated
-            </p>
-          )}
         </div>
       )}
 
       {/* Display Generated Carousel - Horizontal scrollable gallery */}
-      {hasSlides && !isGenerating && (
+      {/* Show even while generating so users see progress */}
+      {hasSlides && (
         <div className="space-y-4">
-          {/* Status indicator */}
-          {status && status !== "completed" && (
+          {/* Progress indicator while generating */}
+          {isGenerating && (
+            <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/30 rounded-lg p-3 mb-4">
+              <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+              <div>
+                <p className="text-orange-400 text-sm font-medium">
+                  Generating slides... {completedSlides.length}/{slides.length} completed
+                </p>
+                <p className="text-gray-500 text-xs">
+                  Images appear as they&apos;re generated
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {/* Status indicator when done but some failed */}
+          {!isGenerating && status && status !== "completed" && (
             <div className="text-yellow-400 text-sm mb-2">
-              ⚠️ Some slides may still be generating. {completedSlides.length} of{" "}
+              ⚠️ Some slides failed to generate. {completedSlides.length} of{" "}
               {slides.length} completed.
             </div>
           )}
