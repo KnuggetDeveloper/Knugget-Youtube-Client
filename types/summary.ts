@@ -213,34 +213,6 @@ export const INFOGRAPHIC_ENDPOINTS = {
   USAGE: "/infographic/usage",
 } as const;
 
-// Carousel types
-export interface CarouselSlide {
-  slideNumber: number;
-  heading: string;
-  explanation: string;
-  imageUrl: string | null;
-  status: string;
-}
-
-export interface CarouselGenerationRequest {
-  summaryId: string;
-  transcriptText?: string;
-}
-
-export interface CarouselGenerationResponse {
-  summaryId: string;
-  slides: CarouselSlide[];
-  totalSlides: number;
-  completedSlides: number;
-  status: string;
-}
-
-// Carousel service endpoints
-export const CAROUSEL_ENDPOINTS = {
-  GENERATE: "/carousel/generate",
-  GET_SLIDES: (summaryId: string) => `/carousel/${summaryId}`,
-} as const;
-
 // Common utility types
 export type SummaryStatus = Summary["status"];
 export type SortField = SummaryQueryParams["sortBy"];
