@@ -41,7 +41,7 @@ export function GlobalSidebar() {
   // Fetch Website articles for sidebar
   const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
     limit: 20,
-    sortBy: "createdAt",
+    sortBy: "savedAt", // Use savedAt to match backend
     sortOrder: "desc",
   });
 

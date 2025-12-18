@@ -45,7 +45,7 @@ export interface WebsiteArticleQueryParams {
   websiteName?: string;
   startDate?: string;
   endDate?: string;
-  sortBy?: "createdAt" | "title" | "websiteName" | "readTime";
+  sortBy?: "savedAt" | "createdAt" | "title"; // Backend accepts these
   sortOrder?: "asc" | "desc";
 }
 
@@ -246,7 +246,7 @@ class WebsiteService {
   ): Promise<ApiResponse<PaginatedWebsiteArticles>> {
     return this.getArticles({
       limit,
-      sortBy: "createdAt",
+      sortBy: "savedAt", // Use savedAt to match backend
       sortOrder: "desc",
     });
   }

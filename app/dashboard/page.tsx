@@ -80,7 +80,7 @@ function DashboardContent() {
   // Fetch Website articles
   const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
     limit: 50,
-    sortBy: "createdAt",
+    sortBy: "savedAt", // Use savedAt to match backend
     sortOrder: "desc",
   });
 

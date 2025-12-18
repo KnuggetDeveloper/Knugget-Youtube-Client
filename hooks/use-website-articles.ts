@@ -31,7 +31,7 @@ export function useWebsiteArticles(
   const [params, setParams] = useState<WebsiteArticleQueryParams>({
     page: 1,
     limit: 20,
-    sortBy: "createdAt",
+    sortBy: "savedAt", // Use savedAt to match backend
     sortOrder: "desc",
     ...initialParams,
   });
@@ -126,7 +126,7 @@ export function useWebsiteArticles(
     setParams((prevParams) => ({
       page: 1,
       limit: prevParams.limit,
-      sortBy: "createdAt" as const,
+      sortBy: "savedAt" as const, // Use savedAt to match backend
       sortOrder: "desc" as const,
     }));
   }, []);
