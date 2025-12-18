@@ -113,14 +113,14 @@ export interface ApiResponse<T = any> {
 
 // API Endpoints
 const LINKEDIN_ENDPOINTS = {
-  LIST: "/api/linkedin",
-  CREATE: "/api/linkedin",
-  GET_BY_ID: (id: string) => `/api/linkedin/${id}`,
-  UPDATE: (id: string) => `/api/linkedin/${id}`,
-  DELETE: (id: string) => `/api/linkedin/${id}`,
-  BULK_DELETE: "/api/linkedin/bulk",
-  STATS: "/api/linkedin/stats",
-  CHECK: "/api/linkedin/check",
+  LIST: "/linkedin",
+  CREATE: "/linkedin",
+  GET_BY_ID: (id: string) => `/linkedin/${id}`,
+  UPDATE: (id: string) => `/linkedin/${id}`,
+  DELETE: (id: string) => `/linkedin/${id}`,
+  BULK_DELETE: "/linkedin/bulk",
+  STATS: "/linkedin/stats",
+  CHECK: "/linkedin/check",
 };
 
 class LinkedinService {

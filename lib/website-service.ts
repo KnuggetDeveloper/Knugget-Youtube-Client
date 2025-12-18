@@ -70,12 +70,12 @@ export interface ApiResponse<T = any> {
 
 // API Endpoints
 const WEBSITE_ENDPOINTS = {
-  LIST: "/api/website",
-  CREATE: "/api/website",
-  GET_BY_ID: (id: string) => `/api/website/${id}`,
-  DELETE: (id: string) => `/api/website/${id}`,
-  BULK_DELETE: "/api/website/bulk",
-  CHECK: "/api/website/by-url",
+  LIST: "/website",
+  CREATE: "/website",
+  GET_BY_ID: (id: string) => `/website/${id}`,
+  DELETE: (id: string) => `/website/${id}`,
+  BULK_DELETE: "/website/bulk",
+  CHECK: "/website/by-url",
 };
 
 class WebsiteService {

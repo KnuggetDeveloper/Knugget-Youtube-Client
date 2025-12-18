@@ -56,7 +56,7 @@ export default function WebsiteArticleDetailPage() {
       const currentUser = auth.currentUser;
       const token = currentUser ? await currentUser.getIdToken() : null;
 
-      const response = await fetch(`${baseUrl}/api/website/${articleId}`, {
+      const response = await fetch(`${baseUrl}/website/${articleId}`, {
         headers: {
           "Content-Type": "application/json",
           ...(token && { Authorization: `Bearer ${token}` }),
@@ -107,7 +107,7 @@ export default function WebsiteArticleDetailPage() {
       const currentUser = auth.currentUser;
       const token = currentUser ? await currentUser.getIdToken() : null;
 
-      const response = await fetch(`${baseUrl}/api/website/${articleId}`, {
+      const response = await fetch(`${baseUrl}/website/${articleId}`, {
         method: "DELETE",
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
