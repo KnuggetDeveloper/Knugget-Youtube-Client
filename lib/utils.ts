@@ -114,7 +114,7 @@ export function isValidEmail(email: string): boolean {
 export function getApiBaseUrl(): string {
   return (
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://knugget-youtube-backend.onrender.com/api"
+    "https://knugget-youtube-backend.onrender.com"
   );
 }
 
