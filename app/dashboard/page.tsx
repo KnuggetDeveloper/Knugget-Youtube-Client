@@ -40,7 +40,7 @@ interface KnuggetItem {
     excerpt?: string | null;
     byline?: string | null;
     websiteName?: string | null;
-    faviconUrl?: string | null;
+    favicon?: string | null;
     readTime?: number | null;
     wordCount?: number | null;
   };
@@ -156,12 +156,12 @@ function DashboardContent() {
         author: article.byline || undefined,
         url: article.url,
         tags: ["Article", "Saved"],
-        createdAt: article.createdAt,
+        createdAt: article.savedAt, // Use savedAt instead of createdAt for consistency
         websiteMetadata: {
           excerpt: article.excerpt,
           byline: article.byline,
           websiteName: article.websiteName,
-          faviconUrl: article.faviconUrl,
+          favicon: article.favicon,
           readTime: article.readTime,
           wordCount: article.wordCount,
         },
@@ -378,7 +378,7 @@ function DashboardContent() {
                         excerpt: item.websiteMetadata?.excerpt,
                         byline: item.websiteMetadata?.byline,
                         websiteName: item.websiteMetadata?.websiteName,
-                        faviconUrl: item.websiteMetadata?.faviconUrl,
+                        favicon: item.websiteMetadata?.favicon,
                         readTime: item.websiteMetadata?.readTime,
                         wordCount: item.websiteMetadata?.wordCount,
                         createdAt: item.createdAt,

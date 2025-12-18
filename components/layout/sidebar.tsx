@@ -114,7 +114,7 @@ export function GlobalSidebar() {
       id: a.id,
       type: "website" as const,
       title: a.title,
-      createdAt: a.createdAt,
+      createdAt: a.savedAt, // Use savedAt for consistency with other platforms
     })),
   ];
 

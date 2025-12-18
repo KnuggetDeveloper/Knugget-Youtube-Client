@@ -13,13 +13,14 @@ export interface WebsiteArticleData {
   excerpt?: string | null;
   byline?: string | null; // Author
   websiteName?: string | null;
-  faviconUrl?: string | null;
+  favicon?: string | null; // Backend returns 'favicon' not 'faviconUrl'
   wordCount?: number | null;
   readTime?: number | null;
   language?: string | null;
   direction?: string | null;
   publishedTime?: string | null;
   platform: string;
+  savedAt: string; // Backend returns savedAt
   createdAt: string;
   updatedAt: string;
 }

@@ -10,7 +10,7 @@ interface WebsiteCardData {
   excerpt?: string | null;
   byline?: string | null; // Author
   websiteName?: string | null;
-  faviconUrl?: string | null;
+  favicon?: string | null; // Renamed from faviconUrl to match backend
   readTime?: number | null;
   wordCount?: number | null;
   createdAt: string;
@@ -87,15 +87,15 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
       />
 
       {/* Favicon and Website Name */}
-      {(data.faviconUrl || data.websiteName) && (
+      {(data.favicon || data.websiteName) && (
         <div
           className="flex items-center gap-2 mb-3 cursor-pointer group/website"
           onClick={handleWebsiteClick}
         >
-          {data.faviconUrl && (
+          {data.favicon && (
             <div className="w-5 h-5 rounded overflow-hidden bg-gray-700 flex items-center justify-center flex-shrink-0">
               <img
-                src={data.faviconUrl}
+                src={data.favicon}
                 alt={data.websiteName || "Website"}
                 className="w-full h-full object-cover"
                 onError={(e) => {
