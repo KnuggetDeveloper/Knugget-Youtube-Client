@@ -4,13 +4,13 @@
 
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { LogOut, Youtube, Clock } from "lucide-react";
+import { LogOut, Youtube, Clock, Linkedin, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
+import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
+import { useWebsiteArticles } from "@/hooks/use-website-articles";
 import { useUserStatsQuery } from "@/hooks/use-profile-query";
 import { BuyNowButton } from "@/components/payment/buy-now-button";
-// LinkedIn hooks disabled - can be re-enabled via feature flags
-// import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
 
@@ -30,6 +30,20 @@ export function GlobalSidebar() {
       sortOrder: "desc",
     });
   const summaries = summariesData?.data || [];
+
+  // Fetch LinkedIn posts for sidebar
+  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts({
+    limit: 20,
+    sortBy: "savedAt",
+    sortOrder: "desc",
+  });
+
+  // Fetch Website articles for sidebar
+  const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
+    limit: 20,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
   // Get user stats for token usage
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,35 +89,85 @@ export function GlobalSidebar() {
     }
   };
 
-  // Group summaries by date for chronological list
-  const groupedSummaries =
-    summaries?.reduce(
-      (groups, summary) => {
-        const date = new Date(summary.createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        });
+  // Combine all content items for timeline
+  interface TimelineItem {
+    id: string;
+    type: "youtube" | "linkedin" | "website";
+    title: string;
+    createdAt: string;
+  }
 
-        if (!groups[date]) {
-          groups[date] = [];
-        }
-        groups[date].push(summary);
-        return groups;
-      },
-      {} as Record<string, typeof summaries>
-    ) || {};
+  const allTimelineItems: TimelineItem[] = [
+    ...summaries.map((s) => ({
+      id: s.id,
+      type: "youtube" as const,
+      title: s.videoTitle || s.title,
+      createdAt: s.createdAt,
+    })),
+    ...linkedinPosts.map((p) => ({
+      id: p.id,
+      type: "linkedin" as const,
+      title: p.title || p.content.substring(0, 100),
+      createdAt: p.savedAt,
+    })),
+    ...websiteArticles.map((a) => ({
+      id: a.id,
+      type: "website" as const,
+      title: a.title,
+      createdAt: a.createdAt,
+    })),
+  ];
+
+  // Group all items by date for chronological list
+  const groupedItems = allTimelineItems.reduce(
+    (groups, item) => {
+      const date = new Date(item.createdAt).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(item);
+      return groups;
+    },
+    {} as Record<string, TimelineItem[]>
+  );
 
   // Sort dates in descending order (newest first)
-  const sortedDates = Object.keys(groupedSummaries).sort((a, b) => {
+  const sortedDates = Object.keys(groupedItems).sort((a, b) => {
     const dateA = new Date(a.split("/").reverse().join("-"));
     const dateB = new Date(b.split("/").reverse().join("-"));
     return dateB.getTime() - dateA.getTime();
   });
 
-  // Handle video click
-  const handleVideoClick = (summaryId: string) => {
-    router.push(`/knugget/youtube/${summaryId}`);
+  // Handle item click based on type
+  const handleItemClick = (item: TimelineItem) => {
+    switch (item.type) {
+      case "youtube":
+        router.push(`/knugget/youtube/${item.id}`);
+        break;
+      case "linkedin":
+        router.push(`/knugget/linkedin/${item.id}`);
+        break;
+      case "website":
+        router.push(`/knugget/website/${item.id}`);
+        break;
+    }
+  };
+
+  // Get icon for content type
+  const getItemIcon = (type: TimelineItem["type"]) => {
+    switch (type) {
+      case "youtube":
+        return <Youtube className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />;
+      case "linkedin":
+        return <Linkedin className="w-3 h-3 text-[#0A66C2] mt-0.5 flex-shrink-0" />;
+      case "website":
+        return <Globe className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />;
+    }
   };
 
   return (
@@ -132,9 +196,9 @@ export function GlobalSidebar() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-medium text-gray-400 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                Recent Videos
+                Recent Content
               </h3>
-              {!summariesLoading && sortedDates.length > 0 && (
+              {!summariesLoading && !linkedinLoading && !websiteLoading && sortedDates.length > 0 && (
                 <Link
                   href="/dashboard"
                   className="text-xs text-orange-500 hover:text-orange-400"
@@ -144,7 +208,7 @@ export function GlobalSidebar() {
               )}
             </div>
 
-            {summariesLoading ? (
+            {(summariesLoading || linkedinLoading || websiteLoading) ? (
               <div className="space-y-2 animate-pulse">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="h-12 bg-gray-800 rounded"></div>
@@ -153,46 +217,55 @@ export function GlobalSidebar() {
             ) : sortedDates.length > 0 ? (
               <div>
                 <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-hide">
-                  {sortedDates.slice(0, 10).map((date) => (
-                    <div key={date} className="space-y-2">
-                      <div className="text-xs font-medium text-gray-500 px-2">
-                        {date}
-                      </div>
-                      <div className="space-y-1">
-                        {groupedSummaries[date]?.slice(0, 5).map((summary) => (
-                          <button
-                            key={summary.id}
-                            onClick={() => handleVideoClick(summary.id)}
-                            className="w-full text-left px-2 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors group"
-                          >
-                            <div className="flex items-start space-x-2">
-                              <Youtube className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />
-                              <span
-                                className="text-left block overflow-hidden"
-                                style={{
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: "vertical",
-                                }}
-                              >
-                                {summary.videoTitle || summary.title}
-                              </span>
+                  {sortedDates.slice(0, 10).map((date) => {
+                    // Sort items within each date by createdAt (newest first)
+                    const itemsForDate = groupedItems[date].sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    );
+
+                    return (
+                      <div key={date} className="space-y-2">
+                        <div className="text-xs font-medium text-gray-500 px-2">
+                          {date}
+                        </div>
+                        <div className="space-y-1">
+                          {itemsForDate.slice(0, 5).map((item) => (
+                            <button
+                              key={`${item.type}-${item.id}`}
+                              onClick={() => handleItemClick(item)}
+                              className="w-full text-left px-2 py-2 text-xs text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors group"
+                            >
+                              <div className="flex items-start space-x-2">
+                                {getItemIcon(item.type)}
+                                <span
+                                  className="text-left block overflow-hidden"
+                                  style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                  }}
+                                >
+                                  {item.title}
+                                </span>
+                              </div>
+                            </button>
+                          ))}
+                          {itemsForDate.length > 5 && (
+                            <div className="text-xs text-gray-600 px-2 py-1">
+                              +{itemsForDate.length - 5} more items
                             </div>
-                          </button>
-                        ))}
-                        {groupedSummaries[date]?.length > 5 && (
-                          <div className="text-xs text-gray-600 px-2 py-1">
-                            +{groupedSummaries[date].length - 5} more videos
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
               <div className="text-xs text-gray-500 text-center py-4">
-                No videos yet. Start summarizing!
+                No content yet. Start saving!
               </div>
             )}
           </div>

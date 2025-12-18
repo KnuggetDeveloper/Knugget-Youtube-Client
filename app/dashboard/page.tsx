@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { useSummariesQuery } from "@/hooks/use-summaries-query";
+import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
+import { useWebsiteArticles } from "@/hooks/use-website-articles";
 import { Input } from "@/components/ui/input";
-import { YouTubeCard } from "@/components/content-cards";
+import { YouTubeCard, LinkedInCard, WebsiteCard } from "@/components/content-cards";
 
 interface KnuggetItem {
   id: string;
-  type: "youtube";
+  type: "youtube" | "linkedin" | "website";
   title: string;
   source: string;
   author?: string;
@@ -25,10 +27,22 @@ interface KnuggetItem {
     channelName: string;
     thumbnailUrl?: string;
   };
-  metadata?: {
-    authorImage?: string;
-    authorAbout?: string;
-    siteLogo?: string;
+  linkedinMetadata?: {
+    authorImage?: string | null;
+    postUrl: string;
+    engagement?: {
+      likes?: number;
+      comments?: number;
+      shares?: number;
+    };
+  };
+  websiteMetadata?: {
+    excerpt?: string | null;
+    byline?: string | null;
+    websiteName?: string | null;
+    faviconUrl?: string | null;
+    readTime?: number | null;
+    wordCount?: number | null;
   };
   summary?: string;
 }
@@ -55,6 +69,20 @@ function DashboardContent() {
       sortBy: "createdAt",
       sortOrder: "desc",
     });
+
+  // Fetch LinkedIn posts
+  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts({
+    limit: 50,
+    sortBy: "savedAt",
+    sortOrder: "desc",
+  });
+
+  // Fetch Website articles
+  const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
+    limit: 50,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -98,6 +126,47 @@ function DashboardContent() {
       });
     });
 
+    // Add LinkedIn posts
+    linkedinPosts.forEach((post) => {
+      items.push({
+        id: post.id,
+        type: "linkedin",
+        title: post.title || post.content.substring(0, 100),
+        source: post.author,
+        author: post.author,
+        content: post.content,
+        url: post.postUrl,
+        tags: ["LinkedIn", "Saved Post"],
+        createdAt: post.savedAt,
+        linkedinMetadata: {
+          authorImage: post.authorImage,
+          postUrl: post.postUrl,
+          engagement: post.engagement,
+        },
+      });
+    });
+
+    // Add Website articles
+    websiteArticles.forEach((article) => {
+      items.push({
+        id: article.id,
+        type: "website",
+        title: article.title,
+        source: article.websiteName || new URL(article.url).hostname.replace(/^www\./, ""),
+        author: article.byline || undefined,
+        url: article.url,
+        tags: ["Article", "Saved"],
+        createdAt: article.createdAt,
+        websiteMetadata: {
+          excerpt: article.excerpt,
+          byline: article.byline,
+          websiteName: article.websiteName,
+          faviconUrl: article.faviconUrl,
+          readTime: article.readTime,
+          wordCount: article.wordCount,
+        },
+      });
+    });
 
     // Sort by creation date (newest first)
     items.sort(
@@ -106,7 +175,7 @@ function DashboardContent() {
     );
 
     return items;
-  }, [summariesData?.data]);
+  }, [summariesData?.data, linkedinPosts, websiteArticles]);
 
   // FIXED: Filter items based on search and active filter using useMemo
   const filteredItems = useMemo(() => {
@@ -158,6 +227,10 @@ function DashboardContent() {
     switch (activeFilter) {
       case "youtube":
         return "YouTube Videos";
+      case "linkedin":
+        return "LinkedIn Posts";
+      case "website":
+        return "Website Articles";
       default:
         return "All Knuggets";
     }
@@ -167,6 +240,12 @@ function DashboardContent() {
     switch (item.type) {
       case "youtube":
         router.push(`/knugget/youtube/${item.id}`);
+        break;
+      case "linkedin":
+        router.push(`/knugget/linkedin/${item.id}`);
+        break;
+      case "website":
+        router.push(`/knugget/website/${item.id}`);
         break;
     }
   };
@@ -241,7 +320,7 @@ function DashboardContent() {
           </div>
 
           {/* Loading State */}
-            {summariesLoading && (
+          {(summariesLoading || linkedinLoading || websiteLoading) && (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
             </div>
@@ -269,6 +348,44 @@ function DashboardContent() {
                       onThumbnailClick={() => handleThumbnailClick(item)}
                     />
                   );
+                case "linkedin":
+                  return (
+                    <LinkedInCard
+                      key={item.id}
+                      data={{
+                        id: item.id,
+                        title: item.title,
+                        content: item.content || "",
+                        author: item.author || "Unknown",
+                        authorImage: item.linkedinMetadata?.authorImage,
+                        postUrl: item.linkedinMetadata?.postUrl || item.url,
+                        imageUrl: null,
+                        engagement: item.linkedinMetadata?.engagement,
+                        savedAt: item.createdAt,
+                        createdAt: item.createdAt,
+                      }}
+                      onCardClick={() => handleItemClick(item)}
+                    />
+                  );
+                case "website":
+                  return (
+                    <WebsiteCard
+                      key={item.id}
+                      data={{
+                        id: item.id,
+                        title: item.title,
+                        url: item.url,
+                        excerpt: item.websiteMetadata?.excerpt,
+                        byline: item.websiteMetadata?.byline,
+                        websiteName: item.websiteMetadata?.websiteName,
+                        faviconUrl: item.websiteMetadata?.faviconUrl,
+                        readTime: item.websiteMetadata?.readTime,
+                        wordCount: item.websiteMetadata?.wordCount,
+                        createdAt: item.createdAt,
+                      }}
+                      onCardClick={() => handleItemClick(item)}
+                    />
+                  );
                 default:
                   return null;
               }
@@ -276,7 +393,7 @@ function DashboardContent() {
           </div>
 
           {/* Empty State */}
-          {!summariesLoading &&
+          {!summariesLoading && !linkedinLoading && !websiteLoading &&
             filteredItems.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
