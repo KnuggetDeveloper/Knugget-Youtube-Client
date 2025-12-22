@@ -11,7 +11,6 @@ import {
   MessageSquare,
   Share2,
   ExternalLink,
-  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLinkedinPost } from "@/hooks/use-linkedin-posts";
@@ -20,7 +19,7 @@ export default function LinkedinPostDetailPage() {
   const params = useParams();
   const router = useRouter();
   const postId = params.id as string;
-  
+
   const { post, isLoading, error } = useLinkedinPost(postId);
 
   const formatDate = (dateString: string) => {
@@ -140,7 +139,9 @@ export default function LinkedinPostDetailPage() {
             <div>
               <h3 className="text-white font-semibold">{post.author}</h3>
               {post.metadata?.timestamp && (
-                <p className="text-gray-400 text-sm">{post.metadata.timestamp}</p>
+                <p className="text-gray-400 text-sm">
+                  {post.metadata.timestamp}
+                </p>
               )}
             </div>
           </div>
@@ -237,4 +238,3 @@ export default function LinkedinPostDetailPage() {
     </div>
   );
 }
-

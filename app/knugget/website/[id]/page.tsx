@@ -3,12 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  Globe,
-  ExternalLink,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, Globe, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getApiBaseUrl } from "@/lib/utils";
 import { auth } from "@/lib/firebase";
@@ -38,10 +33,9 @@ export default function WebsiteArticleDetailPage() {
   const params = useParams();
   const router = useRouter();
   const articleId = params.id as string;
-  
+
   const [article, setArticle] = useState<WebsiteArticleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchArticle = useCallback(async () => {
@@ -205,7 +199,7 @@ export default function WebsiteArticleDetailPage() {
 
           {/* Content Area */}
           <div className="bg-[#313130] rounded-lg p-6">
-            <div 
+            <div
               className="prose prose-invert prose-lg max-w-none
                 prose-headings:text-white prose-headings:font-bold
                 prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
