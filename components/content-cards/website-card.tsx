@@ -93,7 +93,7 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
               <Globe className="fallback-icon w-3 h-3 text-gray-400 hidden" />
             </div>
           )}
-          <span className="text-gray-400 text-xs group-hover/website:text-blue-400 transition-colors">
+          <span className="text-gray-400 text-xs group-hover/website:text-blue-400 transition-colors line-clamp-1">
             {data.websiteName || getDomain(data.url)}
           </span>
         </div>
@@ -104,12 +104,14 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
 
       {/* Byline (Author) */}
       {data.byline && (
-        <p className="text-gray-400 text-xs mb-2">By {data.byline}</p>
+        <p className="text-gray-400 text-xs mb-2 line-clamp-1">
+          By {data.byline}
+        </p>
       )}
 
       {/* Excerpt */}
       {data.excerpt && (
-        <p className="text-gray-300 text-sm mb-3 leading-relaxed break-words">
+        <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
           {data.excerpt}
         </p>
       )}
