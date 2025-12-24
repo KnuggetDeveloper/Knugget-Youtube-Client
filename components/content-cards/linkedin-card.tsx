@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { Linkedin, User, ThumbsUp, MessageSquare, Share2 } from "lucide-react";
-import { BaseCard, CardHeader, CardTitle, TagsContainer } from "./base-card";
+import { BaseCard, CardHeader, CardTitle } from "./base-card";
 
 interface LinkedinCardData {
   id: string;
@@ -51,13 +51,6 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
     return num.toString();
   };
 
-  // Get first ~150 chars of content for preview
-  const getContentPreview = (content: string) => {
-    const maxLength = 150;
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength).trim() + "...";
-  };
-
   const handleCardClick = () => {
     onCardClick?.(data);
   };
@@ -76,7 +69,7 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
       />
 
       {/* Author Info */}
-      <div 
+      <div
         className="flex items-center gap-3 mb-3 cursor-pointer group/author"
         onClick={handleAuthorClick}
       >
@@ -96,8 +89,8 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
               }}
             />
           ) : null}
-          <User 
-            className={`fallback-icon w-5 h-5 text-gray-400 ${data.authorImage ? 'hidden' : ''}`} 
+          <User
+            className={`fallback-icon w-5 h-5 text-gray-400 ${data.authorImage ? "hidden" : ""}`}
           />
         </div>
         <span className="text-white font-medium text-sm group-hover/author:text-[#0A66C2] transition-colors line-clamp-1">
@@ -109,8 +102,8 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
       {data.title ? (
         <CardTitle title={data.title} />
       ) : (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed">
-          {getContentPreview(data.content)}
+        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed break-words">
+          {data.content}
         </p>
       )}
 
@@ -157,10 +150,6 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
           )}
         </div>
       )}
-
-      {/* Tags based on author */}
-      <TagsContainer tags={["LinkedIn", "Saved Post"]} />
     </BaseCard>
   );
 };
-

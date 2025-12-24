@@ -8,7 +8,11 @@ import { useSummariesQuery } from "@/hooks/use-summaries-query";
 import { useLinkedinPosts } from "@/hooks/use-linkedin-posts";
 import { useWebsiteArticles } from "@/hooks/use-website-articles";
 import { Input } from "@/components/ui/input";
-import { YouTubeCard, LinkedInCard, WebsiteCard } from "@/components/content-cards";
+import {
+  YouTubeCard,
+  LinkedInCard,
+  WebsiteCard,
+} from "@/components/content-cards";
 
 interface KnuggetItem {
   id: string;
@@ -42,7 +46,6 @@ interface KnuggetItem {
     websiteName?: string | null;
     favicon?: string | null;
     readTime?: number | null;
-    wordCount?: number | null;
   };
   summary?: string;
 }
@@ -71,18 +74,21 @@ function DashboardContent() {
     });
 
   // Fetch LinkedIn posts
-  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts({
-    limit: 50,
-    sortBy: "savedAt",
-    sortOrder: "desc",
-  });
+  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
+    {
+      limit: 50,
+      sortBy: "savedAt",
+      sortOrder: "desc",
+    }
+  );
 
   // Fetch Website articles
-  const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
-    limit: 50,
-    sortBy: "savedAt", // Use savedAt to match backend
-    sortOrder: "desc",
-  });
+  const { articles: websiteArticles, isLoading: websiteLoading } =
+    useWebsiteArticles({
+      limit: 50,
+      sortBy: "savedAt", // Use savedAt to match backend
+      sortOrder: "desc",
+    });
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -152,7 +158,9 @@ function DashboardContent() {
         id: article.id,
         type: "website",
         title: article.title,
-        source: article.websiteName || new URL(article.url).hostname.replace(/^www\./, ""),
+        source:
+          article.websiteName ||
+          new URL(article.url).hostname.replace(/^www\./, ""),
         author: article.byline || undefined,
         url: article.url,
         tags: ["Article", "Saved"],
@@ -163,7 +171,6 @@ function DashboardContent() {
           websiteName: article.websiteName,
           favicon: article.favicon,
           readTime: article.readTime,
-          wordCount: article.wordCount,
         },
       });
     });
@@ -263,7 +270,10 @@ function DashboardContent() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
+      <div
+        className="flex items-center justify-center min-h-screen"
+        style={{ backgroundColor: "#313130" }}
+      >
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
     );
@@ -274,14 +284,20 @@ function DashboardContent() {
   }
 
   return (
-    <div className="flex h-screen bg-black text-orange-500">
+    <div
+      className="flex h-screen text-orange-500"
+      style={{ backgroundColor: "#313130" }}
+    >
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-black">
+      <div
+        className="flex-1 flex flex-col overflow-hidden"
+        style={{ backgroundColor: "#313130" }}
+      >
         {/* Header */}
         <div
           className="p-6 transition-all duration-300"
           style={{
-            background: "black",
+            background: "#313130",
           }}
         >
           <div className="flex items-center justify-between">
@@ -296,9 +312,9 @@ function DashboardContent() {
                   placeholder="Search your knuggets..."
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="pl-10 bg-black border-gray-800 text-orange-500 placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 w-full transition-all duration-300"
+                  className="pl-10 border-gray-800 text-orange-500 placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 w-full transition-all duration-300"
                   style={{
-                    background: "rgba(0, 0, 0, 0.8)",
+                    background: "#313130",
                     borderColor: "rgba(255, 107, 53, 0.3)",
                     color: "#ff6b35",
                   }}
@@ -309,7 +325,10 @@ function DashboardContent() {
         </div>
 
         {/* Content Grid */}
-        <div className="flex-1 p-6 overflow-auto bg-black">
+        <div
+          className="flex-1 p-6 overflow-auto"
+          style={{ backgroundColor: "#313130" }}
+        >
           <div className="mb-6">
             <h1 className="text-2xl font-semibold mb-2">{getDisplayTitle()}</h1>
             <p className="text-gray-400 text-sm">
@@ -380,7 +399,6 @@ function DashboardContent() {
                         websiteName: item.websiteMetadata?.websiteName,
                         favicon: item.websiteMetadata?.favicon,
                         readTime: item.websiteMetadata?.readTime,
-                        wordCount: item.websiteMetadata?.wordCount,
                         createdAt: item.createdAt,
                       }}
                       onCardClick={() => handleItemClick(item)}
@@ -393,7 +411,9 @@ function DashboardContent() {
           </div>
 
           {/* Empty State */}
-          {!summariesLoading && !linkedinLoading && !websiteLoading &&
+          {!summariesLoading &&
+            !linkedinLoading &&
+            !websiteLoading &&
             filteredItems.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
@@ -428,7 +448,10 @@ function DashboardContent() {
 // Loading fallback component
 function DashboardLoading() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div
+      className="flex items-center justify-center min-h-screen"
+      style={{ backgroundColor: "#313130" }}
+    >
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
     </div>
   );

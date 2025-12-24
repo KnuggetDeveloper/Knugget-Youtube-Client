@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Globe, Clock, BookOpen } from "lucide-react";
-import { BaseCard, CardHeader, CardTitle, TagsContainer } from "./base-card";
+import { Globe, Clock } from "lucide-react";
+import { BaseCard, CardHeader, CardTitle } from "./base-card";
 
 interface WebsiteCardData {
   id: string;
@@ -12,7 +12,6 @@ interface WebsiteCardData {
   websiteName?: string | null;
   favicon?: string | null; // Renamed from faviconUrl to match backend
   readTime?: number | null;
-  wordCount?: number | null;
   createdAt: string;
 }
 
@@ -39,22 +38,6 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
   const formatReadTime = (minutes?: number | null) => {
     if (!minutes) return null;
     return `${minutes} min read`;
-  };
-
-  const formatWordCount = (count?: number | null) => {
-    if (!count) return null;
-    if (count >= 1000) {
-      return (count / 1000).toFixed(1) + "K words";
-    }
-    return count + " words";
-  };
-
-  // Get excerpt preview (first ~150 chars)
-  const getExcerptPreview = (excerpt?: string | null) => {
-    if (!excerpt) return null;
-    const maxLength = 150;
-    if (excerpt.length <= maxLength) return excerpt;
-    return excerpt.substring(0, maxLength).trim() + "...";
   };
 
   const handleCardClick = () => {
@@ -128,32 +111,20 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
 
       {/* Excerpt */}
       {data.excerpt && (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed">
-          {getExcerptPreview(data.excerpt)}
+        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed break-words">
+          {data.excerpt}
         </p>
       )}
 
       {/* Article Stats */}
-      {(data.readTime || data.wordCount) && (
+      {data.readTime && (
         <div className="flex items-center gap-4 text-gray-400 text-xs mb-3">
-          {data.readTime && (
-            <div className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{formatReadTime(data.readTime)}</span>
-            </div>
-          )}
-          {data.wordCount && (
-            <div className="flex items-center gap-1">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>{formatWordCount(data.wordCount)}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{formatReadTime(data.readTime)}</span>
+          </div>
         </div>
       )}
-
-      {/* Tags */}
-      <TagsContainer tags={["Article", "Saved"]} />
     </BaseCard>
   );
 };
-
