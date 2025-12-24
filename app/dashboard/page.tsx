@@ -200,6 +200,12 @@ function DashboardContent() {
           item.author.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (item.content &&
           item.content.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.summary &&
+          item.summary.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.websiteMetadata?.excerpt &&
+          item.websiteMetadata.excerpt
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
         item.tags.some((tag) =>
           tag.toLowerCase().includes(searchQuery.toLowerCase())
         );
