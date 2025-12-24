@@ -272,7 +272,7 @@ function DashboardContent() {
     return (
       <div
         className="flex items-center justify-center min-h-screen"
-        style={{ backgroundColor: "#313130" }}
+        style={{ backgroundColor: "#151515" }}
       >
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
@@ -286,18 +286,18 @@ function DashboardContent() {
   return (
     <div
       className="flex h-screen text-orange-500"
-      style={{ backgroundColor: "#313130" }}
+      style={{ backgroundColor: "#151515" }}
     >
       {/* Main Content */}
       <div
         className="flex-1 flex flex-col overflow-hidden"
-        style={{ backgroundColor: "#313130" }}
+        style={{ backgroundColor: "#151515" }}
       >
         {/* Header */}
         <div
           className="p-6 transition-all duration-300"
           style={{
-            background: "#313130",
+            background: "#151515",
           }}
         >
           <div className="flex items-center justify-between">
@@ -314,7 +314,7 @@ function DashboardContent() {
                   onChange={handleSearchChange}
                   className="pl-10 border-gray-800 text-orange-500 placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 w-full transition-all duration-300"
                   style={{
-                    background: "#313130",
+                    background: "#151515",
                     borderColor: "rgba(255, 107, 53, 0.3)",
                     color: "#ff6b35",
                   }}
@@ -327,7 +327,7 @@ function DashboardContent() {
         {/* Content Grid */}
         <div
           className="flex-1 p-6 overflow-auto"
-          style={{ backgroundColor: "#313130" }}
+          style={{ backgroundColor: "#151515" }}
         >
           <div className="mb-6">
             <h1 className="text-2xl font-semibold mb-2">{getDisplayTitle()}</h1>
@@ -450,7 +450,7 @@ function DashboardLoading() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ backgroundColor: "#313130" }}
+      style={{ backgroundColor: "#151515" }}
     >
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
     </div>

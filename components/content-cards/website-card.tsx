@@ -111,7 +111,7 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
 
       {/* Excerpt */}
       {data.excerpt && (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed break-words">
+        <p className="text-gray-300 text-sm mb-4 line-clamp-8 leading-relaxed break-words">
           {data.excerpt}
         </p>
       )}
