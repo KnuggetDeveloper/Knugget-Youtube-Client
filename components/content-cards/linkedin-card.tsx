@@ -102,7 +102,7 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
       {data.title ? (
         <CardTitle title={data.title} />
       ) : (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed break-words">
+        <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
           {data.content}
         </p>
       )}

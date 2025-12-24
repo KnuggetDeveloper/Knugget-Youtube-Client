@@ -56,7 +56,7 @@ export const CardTitle: React.FC<CardTitleProps> = ({
   className = "",
 }) => (
   <h3
-    className={`text-white font-bold text-base mb-3 line-clamp-2 leading-tight ${className}`}
+    className={`text-white font-bold text-base mb-3 line-clamp-4 leading-tight ${className}`}
   >
     {title}
   </h3>
