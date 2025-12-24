@@ -100,7 +100,7 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
 
       {/* Title and Content Preview */}
       {data.title && <CardTitle title={data.title} />}
-      <p className="text-xs mb-3 line-clamp-5 leading-snug break-words text-gray-300">
+      <p className="text-xs mb-3 line-clamp-6 leading-snug break-words text-gray-300">
         {data.content}
       </p>
 
