@@ -93,7 +93,7 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
             className={`fallback-icon w-5 h-5 text-gray-400 ${data.authorImage ? "hidden" : ""}`}
           />
         </div>
-        <span className="text-white font-medium text-sm group-hover/author:text-[#0A66C2] transition-colors line-clamp-1">
+        <span className="text-white font-medium text-sm group-hover/author:text-[#0A66C2] transition-colors">
           {data.author}
         </span>
       </div>
@@ -102,7 +102,7 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
       {data.title ? (
         <CardTitle title={data.title} />
       ) : (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
+        <p className="text-gray-300 text-sm mb-3 leading-relaxed break-words">
           {data.content}
         </p>
       )}

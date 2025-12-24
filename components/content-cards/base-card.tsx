@@ -15,7 +15,7 @@ export const BaseCard: React.FC<BaseCardProps> = ({
   style,
 }) => (
   <div
-    className={`bg-gray-900 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 cursor-pointer hover:shadow-lg hover:shadow-black/20 h-full flex flex-col ${className}`}
+    className={`bg-gray-900 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 cursor-pointer hover:shadow-lg hover:shadow-black/20 flex flex-col ${className}`}
     onClick={onClick}
     style={style}
   >
@@ -56,7 +56,7 @@ export const CardTitle: React.FC<CardTitleProps> = ({
   className = "",
 }) => (
   <h3
-    className={`text-white font-bold text-base mb-3 line-clamp-4 leading-tight ${className}`}
+    className={`text-white font-bold text-base mb-3 leading-tight ${className}`}
   >
     {title}
   </h3>
