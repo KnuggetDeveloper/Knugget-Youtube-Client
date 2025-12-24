@@ -98,11 +98,14 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
         </span>
       </div>
 
-      {/* Title and Content Preview */}
-      {data.title && <CardTitle title={data.title} />}
-      <p className="text-xs mb-3 leading-snug break-words text-gray-300">
-        {data.content}
-      </p>
+      {/* Title or Content Preview */}
+      {data.title ? (
+        <CardTitle title={data.title} />
+      ) : (
+        <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed break-words">
+          {data.content}
+        </p>
+      )}
 
       {/* Post Image */}
       {data.imageUrl && (
