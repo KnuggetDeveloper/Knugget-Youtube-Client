@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { Linkedin, User, ThumbsUp, MessageSquare, Share2 } from "lucide-react";
-import { BaseCard, CardHeader, CardTitle } from "./base-card";
+import { BaseCard, CardHeader } from "./base-card";
 
 interface LinkedinCardData {
   id: string;
@@ -98,14 +98,10 @@ export const LinkedInCard: React.FC<LinkedinCardProps> = ({
         </span>
       </div>
 
-      {/* Title or Content Preview */}
-      {data.title ? (
-        <CardTitle title={data.title} />
-      ) : (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
-          {data.content}
-        </p>
-      )}
+      {/* Content */}
+      <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
+        {data.content}
+      </p>
 
       {/* Post Image */}
       {data.imageUrl && (

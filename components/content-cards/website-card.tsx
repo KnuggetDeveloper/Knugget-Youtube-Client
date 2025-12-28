@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Globe, Clock } from "lucide-react";
+import { Globe } from "lucide-react";
 import { BaseCard, CardHeader, CardTitle } from "./base-card";
 
 interface WebsiteCardData {
@@ -33,11 +33,6 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
       month: "short",
       year: "numeric",
     });
-  };
-
-  const formatReadTime = (minutes?: number | null) => {
-    if (!minutes) return null;
-    return `${minutes} min read`;
   };
 
   const handleCardClick = () => {
@@ -107,23 +102,6 @@ export const WebsiteCard: React.FC<WebsiteCardProps> = ({
         <p className="text-gray-400 text-xs mb-2 line-clamp-1">
           By {data.byline}
         </p>
-      )}
-
-      {/* Excerpt */}
-      {data.excerpt && (
-        <p className="text-gray-300 text-sm mb-3 line-clamp-[15] leading-relaxed break-words">
-          {data.excerpt}
-        </p>
-      )}
-
-      {/* Article Stats */}
-      {data.readTime && (
-        <div className="flex items-center gap-4 text-gray-400 text-xs mb-3">
-          <div className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{formatReadTime(data.readTime)}</span>
-          </div>
-        </div>
       )}
     </BaseCard>
   );
