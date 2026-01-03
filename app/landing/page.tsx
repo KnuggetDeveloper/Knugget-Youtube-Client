@@ -1,12 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/firebase-auth-context";
 import { Button } from "@/components/ui/button";
 import VideoDemo from "@/components/landing/VideoDemo";
+
+// Lazy load feature sections for better performance
+const LinkedInSection = lazy(
+  () => import("@/components/landing/LinkedInSection")
+);
+const ArticlesSection = lazy(
+  () => import("@/components/landing/ArticlesSection")
+);
+const NewsletterSection = lazy(
+  () => import("@/components/landing/NewsletterSection")
+);
+
+// Loading skeleton for sections
+const SectionLoader = () => (
+  <section
+    className="min-h-screen flex items-center justify-center py-16 sm:py-20"
+    style={{ background: "var(--primary-bg)" }}
+  >
+    <div className="flex flex-col items-center gap-4">
+      <div
+        className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin"
+        style={{ borderColor: "var(--accent-primary)" }}
+      />
+      <p style={{ color: "var(--text-secondary)" }}>Loading...</p>
+    </div>
+  </section>
+);
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
@@ -309,6 +336,19 @@ export default function LandingPage() {
           <VideoDemo />
         </div>
       </section>
+
+      {/* Feature Sections - Lazy loaded for performance */}
+      <Suspense fallback={<SectionLoader />}>
+        <LinkedInSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionLoader />}>
+        <ArticlesSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionLoader />}>
+        <NewsletterSection />
+      </Suspense>
 
       {/* Footer */}
       <footer

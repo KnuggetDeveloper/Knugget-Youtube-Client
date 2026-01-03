@@ -185,11 +185,75 @@
     animation: fadeIn 0.8s ease-out forwards;
   }
 
+  /* Slide in up animation for indicators */
+  @keyframes slideInUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .slide-in-up {
+    animation: slideInUp 0.5s ease;
+  }
+
+  /* Pulse animation for attention */
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 15px rgba(255, 107, 53, 0);
+    }
+  }
+
+  .pulse-animation {
+    animation: pulse 2s ease infinite;
+  }
+
+  /* Fade out animation */
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  .fade-out {
+    animation: fadeOut 0.5s ease forwards;
+  }
+
+  /* Smooth hover transitions */
+  .feature-card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .feature-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--accent-glow);
+  }
+
   /* Responsive Design for Knugget Landing Page */
   @media (max-width: 1024px) {
     .lg\\:grid-cols-2 {
       grid-template-columns: 1fr !important;
       gap: 2rem !important;
+    }
+
+    /* Feature sections stack on tablets */
+    section .grid.lg\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    /* Visual mockups appear first on mobile */
+    section .order-first {
+      order: -1;
     }
   }
 
@@ -229,6 +293,33 @@
     .dropdown-group {
       justify-content: center;
     }
+
+    /* Feature section text sizing */
+    section h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+    }
+
+    section p {
+      font-size: 1rem;
+    }
+
+    /* LinkedIn/Articles mockups adjust */
+    .linkedin-mockup,
+    .article-mockup,
+    .newsletter-mockup {
+      padding: 1rem;
+    }
+
+    /* Browser chrome wrapping on mobile */
+    .browser-chrome {
+      flex-wrap: wrap;
+    }
+
+    /* Inbox indicator static positioning on mobile */
+    section .absolute.-bottom-5 {
+      position: static;
+      margin-top: 2rem;
+    }
   }
 
   @media (max-width: 480px) {
@@ -256,6 +347,36 @@
     /* Summary content padding */
     .summary-content {
       padding: 1rem !important;
+    }
+
+    /* Feature CTA buttons full width on mobile */
+    section button.w-fit {
+      width: 100% !important;
+      justify-content: center;
+    }
+
+    /* Smaller text in mockups */
+    .newsletter-mockup h3,
+    .article-mockup h3 {
+      font-size: 1rem !important;
+    }
+
+    /* Smaller indicators */
+    section .absolute.bottom-6,
+    section .absolute.bottom-8 {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    /* Digest settings buttons stack */
+    .digest-settings {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .digest-settings button {
+      width: 100%;
+      text-align: center;
     }
   }
 
