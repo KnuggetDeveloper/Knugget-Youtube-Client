@@ -295,7 +295,7 @@ export default function LandingPage() {
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 leading-normal fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            <div style={{ color: "var(--text-primary)" }} className="mb-4">
+            <div className="mb-4 TorchKB-gradient-text">
               Your AI Powered Knowledge Base
             </div>
             <div
