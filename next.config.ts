@@ -51,10 +51,10 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: "TorchKB AI",
     NEXT_PUBLIC_APP_DESCRIPTION: "AI-powered YouTube video summarization",
     NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL || "https://www.getTorchKB.com",
+      process.env.NEXT_PUBLIC_APP_URL || "hhttps://www.getknugget.com",
     NEXT_PUBLIC_API_BASE_URL:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://TorchKB-youtube-backend.onrender.com/api",
+      "https://knugget-youtube-backend.onrender.com/api",
   },
   async headers() {
     return [
@@ -86,7 +86,7 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value:
               process.env.NODE_ENV === "production"
-                ? "https://www.getTorchKB.com,https://getTorchKB.com,https://TorchKB-youtube-client.vercel.app"
+                ? "hhttps://www.getknugget.com,https://getTorchKB.com,https://knugget-youtube-client.vercel.app/"
                 : "*",
           },
           {
@@ -109,7 +109,7 @@ const nextConfig = {
   async rewrites() {
     const apiBaseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://TorchKB-youtube-backend.onrender.com/api";
+      "https://knugget-youtube-backend.onrender.com/api";
 
     return [
       {

@@ -20,7 +20,7 @@ class FirebaseAuthService {
   constructor() {
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://TorchKB-youtube-backend.onrender.com/api";
+      "https://knugget-youtube-backend.onrender.com/api";
 
     // Listen for connector ready message
     if (typeof window !== "undefined") {

@@ -102,7 +102,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* DNS Prefetch */}
         <link
           rel="dns-prefetch"
-          href="https://TorchKB-new-backend.onrender.com"
+          href="https://knugget-youtube-backend.onrender.com"
         />
 
         {/* Chrome Extension Connection - Extension ID is now auto-discovered */}

@@ -48,7 +48,7 @@ class AuthService {
     // Use production backend API URL
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://TorchKB-youtube-backend.onrender.com/api";
+      "https://knugget-youtube-backend.onrender.com/api";
   }
 
   private async makeRequest<T>(
