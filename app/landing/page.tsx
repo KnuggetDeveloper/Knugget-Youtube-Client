@@ -15,6 +15,9 @@ const LinkedInSection = lazy(
 const ArticlesSection = lazy(
   () => import("@/components/landing/ArticlesSection")
 );
+const SearchSection = lazy(
+  () => import("@/components/landing/SearchSection")
+);
 // const NewsletterSection = lazy(
 //   () => import("@/components/landing/NewsletterSection")
 // );
@@ -355,6 +358,10 @@ export default function LandingPage() {
 
       <Suspense fallback={<SectionLoader />}>
         <ArticlesSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionLoader />}>
+        <SearchSection />
       </Suspense>
 
       {/* <Suspense fallback={<SectionLoader />}>
