@@ -1,6 +1,15 @@
 "use client";
 
-import { Search, Calendar, Clock, User, Youtube, Linkedin, Globe, BarChart3 } from "lucide-react";
+import {
+  Search,
+  Calendar,
+  Clock,
+  User,
+  Youtube,
+  Linkedin,
+  Globe,
+  BarChart3,
+} from "lucide-react";
 
 export default function SearchSection() {
   return (
@@ -12,17 +21,6 @@ export default function SearchSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div className="flex flex-col gap-6">
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium w-fit"
-              style={{
-                background: "rgba(255, 107, 53, 0.1)",
-                color: "var(--accent-primary)",
-                border: "1px solid rgba(255, 107, 53, 0.3)",
-              }}
-            >
-              <Search className="w-4 h-4" />
-              Smart Search
-            </div>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
               style={{ color: "var(--text-primary)" }}
@@ -33,8 +31,8 @@ export default function SearchSection() {
               className="text-lg sm:text-xl leading-relaxed"
               style={{ color: "var(--text-secondary)" }}
             >
-              Instantly search through all your youtube summaries, linkedin posts
-              and web articles anytime
+              Instantly search through all your youtube summaries, linkedin
+              posts and web articles anytime
             </p>
           </div>
 
@@ -63,7 +61,10 @@ export default function SearchSection() {
                     borderColor: "var(--border-color)",
                   }}
                 >
-                  <Search className="w-5 h-5" style={{ color: "var(--text-muted)" }} />
+                  <Search
+                    className="w-5 h-5"
+                    style={{ color: "var(--text-muted)" }}
+                  />
                   <input
                     type="text"
                     className="flex-1 bg-transparent border-none outline-none text-base"
@@ -87,7 +88,10 @@ export default function SearchSection() {
                   className="mb-6 pb-3 border-b"
                   style={{ borderBottomColor: "var(--border-color)" }}
                 >
-                  <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                  <span
+                    className="text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     3 results found
                   </span>
                 </div>
@@ -153,15 +157,24 @@ export default function SearchSection() {
                       ...
                     </p>
                     <div className="flex items-center gap-4 flex-wrap text-xs">
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <Calendar className="w-3.5 h-3.5" />
                         <span>2 days ago</span>
                       </div>
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <Clock className="w-3.5 h-3.5" />
                         <span>2h 26m</span>
                       </div>
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <User className="w-3.5 h-3.5" />
                         <span>Simon Squibb</span>
                       </div>
@@ -238,11 +251,17 @@ export default function SearchSection() {
                       is understanding your users deeply...
                     </p>
                     <div className="flex items-center gap-4 flex-wrap text-xs">
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <Calendar className="w-3.5 h-3.5" />
                         <span>1 week ago</span>
                       </div>
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <User className="w-3.5 h-3.5" />
                         <span>Sarah Johnson</span>
                       </div>
@@ -308,15 +327,24 @@ export default function SearchSection() {
                       teams work...
                     </p>
                     <div className="flex items-center gap-4 flex-wrap text-xs">
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <Calendar className="w-3.5 h-3.5" />
                         <span>3 days ago</span>
                       </div>
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <Clock className="w-3.5 h-3.5" />
                         <span>5 min read</span>
                       </div>
-                      <div className="flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+                      <div
+                        className="flex items-center gap-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         <User className="w-3.5 h-3.5" />
                         <span>Alex Rivera</span>
                       </div>
@@ -336,8 +364,12 @@ export default function SearchSection() {
             >
               <BarChart3 className="w-5 h-5" />
               <div>
-                <div className="font-semibold text-sm">127 items in your library</div>
-                <div className="text-xs opacity-90">Ready to search anytime</div>
+                <div className="font-semibold text-sm">
+                  127 items in your library
+                </div>
+                <div className="text-xs opacity-90">
+                  Ready to search anytime
+                </div>
               </div>
             </div>
           </div>
@@ -346,4 +378,3 @@ export default function SearchSection() {
     </section>
   );
 }
-
