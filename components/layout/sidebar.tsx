@@ -179,10 +179,10 @@ export function GlobalSidebar() {
 
   return (
     <div
-      className={`${sidebarCollapsed ? "w-16" : "w-64"} bg-black flex flex-col transition-all duration-300 fixed left-0 top-0 h-full z-50`}
+      className={`${sidebarCollapsed ? "w-16" : "w-64"} bg-black flex flex-col transition-all duration-300 fixed left-0 top-0 h-screen z-50`}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-800">
+      <div className="p-4 border-b border-gray-800 flex-shrink-0">
         <div className="flex items-center justify-between">
           {!sidebarCollapsed && (
             <Link href="/dashboard" className="flex items-center space-x-2">
@@ -195,8 +195,8 @@ export function GlobalSidebar() {
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+      {/* Navigation - Takes all available space */}
+      <div className="flex-1 p-4 space-y-6 overflow-y-auto min-h-0">
         {/* Recent Videos */}
         {!sidebarCollapsed && (
           <div>
@@ -286,7 +286,7 @@ export function GlobalSidebar() {
       {!sidebarCollapsed && user && (
         <div
           ref={buyNowButtonRef}
-          className="px-4 py-3 border-t border-gray-800"
+          className="px-4 py-3 border-t border-gray-800 flex-shrink-0"
         >
           <BuyNowButton variant="button" size="default" className="w-full" />
         </div>
@@ -294,7 +294,7 @@ export function GlobalSidebar() {
 
       {/* User Profile */}
       {!sidebarCollapsed && user && (
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-800 flex-shrink-0">
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
               <span className="text-white text-sm font-medium">
