@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
 export default function ArticlesSection() {
-  const [hoveredButton, setHoveredButton] = useState(false);
-
   return (
     <section
       className="min-h-screen flex items-center py-16 sm:py-20 relative overflow-hidden"
@@ -145,18 +141,6 @@ export default function ArticlesSection() {
               articles from any website with one click and never lose track of
               important reads.
             </p>
-            <button
-              className="w-fit flex items-center gap-3 px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-300 hover:transform hover:translate-y-[-3px]"
-              style={{
-                background: "var(--accent-gradient)",
-                color: "var(--primary-bg)",
-                boxShadow: hoveredButton
-                  ? "var(--accent-glow-strong)"
-                  : "var(--accent-glow)",
-              }}
-              onMouseEnter={() => setHoveredButton(true)}
-              onMouseLeave={() => setHoveredButton(false)}
-            ></button>
           </div>
         </div>
       </div>
