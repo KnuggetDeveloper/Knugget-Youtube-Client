@@ -8,16 +8,15 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TorchKB AI - AI-Powered Content Summaries",
+  title: "TorchKB AI - Your AI Powered Knowledge Base",
   description:
-    "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
+    "Save YouTube summaries, LinkedIn posts & web pages to your knowledge base & search anytime effortlessly.",
   keywords: [
     "YouTube summaries",
     "LinkedIn posts",
-    "AI content analysis",
-    "content summarization",
-    "artificial intelligence",
-    "productivity tools",
+    "web pages",
+    "knowledge base",
+    "search anytime",
   ],
   authors: [{ name: "TorchKB AI" }],
   creator: "TorchKB AI",
@@ -29,15 +28,15 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_WEBSITE_URL ||
-      "https://TorchKB-new-client.vercel.app"
+      "https://knugget-youtube-client.vercel.app"
   ),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "TorchKB AI - AI-Powered Content Summaries",
+    title: "TorchKB AI - Your AI Powered Knowledge Base",
     description:
-      "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
+      "Save YouTube summaries, LinkedIn posts & web pages to your knowledge base & search anytime effortlessly.",
     url: "/",
     siteName: "TorchKB AI",
     images: [
@@ -45,7 +44,7 @@ export const metadata: Metadata = {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "TorchKB AI - AI-Powered Content Summaries",
+        alt: "TorchKB AI - Your AI Powered Knowledge Base",
       },
     ],
     locale: "en_US",
@@ -53,9 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TorchKB AI - AI-Powered Content Summaries",
+    title: "TorchKB AI - Your AI Powered Knowledge Base",
     description:
-      "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
+      "Save YouTube summaries, LinkedIn posts & web pages to your knowledge base & search anytime effortlessly.",
     images: ["/logo.png"],
     creator: "@TorchKBai",
   },
