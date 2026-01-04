@@ -51,7 +51,7 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: "TorchKB AI",
     NEXT_PUBLIC_APP_DESCRIPTION: "AI-powered YouTube video summarization",
     NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL || "hhttps://www.getknugget.com",
+      process.env.NEXT_PUBLIC_APP_URL || "https://www.getknugget.com",
     NEXT_PUBLIC_API_BASE_URL:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://knugget-youtube-backend.onrender.com/api",
@@ -86,7 +86,7 @@ const nextConfig = {
             key: "Access-Control-Allow-Origin",
             value:
               process.env.NODE_ENV === "production"
-                ? "hhttps://www.getknugget.com,https://getTorchKB.com,https://knugget-youtube-client.vercel.app/"
+                ? "https://www.getknugget.com,https://getTorchKB.com,https://knugget-youtube-client.vercel.app/"
                 : "*",
           },
           {
