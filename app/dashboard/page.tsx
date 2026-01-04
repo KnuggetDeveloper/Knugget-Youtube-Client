@@ -14,7 +14,7 @@ import {
   WebsiteCard,
 } from "@/components/content-cards";
 
-interface KnuggetItem {
+interface TorchKBItem {
   id: string;
   type: "youtube" | "linkedin" | "website";
   title: string;
@@ -109,7 +109,7 @@ function DashboardContent() {
 
   // Combine all data sources using useMemo to prevent infinite loops
   const allItems = useMemo(() => {
-    const items: KnuggetItem[] = [];
+    const items: TorchKBItem[] = [];
     const summaries = summariesData?.data || [];
 
     // Add summaries (YouTube)
@@ -245,29 +245,29 @@ function DashboardContent() {
       case "website":
         return "Website Articles";
       default:
-        return "All Knuggets";
+        return "All TorchKBs";
     }
   };
 
-  const handleItemClick = (item: KnuggetItem) => {
+  const handleItemClick = (item: TorchKBItem) => {
     switch (item.type) {
       case "youtube":
-        router.push(`/knugget/youtube/${item.id}`);
+        router.push(`/TorchKB/youtube/${item.id}`);
         break;
       case "linkedin":
-        router.push(`/knugget/linkedin/${item.id}`);
+        router.push(`/TorchKB/linkedin/${item.id}`);
         break;
       case "website":
-        router.push(`/knugget/website/${item.id}`);
+        router.push(`/TorchKB/website/${item.id}`);
         break;
     }
   };
 
-  const handleThumbnailClick = (item: KnuggetItem) => {
+  const handleThumbnailClick = (item: TorchKBItem) => {
     switch (item.type) {
       case "youtube":
         // Navigate to detail page with autoplay parameter
-        router.push(`/knugget/youtube/${item.id}?autoplay=true`);
+        router.push(`/TorchKB/youtube/${item.id}?autoplay=true`);
         break;
       default:
         break;
@@ -315,7 +315,7 @@ function DashboardContent() {
                 />
                 <Input
                   type="text"
-                  placeholder="Search your knuggets..."
+                  placeholder="Search your TorchKBs..."
                   value={searchQuery}
                   onChange={handleSearchChange}
                   className="pl-10 border-gray-800 text-orange-500 placeholder-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 w-full transition-all duration-300"
@@ -424,7 +424,7 @@ function DashboardContent() {
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium">No knuggets found</p>
+                  <p className="text-lg font-medium">No TorchKBs found</p>
                   <p className="text-sm">
                     {searchQuery || activeFilter !== "all"
                       ? `No results for your current filters`

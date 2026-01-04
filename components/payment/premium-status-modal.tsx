@@ -96,7 +96,7 @@ export function PremiumStatusModal({
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Crown className="h-6 w-6 text-knugget-500" />
+                  <Crown className="h-6 w-6 text-TorchKB-500" />
                   <h2 className="text-xl font-bold">Premium</h2>
                 </div>
                 <Button
@@ -168,21 +168,19 @@ export function PremiumStatusModal({
                   <span>{user.email}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Videos This Month:</span>
+                  <span className="text-muted-foreground">
+                    Videos This Month:
+                  </span>
                   <span>{user.videosProcessedThisMonth ?? 0}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    Input Tokens:
-                  </span>
+                  <span className="text-muted-foreground">Input Tokens:</span>
                   <span className="font-mono">
                     {user.inputTokensRemaining?.toLocaleString() || "0"}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    Output Tokens:
-                  </span>
+                  <span className="text-muted-foreground">Output Tokens:</span>
                   <span className="font-mono">
                     {user.outputTokensRemaining?.toLocaleString() || "0"}
                   </span>

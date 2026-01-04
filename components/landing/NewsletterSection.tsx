@@ -155,13 +155,13 @@ export default function NewsletterSection() {
                       className="font-semibold text-sm"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      Your Knugget Digest
+                      Your TorchKB Digest
                     </div>
                     <div
                       className="text-xs truncate"
                       style={{ color: "var(--text-muted)" }}
                     >
-                      digest@knugget.ai
+                      digest@TorchKB.ai
                     </div>
                   </div>
                 </div>
@@ -298,4 +298,3 @@ export default function NewsletterSection() {
     </section>
   );
 }
-

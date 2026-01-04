@@ -114,7 +114,7 @@ export function isValidEmail(email: string): boolean {
 export function getApiBaseUrl(): string {
   return (
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://knugget-youtube-backend.onrender.com"
+    "https://TorchKB-youtube-backend.onrender.com"
   );
 }
 
@@ -124,7 +124,7 @@ export function getApiBaseUrl(): string {
 export function getWebsiteUrl(): string {
   return (
     process.env.NEXT_PUBLIC_WEBSITE_URL ||
-    "https://knugget-youtube-client.vercel.app"
+    "https://TorchKB-youtube-client.vercel.app"
   );
 }
 

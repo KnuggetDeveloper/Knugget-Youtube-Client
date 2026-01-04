@@ -24,7 +24,7 @@ class TokenService {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
-    const token = localStorage.getItem("knugget_access_token");
+    const token = localStorage.getItem("TorchKB_access_token");
 
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       headers: {

@@ -56,7 +56,7 @@ export default function ArticlesSection() {
                   }}
                 >
                   <span>💾</span>
-                  <span>Save to Knugget</span>
+                  <span>Save to TorchKB</span>
                 </div>
               </div>
 
@@ -131,16 +131,6 @@ export default function ArticlesSection() {
 
           {/* Content */}
           <div className="flex flex-col gap-6 order-last lg:order-last">
-            <div
-              className="inline-block w-fit px-4 py-2 rounded-full text-sm font-semibold tracking-wide"
-              style={{
-                background: "rgba(255, 107, 53, 0.1)",
-                border: "1px solid rgba(255, 107, 53, 0.3)",
-                color: "var(--accent-primary)",
-              }}
-            >
-              📰 Smart Reading
-            </div>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
               style={{ color: "var(--text-primary)" }}
@@ -155,33 +145,6 @@ export default function ArticlesSection() {
               articles from any website with one click and never lose track of
               important reads.
             </p>
-            <ul className="flex flex-col gap-4">
-              {[
-                "One-click save from any website",
-                "Auto-extract key insights with AI",
-                "Offline reading mode",
-                "Organize with tags and collections",
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-4">
-                  <span
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{
-                      background: "var(--accent-gradient)",
-                      color: "var(--primary-bg)",
-                      boxShadow: "var(--accent-glow)",
-                    }}
-                  >
-                    ✓
-                  </span>
-                  <span
-                    className="text-base"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
             <button
               className="w-fit flex items-center gap-3 px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-300 hover:transform hover:translate-y-[-3px]"
               style={{
@@ -193,16 +156,10 @@ export default function ArticlesSection() {
               }}
               onMouseEnter={() => setHoveredButton(true)}
               onMouseLeave={() => setHoveredButton(false)}
-            >
-              <span>Start Saving Articles</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </button>
+            ></button>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

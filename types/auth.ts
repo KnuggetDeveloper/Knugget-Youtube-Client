@@ -168,18 +168,18 @@ export interface AuthContextType extends UseAuthReturn {
 
 // Session storage keys
 export const AUTH_STORAGE_KEYS = {
-  ACCESS_TOKEN: "knugget_access_token",
-  REFRESH_TOKEN: "knugget_refresh_token",
-  USER_DATA: "knugget_user_data",
-  EXPIRES_AT: "knugget_expires_at",
+  ACCESS_TOKEN: "TorchKB_access_token",
+  REFRESH_TOKEN: "TorchKB_refresh_token",
+  USER_DATA: "TorchKB_user_data",
+  EXPIRES_AT: "TorchKB_expires_at",
 } as const;
 
 // Chrome extension storage keys (matching extension codebase)
 export const EXTENSION_STORAGE_KEYS = {
-  AUTH_DATA: "knugget_auth",
-  USER_PREFERENCES: "knugget_preferences",
-  CACHED_SUMMARIES: "knugget_summaries_cache",
-  LAST_SYNC: "knugget_last_sync",
+  AUTH_DATA: "TorchKB_auth",
+  USER_PREFERENCES: "TorchKB_preferences",
+  CACHED_SUMMARIES: "TorchKB_summaries_cache",
+  LAST_SYNC: "TorchKB_last_sync",
 } as const;
 
 // API endpoints

@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [https://knugget-youtube-client.vercel.app](https://knugget-youtube-client.vercel.app) with your browser to see the result.
+Open [https://TorchKB-youtube-client.vercel.app](https://TorchKB-youtube-client.vercel.app) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

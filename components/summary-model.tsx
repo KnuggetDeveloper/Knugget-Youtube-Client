@@ -256,7 +256,7 @@ export function SummaryModal({
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center text-lg">
-                        <Play className="h-5 w-5 mr-2 text-knugget-500" />
+                        <Play className="h-5 w-5 mr-2 text-TorchKB-500" />
                         Video Information
                       </CardTitle>
                     </CardHeader>
@@ -303,7 +303,7 @@ export function SummaryModal({
                     <ul className="mt-3 space-y-2">
                       {summary.keyPoints.map((point, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <div className="w-2 h-2 rounded-full bg-knugget-500 mt-2 flex-shrink-0" />
+                          <div className="w-2 h-2 rounded-full bg-TorchKB-500 mt-2 flex-shrink-0" />
                           <span className="text-sm">{point}</span>
                         </li>
                       ))}
@@ -336,7 +336,7 @@ export function SummaryModal({
                       {summary.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-knugget-100 text-knugget-800 dark:bg-knugget-900 dark:text-knugget-200"
+                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-TorchKB-100 text-TorchKB-800 dark:bg-TorchKB-900 dark:text-TorchKB-200"
                         >
                           {tag}
                         </span>
@@ -471,7 +471,7 @@ export function SummaryModal({
                         {tagFields.map((field, index) => (
                           <div
                             key={field.id}
-                            className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-knugget-100 text-knugget-800 dark:bg-knugget-900 dark:text-knugget-200"
+                            className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-TorchKB-100 text-TorchKB-800 dark:bg-TorchKB-900 dark:text-TorchKB-200"
                           >
                             <span>{form.watch(`tags.${index}`)}</span>
                             <button

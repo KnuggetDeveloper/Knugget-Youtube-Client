@@ -78,7 +78,7 @@
 }
 
 @layer components {
-  /* Knugget Theme Variables - Black and Orange */
+  /* TorchKB Theme Variables - Black and Orange */
   :root {
     /* Colors - Black and Orange Theme */
     --primary-bg: #000000;
@@ -126,12 +126,12 @@
     --shadow-glow: var(--accent-glow);
   }
 
-  /* Custom gradient for Knugget branding */
-  .knugget-gradient {
+  /* Custom gradient for TorchKB branding */
+  .TorchKB-gradient {
     background: var(--accent-gradient);
   }
 
-  .knugget-gradient-text {
+  .TorchKB-gradient-text {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -238,7 +238,7 @@
     box-shadow: var(--accent-glow);
   }
 
-  /* Responsive Design for Knugget Landing Page */
+  /* Responsive Design for TorchKB Landing Page */
   @media (max-width: 1024px) {
     .lg\\:grid-cols-2 {
       grid-template-columns: 1fr !important;
@@ -410,7 +410,7 @@
 
   /* Loading spinner */
   .spinner {
-    @apply animate-spin h-5 w-5 border-2 border-knugget-500 border-t-transparent rounded-full;
+    @apply animate-spin h-5 w-5 border-2 border-TorchKB-500 border-t-transparent rounded-full;
   }
 
   /* Form elements */
@@ -454,7 +454,7 @@
 
 /* Focus styles for accessibility */
 .focus-visible {
-  @apply outline-none focus-visible:ring-2 focus-visible:ring-knugget-500 focus-visible:ring-offset-2;
+  @apply outline-none focus-visible:ring-2 focus-visible:ring-TorchKB-500 focus-visible:ring-offset-2;
 }
 
 /* Animations */

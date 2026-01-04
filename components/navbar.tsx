@@ -61,11 +61,11 @@ export function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg knugget-gradient flex items-center justify-center">
+              <div className="h-8 w-8 rounded-lg TorchKB-gradient flex items-center justify-center">
                 <span className="text-white font-bold text-lg">K</span>
               </div>
-              <span className="text-xl font-bold knugget-gradient-text">
-                Knugget AI
+              <span className="text-xl font-bold TorchKB-gradient-text">
+                TorchKB AI
               </span>
             </Link>
           </div>
@@ -82,8 +82,8 @@ export function Navbar() {
                       href={item.href}
                       className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                         isActivePath(item.href)
-                          ? "text-knugget-600 bg-knugget-50 dark:bg-knugget-900 dark:text-knugget-400"
-                          : "text-gray-700 dark:text-gray-300 hover:text-knugget-600 dark:hover:text-knugget-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          ? "text-TorchKB-600 bg-TorchKB-50 dark:bg-TorchKB-900 dark:text-TorchKB-400"
+                          : "text-gray-700 dark:text-gray-300 hover:text-TorchKB-600 dark:hover:text-TorchKB-400 hover:bg-gray-50 dark:hover:bg-gray-800"
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -112,7 +112,7 @@ export function Navbar() {
                     variant="ghost"
                     className="relative h-8 w-8 rounded-full"
                   >
-                    <div className="h-8 w-8 rounded-full bg-knugget-500 flex items-center justify-center text-white font-medium text-sm">
+                    <div className="h-8 w-8 rounded-full bg-TorchKB-500 flex items-center justify-center text-white font-medium text-sm">
                       {getInitials(user?.name || "", user?.email || "")}
                     </div>
                   </Button>
@@ -128,7 +128,8 @@ export function Navbar() {
                       </p>
                       <div className="flex items-center space-x-2 mt-2">
                         <span className="text-xs text-muted-foreground">
-                          {user?.videosProcessedThisMonth ?? 0} videos this month
+                          {user?.videosProcessedThisMonth ?? 0} videos this
+                          month
                         </span>
                         <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           <span>•</span>
@@ -182,13 +183,13 @@ export function Navbar() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/login"
-                  className="text-gray-700 dark:text-gray-300 hover:text-knugget-600 dark:hover:text-knugget-400 px-3 py-2 text-sm font-medium"
+                  className="text-gray-700 dark:text-gray-300 hover:text-TorchKB-600 dark:hover:text-TorchKB-400 px-3 py-2 text-sm font-medium"
                 >
                   Log in
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-knugget-600 hover:bg-knugget-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="bg-TorchKB-600 hover:bg-TorchKB-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Sign up
                 </Link>
@@ -226,8 +227,8 @@ export function Navbar() {
                         href={item.href}
                         className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium ${
                           isActivePath(item.href)
-                            ? "text-knugget-600 bg-knugget-50 dark:bg-knugget-900 dark:text-knugget-400"
-                            : "text-gray-700 dark:text-gray-300 hover:text-knugget-600 dark:hover:text-knugget-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                            ? "text-TorchKB-600 bg-TorchKB-50 dark:bg-TorchKB-900 dark:text-TorchKB-400"
+                            : "text-gray-700 dark:text-gray-300 hover:text-TorchKB-600 dark:hover:text-TorchKB-400 hover:bg-gray-50 dark:hover:bg-gray-800"
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -238,7 +239,7 @@ export function Navbar() {
                   })}
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
                     <div className="flex items-center px-3 py-2">
-                      <div className="h-8 w-8 rounded-full bg-knugget-500 flex items-center justify-center text-white font-medium text-sm mr-3">
+                      <div className="h-8 w-8 rounded-full bg-TorchKB-500 flex items-center justify-center text-white font-medium text-sm mr-3">
                         {getInitials(user?.name || "", user?.email || "")}
                       </div>
                       <div className="flex-1">

@@ -78,8 +78,8 @@ export default function VideoDemo() {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 knugget-gradient-text">
-          See Knugget in Action
+        <h2 className="text-3xl md:text-4xl font-bold text-center mx-auto mb-12 TorchKB-gradient-text">
+          Save YouTube Summaries and Transcript In One Click
         </h2>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -222,7 +222,7 @@ export default function VideoDemo() {
                     {btn.view === "summary" ? (
                       <Image
                         src="/logo.png"
-                        alt="Knugget Logo"
+                        alt="TorchKB Logo"
                         width={20}
                         height={20}
                         className="object-contain"

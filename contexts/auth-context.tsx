@@ -389,10 +389,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const authKeys = [
         "sb-access-token",
         "sb-refresh-token",
-        "knugget_access_token",
-        "knugget_refresh_token",
-        "knugget_user_data",
-        "knugget_expires_at",
+        "TorchKB_access_token",
+        "TorchKB_refresh_token",
+        "TorchKB_user_data",
+        "TorchKB_expires_at",
       ];
 
       authKeys.forEach((key) => {

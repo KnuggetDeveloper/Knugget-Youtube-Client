@@ -48,7 +48,7 @@ class AuthService {
     // Use production backend API URL
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://knugget-youtube-backend.onrender.com/api";
+      "https://TorchKB-youtube-backend.onrender.com/api";
   }
 
   private async makeRequest<T>(
@@ -255,7 +255,7 @@ class AuthService {
       });
 
       await chromeAPI.storage.local.set({
-        knuggetUserInfo: extensionAuthData,
+        TorchKBUserInfo: extensionAuthData,
       });
 
       console.log("Auth data synced with Chrome extension");
@@ -270,7 +270,7 @@ class AuthService {
 
     try {
       await chromeAPI.storage.sync.remove(EXTENSION_STORAGE_KEYS.AUTH_DATA);
-      await chromeAPI.storage.local.remove("knuggetUserInfo");
+      await chromeAPI.storage.local.remove("TorchKBUserInfo");
       console.log("Extension auth data cleared");
     } catch (error) {
       console.error("Failed to clear extension auth:", error);
@@ -281,11 +281,11 @@ class AuthService {
   private async findExtensionId(chromeAPI: ChromeAPI): Promise<string | null> {
     // Try stored extension ID first
     try {
-      const storedId = localStorage.getItem("knugget_extension_id");
+      const storedId = localStorage.getItem("TorchKB_extension_id");
       if (storedId) {
         // Test if it's still working
         await chromeAPI.runtime.sendMessage(storedId, {
-          type: "KNUGGET_CHECK_AUTH",
+          type: "TorchKB_CHECK_AUTH",
           timestamp: new Date().toISOString(),
         });
         return storedId;
@@ -301,11 +301,11 @@ class AuthService {
       if (urlExtensionId) {
         // Test if it works
         await chromeAPI.runtime.sendMessage(urlExtensionId, {
-          type: "KNUGGET_CHECK_AUTH",
+          type: "TorchKB_CHECK_AUTH",
           timestamp: new Date().toISOString(),
         });
         // Store for future use
-        localStorage.setItem("knugget_extension_id", urlExtensionId);
+        localStorage.setItem("TorchKB_extension_id", urlExtensionId);
         return urlExtensionId;
       }
     } catch {
@@ -325,7 +325,7 @@ class AuthService {
       if (!extensionId) return;
 
       await chromeAPI.runtime.sendMessage(extensionId, {
-        type: "KNUGGET_AUTH_SUCCESS",
+        type: "TorchKB_AUTH_SUCCESS",
         payload: {
           token: authData.accessToken,
           refreshToken: authData.refreshToken,
@@ -347,7 +347,7 @@ class AuthService {
       if (!extensionId) return;
 
       await chromeAPI.runtime.sendMessage(extensionId, {
-        type: "KNUGGET_LOGOUT",
+        type: "TorchKB_LOGOUT",
       });
     } catch (error) {
       console.error("Failed to notify extension of logout:", error);

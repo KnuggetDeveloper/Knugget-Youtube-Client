@@ -20,7 +20,7 @@ class FirebaseAuthService {
   constructor() {
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://knugget-youtube-backend.onrender.com/api";
+      "https://TorchKB-youtube-backend.onrender.com/api";
 
     // Listen for connector ready message
     if (typeof window !== "undefined") {
@@ -32,13 +32,13 @@ class FirebaseAuthService {
   private setupConnectorListener(): void {
     window.addEventListener("message", (event) => {
       if (
-        event.data?.target === "KNUGGET_WEBPAGE" &&
+        event.data?.target === "TorchKB_WEBPAGE" &&
         event.data?.type === "CONNECTOR_READY"
       ) {
         this.connectorReady = true;
         const extensionId = event.data.extensionId;
         if (extensionId) {
-          localStorage.setItem("knugget_extension_id", extensionId);
+          localStorage.setItem("TorchKB_extension_id", extensionId);
           console.log("✅ Extension connector ready, ID stored:", extensionId);
         }
       }
@@ -223,11 +223,11 @@ class FirebaseAuthService {
 
       // Method 1: Try direct Chrome API
       if (typeof chrome !== "undefined" && chrome.runtime) {
-        const extensionId = localStorage.getItem("knugget_extension_id");
+        const extensionId = localStorage.getItem("TorchKB_extension_id");
         if (extensionId) {
           try {
             await chrome.runtime.sendMessage(extensionId, {
-              type: "KNUGGET_LOGOUT",
+              type: "TorchKB_LOGOUT",
               timestamp: new Date().toISOString(),
             });
             console.log("✅ Logout notified via Chrome API");
@@ -241,7 +241,7 @@ class FirebaseAuthService {
       // Method 2: Use postMessage to content script
       window.postMessage(
         {
-          target: "KNUGGET_EXTENSION",
+          target: "TorchKB_EXTENSION",
           type: "LOGOUT",
         },
         "*"
@@ -338,11 +338,11 @@ class FirebaseAuthService {
 
       // Method 1: Try direct Chrome API (if available)
       if (typeof chrome !== "undefined" && chrome.runtime) {
-        const extensionId = localStorage.getItem("knugget_extension_id");
+        const extensionId = localStorage.getItem("TorchKB_extension_id");
         if (extensionId) {
           try {
             await chrome.runtime.sendMessage(extensionId, {
-              type: "KNUGGET_AUTH_SUCCESS",
+              type: "TorchKB_AUTH_SUCCESS",
               payload: authData,
             });
             console.log("✅ Auth synced via Chrome API");
@@ -356,7 +356,7 @@ class FirebaseAuthService {
       // Method 2: Use postMessage to content script (more reliable)
       window.postMessage(
         {
-          target: "KNUGGET_EXTENSION",
+          target: "TorchKB_EXTENSION",
           type: "SYNC_AUTH",
           payload: authData,
         },
@@ -388,7 +388,7 @@ class FirebaseAuthService {
 
       const handler = (event: MessageEvent) => {
         if (
-          event.data?.target === "KNUGGET_WEBPAGE" &&
+          event.data?.target === "TorchKB_WEBPAGE" &&
           event.data?.type === "AUTH_SYNC_COMPLETE"
         ) {
           clearTimeout(timeout);

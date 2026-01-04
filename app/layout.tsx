@@ -8,7 +8,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Knugget AI - AI-Powered Content Summaries",
+  title: "TorchKB AI - AI-Powered Content Summaries",
   description:
     "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
   keywords: [
@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     "artificial intelligence",
     "productivity tools",
   ],
-  authors: [{ name: "Knugget AI" }],
-  creator: "Knugget AI",
-  publisher: "Knugget AI",
+  authors: [{ name: "TorchKB AI" }],
+  creator: "TorchKB AI",
+  publisher: "TorchKB AI",
   formatDetection: {
     email: false,
     address: false,
@@ -29,23 +29,23 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_WEBSITE_URL ||
-      "https://knugget-new-client.vercel.app"
+      "https://TorchKB-new-client.vercel.app"
   ),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Knugget AI - AI-Powered Content Summaries",
+    title: "TorchKB AI - AI-Powered Content Summaries",
     description:
       "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
     url: "/",
-    siteName: "Knugget AI",
+    siteName: "TorchKB AI",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Knugget AI - AI-Powered Content Summaries",
+        alt: "TorchKB AI - AI-Powered Content Summaries",
       },
     ],
     locale: "en_US",
@@ -53,11 +53,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Knugget AI - AI-Powered Content Summaries",
+    title: "TorchKB AI - AI-Powered Content Summaries",
     description:
       "Generate intelligent summaries and key insights from YouTube, LinkedIn, and web content using AI.",
     images: ["/logo.png"],
-    creator: "@knuggetai",
+    creator: "@TorchKBai",
   },
   robots: {
     index: true,
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* DNS Prefetch */}
         <link
           rel="dns-prefetch"
-          href="https://knugget-new-backend.onrender.com"
+          href="https://TorchKB-new-backend.onrender.com"
         />
 
         {/* Chrome Extension Connection - Extension ID is now auto-discovered */}

@@ -86,7 +86,7 @@ class AuthSyncService {
       try {
         console.log("🔍 Testing extension ID:", id);
         const response = await this.chromeAPI.runtime.sendMessage(id!, {
-          type: "KNUGGET_CHECK_AUTH",
+          type: "TorchKB_CHECK_AUTH",
           timestamp: new Date().toISOString(),
         });
         console.log("✅ Extension is available with ID:", id, response);
@@ -148,7 +148,7 @@ class AuthSyncService {
         const response = await this.chromeAPI.runtime.sendMessage(
           this.extensionId,
           {
-            type: "KNUGGET_AUTH_SUCCESS",
+            type: "TorchKB_AUTH_SUCCESS",
             payload: {
               accessToken: authData.accessToken,
               refreshToken: authData.refreshToken,
@@ -173,9 +173,9 @@ class AuthSyncService {
       // Try to store in Chrome storage (this may also fail if extension isn't installed)
       try {
         await Promise.all([
-          this.chromeAPI.storage.sync.set({ knugget_auth: extensionAuthData }),
+          this.chromeAPI.storage.sync.set({ TorchKB_auth: extensionAuthData }),
           this.chromeAPI.storage.local.set({
-            knuggetUserInfo: extensionAuthData,
+            TorchKBUserInfo: extensionAuthData,
           }),
         ]);
         console.log("✅ Auth data stored in extension storage");
@@ -221,7 +221,7 @@ class AuthSyncService {
       const response = await this.chromeAPI.runtime.sendMessage(
         this.extensionId,
         {
-          type: "KNUGGET_LOGOUT",
+          type: "TorchKB_LOGOUT",
           timestamp: new Date().toISOString(),
         }
       );
@@ -372,7 +372,7 @@ class AuthSyncService {
         const response = await this.chromeAPI.runtime.sendMessage(
           this.extensionId,
           {
-            type: "KNUGGET_CHECK_AUTH",
+            type: "TorchKB_CHECK_AUTH",
             timestamp: new Date().toISOString(),
           }
         );
@@ -398,7 +398,7 @@ class AuthSyncService {
 
     try {
       await this.chromeAPI.runtime.sendMessage(this.extensionId, {
-        type: "KNUGGET_LOGOUT",
+        type: "TorchKB_LOGOUT",
         timestamp: new Date().toISOString(),
       });
       return true;
@@ -418,7 +418,7 @@ class AuthSyncService {
     if (this.chromeAPI.runtime && this.chromeAPI.runtime.onMessage) {
       this.chromeAPI.runtime.onMessage.addListener(
         (message: any, sender: any, sendResponse: any) => {
-          if (message.type === "KNUGGET_AUTH_CHANGED") {
+          if (message.type === "TorchKB_AUTH_CHANGED") {
             if (message.data?.isAuthenticated && message.data?.user) {
               // Extension logged in
               window.dispatchEvent(
@@ -455,7 +455,7 @@ class AuthSyncService {
   private getCurrentUser(): User | null {
     if (typeof window === "undefined") return null;
 
-    const userData = localStorage.getItem("knugget_user_data");
+    const userData = localStorage.getItem("TorchKB_user_data");
     if (!userData) return null;
 
     try {
@@ -469,7 +469,7 @@ class AuthSyncService {
    * Check if current token is valid
    */
   private isTokenValid(): boolean {
-    const expiresAt = localStorage.getItem("knugget_expires_at");
+    const expiresAt = localStorage.getItem("TorchKB_expires_at");
     if (!expiresAt) return false;
 
     const expiry = parseInt(expiresAt);
@@ -522,7 +522,7 @@ class AuthSyncService {
     if (typeof window === "undefined") return null;
 
     try {
-      return localStorage.getItem("knugget_extension_id");
+      return localStorage.getItem("TorchKB_extension_id");
     } catch {
       return null;
     }
@@ -535,7 +535,7 @@ class AuthSyncService {
     if (typeof window === "undefined") return;
 
     try {
-      localStorage.setItem("knugget_extension_id", extensionId);
+      localStorage.setItem("TorchKB_extension_id", extensionId);
     } catch {
       // Ignore storage errors
     }

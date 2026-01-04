@@ -1,7 +1,7 @@
 {
-  "name": "knugget-frontend",
+  "name": "TorchKB-frontend",
   "version": "1.0.0",
-  "description": "Knugget AI - YouTube Video Summarization Platform Frontend",
+  "description": "TorchKB AI - YouTube Video Summarization Platform Frontend",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",

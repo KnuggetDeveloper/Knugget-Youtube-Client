@@ -18,7 +18,7 @@ class PaymentService {
   constructor() {
     this.baseUrl =
       process.env.NEXT_PUBLIC_API_URL ||
-      "https://knugget-youtube-backend.onrender.com/api";
+      "https://TorchKB-youtube-backend.onrender.com/api";
   }
 
   /**

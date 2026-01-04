@@ -1,20 +1,20 @@
 // components/profile/delete-account-dialog.tsx
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { AlertTriangle, X, Trash2 } from 'lucide-react'
-import { useDeleteAccount } from '@/hooks/profile-hooks'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Spinner } from '@/components/ui/spinner'
+import { useState } from "react";
+import { AlertTriangle, X, Trash2 } from "lucide-react";
+import { useDeleteAccount } from "@/hooks/profile-hooks";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
 
 interface DeleteAccountDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  userEmail: string
+  isOpen: boolean;
+  onClose: () => void;
+  userEmail: string;
 }
 
 export function DeleteAccountDialog({
@@ -22,58 +22,66 @@ export function DeleteAccountDialog({
   onClose,
   userEmail,
 }: DeleteAccountDialogProps) {
-  const { deleteAccount, isDeleting, error, clearError } = useDeleteAccount()
-  const [confirmationEmail, setConfirmationEmail] = useState('')
+  const { deleteAccount, isDeleting, error, clearError } = useDeleteAccount();
+  const [confirmationEmail, setConfirmationEmail] = useState("");
   const [confirmationsChecked, setConfirmationsChecked] = useState({
     dataLoss: false,
     noRecovery: false,
     finalDecision: false,
-  })
+  });
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  const allConfirmationsChecked = Object.values(confirmationsChecked).every(Boolean)
-  const emailMatches = confirmationEmail.toLowerCase() === userEmail.toLowerCase()
-  const canDelete = allConfirmationsChecked && emailMatches
+  const allConfirmationsChecked =
+    Object.values(confirmationsChecked).every(Boolean);
+  const emailMatches =
+    confirmationEmail.toLowerCase() === userEmail.toLowerCase();
+  const canDelete = allConfirmationsChecked && emailMatches;
 
   const handleDelete = async () => {
-    if (!canDelete) return
+    if (!canDelete) return;
 
     try {
-      clearError()
-      const success = await deleteAccount(confirmationEmail)
-      
+      clearError();
+      const success = await deleteAccount(confirmationEmail);
+
       if (success) {
         // Account deleted successfully, user will be logged out automatically
-        onClose()
+        onClose();
       }
     } catch (error) {
-      console.error('Delete account error:', error)
+      console.error("Delete account error:", error);
     }
-  }
+  };
 
   const handleClose = () => {
-    setConfirmationEmail('')
+    setConfirmationEmail("");
     setConfirmationsChecked({
       dataLoss: false,
       noRecovery: false,
       finalDecision: false,
-    })
-    clearError()
-    onClose()
-  }
+    });
+    clearError();
+    onClose();
+  };
 
-  const handleConfirmationChange = (key: keyof typeof confirmationsChecked, checked: boolean) => {
-    setConfirmationsChecked(prev => ({
+  const handleConfirmationChange = (
+    key: keyof typeof confirmationsChecked,
+    checked: boolean
+  ) => {
+    setConfirmationsChecked((prev) => ({
       ...prev,
       [key]: checked,
-    }))
-  }
+    }));
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={handleClose} />
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={handleClose}
+      />
 
       {/* Dialog */}
       <div className="flex min-h-full items-center justify-center p-4">
@@ -104,8 +112,9 @@ export function DeleteAccountDialog({
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Warning:</strong> Deleting your account will permanently remove all your data, 
-                including summaries, settings, and account information. This action cannot be reversed.
+                <strong>Warning:</strong> Deleting your account will permanently
+                remove all your data, including summaries, settings, and account
+                information. This action cannot be reversed.
               </AlertDescription>
             </Alert>
 
@@ -142,19 +151,19 @@ export function DeleteAccountDialog({
             {/* Confirmations */}
             <div className="space-y-4">
               <h3 className="font-medium text-sm">Please confirm:</h3>
-              
+
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
                   <Checkbox
                     id="data-loss"
                     checked={confirmationsChecked.dataLoss}
-                    onCheckedChange={(checked: boolean) => 
-                      handleConfirmationChange('dataLoss', checked as boolean)
+                    onCheckedChange={(checked: boolean) =>
+                      handleConfirmationChange("dataLoss", checked as boolean)
                     }
                     disabled={isDeleting}
                   />
-                  <Label 
-                    htmlFor="data-loss" 
+                  <Label
+                    htmlFor="data-loss"
                     className="text-sm leading-relaxed cursor-pointer"
                   >
                     I understand that all my data will be permanently deleted
@@ -165,13 +174,13 @@ export function DeleteAccountDialog({
                   <Checkbox
                     id="no-recovery"
                     checked={confirmationsChecked.noRecovery}
-                    onCheckedChange={(checked: boolean) => 
-                      handleConfirmationChange('noRecovery', checked as boolean)
+                    onCheckedChange={(checked: boolean) =>
+                      handleConfirmationChange("noRecovery", checked as boolean)
                     }
                     disabled={isDeleting}
                   />
-                  <Label 
-                    htmlFor="no-recovery" 
+                  <Label
+                    htmlFor="no-recovery"
                     className="text-sm leading-relaxed cursor-pointer"
                   >
                     I understand that this action cannot be undone or recovered
@@ -182,16 +191,19 @@ export function DeleteAccountDialog({
                   <Checkbox
                     id="final-decision"
                     checked={confirmationsChecked.finalDecision}
-                    onCheckedChange={(checked: boolean) => 
-                      handleConfirmationChange('finalDecision', checked as boolean)
+                    onCheckedChange={(checked: boolean) =>
+                      handleConfirmationChange(
+                        "finalDecision",
+                        checked as boolean
+                      )
                     }
                     disabled={isDeleting}
                   />
-                  <Label 
-                    htmlFor="final-decision" 
+                  <Label
+                    htmlFor="final-decision"
                     className="text-sm leading-relaxed cursor-pointer"
                   >
-                    I want to permanently delete my Knugget account
+                    I want to permanently delete my TorchKB account
                   </Label>
                 </div>
               </div>
@@ -199,8 +211,12 @@ export function DeleteAccountDialog({
 
             {/* Email Confirmation */}
             <div className="space-y-2">
-              <Label htmlFor="confirmation-email" className="text-sm font-medium">
-                Type your email address to confirm: <span className="font-mono text-xs">{userEmail}</span>
+              <Label
+                htmlFor="confirmation-email"
+                className="text-sm font-medium"
+              >
+                Type your email address to confirm:{" "}
+                <span className="font-mono text-xs">{userEmail}</span>
               </Label>
               <Input
                 id="confirmation-email"
@@ -209,7 +225,9 @@ export function DeleteAccountDialog({
                 value={confirmationEmail}
                 onChange={(e) => setConfirmationEmail(e.target.value)}
                 disabled={isDeleting}
-                className={emailMatches && confirmationEmail ? 'border-green-500' : ''}
+                className={
+                  emailMatches && confirmationEmail ? "border-green-500" : ""
+                }
               />
               {confirmationEmail && !emailMatches && (
                 <p className="text-xs text-red-600">
@@ -221,7 +239,11 @@ export function DeleteAccountDialog({
 
           {/* Footer */}
           <div className="flex items-center justify-end space-x-3 p-6 border-t bg-muted/30">
-            <Button variant="outline" onClick={handleClose} disabled={isDeleting}>
+            <Button
+              variant="outline"
+              onClick={handleClose}
+              disabled={isDeleting}
+            >
               Cancel
             </Button>
             <Button
@@ -245,5 +267,5 @@ export function DeleteAccountDialog({
         </div>
       </div>
     </div>
-  )
+  );
 }

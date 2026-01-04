@@ -119,7 +119,7 @@ export function SummaryCard({
     <Card
       className={`group cursor-pointer transition-all duration-200 hover:shadow-md ${
         isSelected
-          ? "ring-2 ring-knugget-500 bg-knugget-50 dark:bg-knugget-950"
+          ? "ring-2 ring-TorchKB-500 bg-TorchKB-50 dark:bg-TorchKB-950"
           : ""
       }`}
       onClick={handleCardClick}
@@ -133,7 +133,7 @@ export function SummaryCard({
               checked={isSelected}
               onChange={() => {}}
               onClick={handleCheckboxClick}
-              className="h-4 w-4 rounded border-gray-300 text-knugget-600 focus:ring-knugget-500"
+              className="h-4 w-4 rounded border-gray-300 text-TorchKB-600 focus:ring-TorchKB-500"
             />
           </div>
         )}
@@ -238,7 +238,7 @@ export function SummaryCard({
 
         {/* Title and Description */}
         <div className="space-y-2">
-          <CardTitle className="text-lg font-semibold line-clamp-2 group-hover:text-knugget-600 transition-colors">
+          <CardTitle className="text-lg font-semibold line-clamp-2 group-hover:text-TorchKB-600 transition-colors">
             {summary.title}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground line-clamp-1">
@@ -258,7 +258,7 @@ export function SummaryCard({
             <ul className="space-y-1">
               {summary.keyPoints.slice(0, 3).map((point, index) => (
                 <li key={index} className="flex items-start space-x-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-knugget-500 mt-2 flex-shrink-0" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-TorchKB-500 mt-2 flex-shrink-0" />
                   <span className="text-sm text-muted-foreground line-clamp-2">
                     {truncate(point, 100)}
                   </span>

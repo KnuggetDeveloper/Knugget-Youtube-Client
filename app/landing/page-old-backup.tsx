@@ -182,14 +182,19 @@ export default function LandingPage() {
                   className="text-lg font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
-                  <img src="/logo.png" alt="Knugget Logo" width={20} height={20} />
+                  <img
+                    src="/logo.png"
+                    alt="TorchKB Logo"
+                    width={20}
+                    height={20}
+                  />
                 </span>
               </div>
               <span
                 className="text-xl font-semibold"
                 style={{ color: "var(--text-primary)" }}
               >
-                Knugget
+                TorchKB
               </span>
             </Link>
 
@@ -340,7 +345,7 @@ export default function LandingPage() {
             <div style={{ color: "var(--text-primary)" }} className="mb-4">
               Summarize Videos Within YouTube
             </div>
-            <div className="knugget-gradient-text">
+            <div className="TorchKB-gradient-text">
               Save Time, Get Insights Instantly!
             </div>
           </h1>
@@ -573,7 +578,7 @@ export default function LandingPage() {
                       {btn.view === "summary" ? (
                         <Image
                           src="/logo.png"
-                          alt="Knugget Logo"
+                          alt="TorchKB Logo"
                           width={20}
                           height={20}
                           className="object-contain"

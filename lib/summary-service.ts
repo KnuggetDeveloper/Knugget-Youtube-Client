@@ -368,10 +368,10 @@ class SummaryService {
   private async findExtensionId(chromeAPI: any): Promise<string | null> {
     // Try stored extension ID first
     try {
-      const storedId = localStorage.getItem("knugget_extension_id");
+      const storedId = localStorage.getItem("TorchKB_extension_id");
       if (storedId) {
         await chromeAPI.runtime.sendMessage(storedId, {
-          type: "KNUGGET_CHECK_AUTH",
+          type: "TorchKB_CHECK_AUTH",
           timestamp: new Date().toISOString(),
         });
         return storedId;
@@ -386,10 +386,10 @@ class SummaryService {
       const urlExtensionId = urlParams.get("extensionId");
       if (urlExtensionId) {
         await chromeAPI.runtime.sendMessage(urlExtensionId, {
-          type: "KNUGGET_CHECK_AUTH",
+          type: "TorchKB_CHECK_AUTH",
           timestamp: new Date().toISOString(),
         });
-        localStorage.setItem("knugget_extension_id", urlExtensionId);
+        localStorage.setItem("TorchKB_extension_id", urlExtensionId);
         return urlExtensionId;
       }
     } catch {

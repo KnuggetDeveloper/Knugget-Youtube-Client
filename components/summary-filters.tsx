@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -14,25 +14,26 @@ import {
   List,
   Download,
   Plus,
-} from 'lucide-react'
-import { SummaryQueryParams } from '@/types/summary'
-import {
-  Button,
-} from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+} from "lucide-react";
+import { SummaryQueryParams } from "@/types/summary";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface SummaryFiltersProps {
-  params: SummaryQueryParams
-  onSearch: (query: string) => void
-  onFilterByStatus: (status: string) => void
-  onSort: (sortBy: SummaryQueryParams['sortBy'], sortOrder: SummaryQueryParams['sortOrder']) => void
-  onClearFilters: () => void
-  onViewChange?: (view: 'grid' | 'list') => void
-  onExport?: () => void
-  onCreateNew?: () => void
-  view?: 'grid' | 'list'
-  isLoading?: boolean
-  popularTags?: Array<{ tag: string; count: number }>
+  params: SummaryQueryParams;
+  onSearch: (query: string) => void;
+  onFilterByStatus: (status: string) => void;
+  onSort: (
+    sortBy: SummaryQueryParams["sortBy"],
+    sortOrder: SummaryQueryParams["sortOrder"]
+  ) => void;
+  onClearFilters: () => void;
+  onViewChange?: (view: "grid" | "list") => void;
+  onExport?: () => void;
+  onCreateNew?: () => void;
+  view?: "grid" | "list";
+  isLoading?: boolean;
+  popularTags?: Array<{ tag: string; count: number }>;
 }
 
 export function SummaryFilters({
@@ -44,57 +45,62 @@ export function SummaryFilters({
   onViewChange,
   onExport,
   onCreateNew,
-  view = 'grid',
+  view = "grid",
   isLoading = false,
   popularTags = [],
 }: SummaryFiltersProps) {
-  const [searchQuery, setSearchQuery] = useState(params.search || '')
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState(params.search || "");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   // Update search query when params change
   useEffect(() => {
-    setSearchQuery(params.search || '')
-  }, [params.search])
+    setSearchQuery(params.search || "");
+  }, [params.search]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSearch(searchQuery)
-  }
+    e.preventDefault();
+    onSearch(searchQuery);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
+    setSearchQuery(e.target.value);
     // Debounced search - trigger search after user stops typing
-    clearTimeout((window as any).searchTimeout)
-    ;(window as any).searchTimeout = setTimeout(() => {
-      onSearch(e.target.value)
-    }, 500)
-  }
+    clearTimeout((window as any).searchTimeout);
+    (window as any).searchTimeout = setTimeout(() => {
+      onSearch(e.target.value);
+    }, 500);
+  };
 
   const handleStatusFilter = (status: string) => {
-    onFilterByStatus(status)
-  }
+    onFilterByStatus(status);
+  };
 
-  const handleSortChange = (field: SummaryQueryParams['sortBy']) => {
-    const newOrder = params.sortBy === field && params.sortOrder === 'desc' ? 'asc' : 'desc'
-    onSort(field, newOrder)
-  }
+  const handleSortChange = (field: SummaryQueryParams["sortBy"]) => {
+    const newOrder =
+      params.sortBy === field && params.sortOrder === "desc" ? "asc" : "desc";
+    onSort(field, newOrder);
+  };
 
   const handleTagClick = (tag: string) => {
-    setSearchQuery(tag)
-    onSearch(tag)
-  }
+    setSearchQuery(tag);
+    onSearch(tag);
+  };
 
-  const getSortIcon = (field: SummaryQueryParams['sortBy']) => {
-    if (params.sortBy !== field) return null
-    return params.sortOrder === 'desc' ? <SortDesc className="h-4 w-4" /> : <SortAsc className="h-4 w-4" />
-  }
+  const getSortIcon = (field: SummaryQueryParams["sortBy"]) => {
+    if (params.sortBy !== field) return null;
+    return params.sortOrder === "desc" ? (
+      <SortDesc className="h-4 w-4" />
+    ) : (
+      <SortAsc className="h-4 w-4" />
+    );
+  };
 
   const activeFiltersCount = [
     params.search,
-    params.status && params.status !== 'all',
+    params.status && params.status !== "all",
     params.startDate,
     params.endDate,
-  ].filter(Boolean).length
+  ].filter(Boolean).length;
 
   return (
     <div className="space-y-4">
@@ -127,7 +133,7 @@ export function SummaryFilters({
             <Filter className="h-4 w-4 mr-2" />
             Filters
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-knugget-500 text-white text-xs flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-TorchKB-500 text-white text-xs flex items-center justify-center">
                 {activeFiltersCount}
               </span>
             )}
@@ -140,17 +146,17 @@ export function SummaryFilters({
           {onViewChange && (
             <div className="flex items-center border rounded-md">
               <Button
-                variant={view === 'grid' ? 'default' : 'ghost'}
+                variant={view === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => onViewChange('grid')}
+                onClick={() => onViewChange("grid")}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button
-                variant={view === 'list' ? 'default' : 'ghost'}
+                variant={view === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => onViewChange('list')}
+                onClick={() => onViewChange("list")}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -168,7 +174,7 @@ export function SummaryFilters({
 
           {/* Create New */}
           {onCreateNew && (
-            <Button  size="sm" onClick={onCreateNew}>
+            <Button size="sm" onClick={onCreateNew}>
               <Plus className="h-4 w-4 mr-2" />
               New Summary
             </Button>
@@ -188,16 +194,18 @@ export function SummaryFilters({
               </label>
               <div className="flex flex-wrap gap-2">
                 {[
-                  { value: 'all', label: 'All' },
-                  { value: 'COMPLETED', label: 'Completed' },
-                  { value: 'PROCESSING', label: 'Processing' },
-                  { value: 'FAILED', label: 'Failed' },
-                  { value: 'PENDING', label: 'Pending' },
+                  { value: "all", label: "All" },
+                  { value: "COMPLETED", label: "Completed" },
+                  { value: "PROCESSING", label: "Processing" },
+                  { value: "FAILED", label: "Failed" },
+                  { value: "PENDING", label: "Pending" },
                 ].map((status) => (
                   <Button
                     key={status.value}
                     variant={
-                      (params.status || 'all') === status.value ? 'default' : 'outline'
+                      (params.status || "all") === status.value
+                        ? "default"
+                        : "outline"
                     }
                     size="sm"
                     onClick={() => handleStatusFilter(status.value)}
@@ -214,19 +222,25 @@ export function SummaryFilters({
               <label className="text-sm font-medium">Sort By</label>
               <div className="flex flex-wrap gap-2">
                 {[
-                  { value: 'createdAt', label: 'Date' },
-                  { value: 'title', label: 'Title' },
-                  { value: 'videoTitle', label: 'Video' },
+                  { value: "createdAt", label: "Date" },
+                  { value: "title", label: "Title" },
+                  { value: "videoTitle", label: "Video" },
                 ].map((sort) => (
                   <Button
                     key={sort.value}
-                    variant={params.sortBy === sort.value ? 'default' : 'outline'}
+                    variant={
+                      params.sortBy === sort.value ? "default" : "outline"
+                    }
                     size="sm"
-                    onClick={() => handleSortChange(sort.value as SummaryQueryParams['sortBy'])}
+                    onClick={() =>
+                      handleSortChange(
+                        sort.value as SummaryQueryParams["sortBy"]
+                      )
+                    }
                     className="text-xs flex items-center"
                   >
                     {sort.label}
-                    {getSortIcon(sort.value as SummaryQueryParams['sortBy'])}
+                    {getSortIcon(sort.value as SummaryQueryParams["sortBy"])}
                   </Button>
                 ))}
               </div>
@@ -261,7 +275,10 @@ export function SummaryFilters({
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="text-sm text-muted-foreground">
               {activeFiltersCount > 0 && (
-                <span>{activeFiltersCount} filter{activeFiltersCount === 1 ? '' : 's'} applied</span>
+                <span>
+                  {activeFiltersCount} filter
+                  {activeFiltersCount === 1 ? "" : "s"} applied
+                </span>
               )}
             </div>
             <div className="flex items-center space-x-2">
@@ -291,7 +308,7 @@ export function SummaryFilters({
         <div className="flex items-center space-x-2 text-sm">
           <span className="text-muted-foreground">Active filters:</span>
           {params.search && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full bg-knugget-100 text-knugget-800 dark:bg-knugget-900 dark:text-knugget-200">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-TorchKB-100 text-TorchKB-800 dark:bg-TorchKB-900 dark:text-TorchKB-200">
               Search: &quot;{params.search}&quot;
             </span>
           )}
@@ -312,5 +329,5 @@ export function SummaryFilters({
         </div>
       )}
     </div>
-  )
+  );
 }

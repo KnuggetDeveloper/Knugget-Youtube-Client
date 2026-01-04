@@ -32,18 +32,21 @@ export function GlobalSidebar() {
   const summaries = summariesData?.data || [];
 
   // Fetch LinkedIn posts for sidebar
-  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts({
-    limit: 20,
-    sortBy: "savedAt",
-    sortOrder: "desc",
-  });
+  const { posts: linkedinPosts, isLoading: linkedinLoading } = useLinkedinPosts(
+    {
+      limit: 20,
+      sortBy: "savedAt",
+      sortOrder: "desc",
+    }
+  );
 
   // Fetch Website articles for sidebar
-  const { articles: websiteArticles, isLoading: websiteLoading } = useWebsiteArticles({
-    limit: 20,
-    sortBy: "savedAt", // Use savedAt to match backend
-    sortOrder: "desc",
-  });
+  const { articles: websiteArticles, isLoading: websiteLoading } =
+    useWebsiteArticles({
+      limit: 20,
+      sortBy: "savedAt", // Use savedAt to match backend
+      sortOrder: "desc",
+    });
 
   // Get user stats for token usage
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -147,13 +150,13 @@ export function GlobalSidebar() {
   const handleItemClick = (item: TimelineItem) => {
     switch (item.type) {
       case "youtube":
-        router.push(`/knugget/youtube/${item.id}`);
+        router.push(`/TorchKB/youtube/${item.id}`);
         break;
       case "linkedin":
-        router.push(`/knugget/linkedin/${item.id}`);
+        router.push(`/TorchKB/linkedin/${item.id}`);
         break;
       case "website":
-        router.push(`/knugget/website/${item.id}`);
+        router.push(`/TorchKB/website/${item.id}`);
         break;
     }
   };
@@ -162,9 +165,13 @@ export function GlobalSidebar() {
   const getItemIcon = (type: TimelineItem["type"]) => {
     switch (type) {
       case "youtube":
-        return <Youtube className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />;
+        return (
+          <Youtube className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />
+        );
       case "linkedin":
-        return <Linkedin className="w-3 h-3 text-[#0A66C2] mt-0.5 flex-shrink-0" />;
+        return (
+          <Linkedin className="w-3 h-3 text-[#0A66C2] mt-0.5 flex-shrink-0" />
+        );
       case "website":
         return <Globe className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />;
     }
@@ -180,9 +187,9 @@ export function GlobalSidebar() {
           {!sidebarCollapsed && (
             <Link href="/dashboard" className="flex items-center space-x-2">
               <div className="h-5 w-5 rounded-lg bg-gradient-to-r flex items-center justify-center">
-                <img src="/logo.png" alt="Knugget" className="h-5 w-5" />
+                <img src="/logo.png" alt="TorchKB" className="h-5 w-5" />
               </div>
-              <span className="text-lg font-semibold text-white">Knugget</span>
+              <span className="text-lg font-semibold text-white">TorchKB</span>
             </Link>
           )}
         </div>
@@ -198,17 +205,20 @@ export function GlobalSidebar() {
                 <Clock className="w-4 h-4 mr-2" />
                 Recent Content
               </h3>
-              {!summariesLoading && !linkedinLoading && !websiteLoading && sortedDates.length > 0 && (
-                <Link
-                  href="/dashboard"
-                  className="text-xs text-orange-500 hover:text-orange-400"
-                >
-                  View All
-                </Link>
-              )}
+              {!summariesLoading &&
+                !linkedinLoading &&
+                !websiteLoading &&
+                sortedDates.length > 0 && (
+                  <Link
+                    href="/dashboard"
+                    className="text-xs text-orange-500 hover:text-orange-400"
+                  >
+                    View All
+                  </Link>
+                )}
             </div>
 
-            {(summariesLoading || linkedinLoading || websiteLoading) ? (
+            {summariesLoading || linkedinLoading || websiteLoading ? (
               <div className="space-y-2 animate-pulse">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="h-12 bg-gray-800 rounded"></div>

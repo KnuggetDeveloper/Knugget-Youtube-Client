@@ -14,16 +14,6 @@ export default function LinkedInSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div className="flex flex-col gap-6">
-            <div
-              className="inline-block w-fit px-4 py-2 rounded-full text-sm font-semibold tracking-wide"
-              style={{
-                background: "rgba(255, 107, 53, 0.1)",
-                border: "1px solid rgba(255, 107, 53, 0.3)",
-                color: "var(--accent-primary)",
-              }}
-            >
-              💼 LinkedIn Integration
-            </div>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
               style={{ color: "var(--text-primary)" }}
@@ -38,33 +28,6 @@ export default function LinkedInSection() {
               posts, articles, and thought leadership content directly from
               LinkedIn with a single click.
             </p>
-            <ul className="flex flex-col gap-4">
-              {[
-                "Instant saving from LinkedIn newsfeed",
-                "Capture posts, images, and documents",
-                "Auto-categorize by topic and author",
-                "Search and revisit anytime",
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-4">
-                  <span
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{
-                      background: "var(--accent-gradient)",
-                      color: "var(--primary-bg)",
-                      boxShadow: "var(--accent-glow)",
-                    }}
-                  >
-                    ✓
-                  </span>
-                  <span
-                    className="text-base"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
             <button
               className="w-fit flex items-center gap-3 px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-300 hover:transform hover:translate-y-[-3px]"
               style={{
@@ -77,10 +40,6 @@ export default function LinkedInSection() {
               onMouseEnter={() => setHoveredButton(true)}
               onMouseLeave={() => setHoveredButton(false)}
             >
-              <span>Try LinkedIn Save</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
             </button>
           </div>
 
@@ -152,7 +111,7 @@ export default function LinkedInSection() {
                       className="text-xs font-semibold cursor-pointer"
                       style={{ color: "var(--accent-primary)" }}
                     >
-                      💾 Save to Knugget
+                      💾 Save to TorchKB
                     </span>
                   </div>
                 </div>
@@ -214,7 +173,7 @@ export default function LinkedInSection() {
                       className="text-xs font-semibold cursor-pointer"
                       style={{ color: "var(--accent-primary)" }}
                     >
-                      💾 Save to Knugget
+                      💾 Save to TorchKB
                     </span>
                   </div>
                 </div>
@@ -241,4 +200,3 @@ export default function LinkedInSection() {
     </section>
   );
 }
-

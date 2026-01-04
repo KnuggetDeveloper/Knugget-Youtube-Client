@@ -15,9 +15,9 @@ const LinkedInSection = lazy(
 const ArticlesSection = lazy(
   () => import("@/components/landing/ArticlesSection")
 );
-const NewsletterSection = lazy(
-  () => import("@/components/landing/NewsletterSection")
-);
+// const NewsletterSection = lazy(
+//   () => import("@/components/landing/NewsletterSection")
+// );
 
 // Loading skeleton for sections
 const SectionLoader = () => (
@@ -116,7 +116,7 @@ export default function LandingPage() {
                 >
                   <img
                     src="/logo.png"
-                    alt="Knugget Logo"
+                    alt="TorchKB Logo"
                     width={20}
                     height={20}
                   />
@@ -126,7 +126,7 @@ export default function LandingPage() {
                 className="text-xl font-semibold"
                 style={{ color: "var(--text-primary)" }}
               >
-                Knugget
+                TorchKB
               </span>
             </Link>
 
@@ -296,10 +296,11 @@ export default function LandingPage() {
             style={{ animationDelay: "0.2s" }}
           >
             <div style={{ color: "var(--text-primary)" }} className="mb-4">
-              Summarize Videos Within YouTube
+              Your AI Powered Knowledge Base
             </div>
-            <div className="knugget-gradient-text">
-              Save Time, Get Insights Instantly!
+            <div className="TorchKB-gradient-text">
+              Save YouTube summaries, LinkedIn posts & web pages to your
+              knowledge base & search anytime effortlessly.
             </div>
           </h1>
 
@@ -346,9 +347,9 @@ export default function LandingPage() {
         <ArticlesSection />
       </Suspense>
 
-      <Suspense fallback={<SectionLoader />}>
+      {/* <Suspense fallback={<SectionLoader />}>
         <NewsletterSection />
-      </Suspense>
+      </Suspense> */}
 
       {/* Footer */}
       <footer
@@ -360,7 +361,7 @@ export default function LandingPage() {
       >
         <div className="max-w-6xl mx-auto px-4">
           <p style={{ color: "var(--text-secondary)" }}>
-            © {new Date().getFullYear()} Knugget. All rights reserved.
+            © {new Date().getFullYear()} TorchKB. All rights reserved.
           </p>
         </div>
       </footer>
