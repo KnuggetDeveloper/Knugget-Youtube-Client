@@ -245,7 +245,7 @@ function DashboardContent() {
       case "website":
         return "Website Articles";
       default:
-        return "All TorchKBs";
+        return "All Contents";
     }
   };
 

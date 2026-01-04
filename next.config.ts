@@ -116,6 +116,11 @@ const nextConfig = {
         source: "/api/:path*",
         destination: `${apiBaseUrl}/:path*`,
       },
+      // Rewrite /TorchKB/* to /knugget/* for backward compatibility
+      {
+        source: "/TorchKB/:path*",
+        destination: "/knugget/:path*",
+      },
     ];
   },
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
