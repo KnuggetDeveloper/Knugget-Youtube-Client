@@ -157,10 +157,13 @@ function SignupPageContent() {
       {/* Navigation */}
       <nav className="absolute top-0 left-0 right-0 z-10 p-6">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <div className="flex items-center space-x-3">
+          <Link
+            href="/"
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity"
+          >
             <Image src="/logo.png" alt="TorchKB Logo" width={20} height={20} />
             <span className="text-2xl font-bold text-white">TorchKB</span>
-          </div>
+          </Link>
           <div className="flex items-center space-x-6">
             <Link
               href="#"
