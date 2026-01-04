@@ -298,7 +298,17 @@ export default function LandingPage() {
             <div style={{ color: "var(--text-primary)" }} className="mb-4">
               Your AI Powered Knowledge Base
             </div>
-            <div className="TorchKB-gradient-text">
+            <div
+              className="mx-auto"
+              style={{
+                fontSize: "clamp(1rem, 2vw, 1.25rem)",
+                color: "var(--text-secondary)",
+                lineHeight: "1.6",
+                maxWidth: "800px",
+                marginTop: "3rem",
+                fontWeight: 400,
+              }}
+            >
               Save YouTube summaries, LinkedIn posts & web pages to your
               knowledge base & search anytime effortlessly.
             </div>

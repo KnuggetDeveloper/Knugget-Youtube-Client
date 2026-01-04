@@ -78,9 +78,26 @@ export default function VideoDemo() {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mx-auto mb-12 TorchKB-gradient-text">
-          Save YouTube Summaries and Transcript In One Click
-        </h2>
+        <div
+          className="text-center"
+          style={{
+            marginBottom: "4rem",
+            padding: "0 1.5rem",
+          }}
+        >
+          <h2
+            className="mx-auto"
+            style={{
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontWeight: 700,
+              lineHeight: "1.2",
+              color: "var(--text-primary)",
+              maxWidth: "900px",
+            }}
+          >
+            Save YouTube Summaries and Transcript In One Click
+          </h2>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Video Player */}
